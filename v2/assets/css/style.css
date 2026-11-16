@@ -336,3 +336,5 @@ textarea.field{height:110px;padding:12px 16px;resize:vertical}
 
 .detail .photo .credit{position:absolute;right:12px;bottom:10px;font-size:11px;color:#6b6f7a;background:rgba(255,255,255,.85);padding:2px 8px;border-radius:999px}
 .detail .photo .credit:hover{color:#111}
+.alert-form{grid-template-columns:1fr 200px auto;align-items:center}
+@media (max-width:700px){.alert-form{grid-template-columns:1fr}}

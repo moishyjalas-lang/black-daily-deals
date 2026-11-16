@@ -130,7 +130,7 @@ for cid, name, fname in cats:
     page(fname, f'{name} Deals | Black Daily Deals', f'The best {name.lower()} deals today, checked by hand.', f'data-page="category" data-cat="{cid}"', listing())
 page('deals.html', 'All Deals | Black Daily Deals', 'Every live deal on Black Daily Deals.', 'data-page="deals"', listing())
 page('deal.html', 'Deal | Black Daily Deals', 'Deal details.', 'data-page="deal"', '<div class="wrap"><div id="deal"></div><section class="section"><div class="sec-head"><div><h2 class="display">More like this</h2></div></div><div class="grid" id="more"></div></section></div>')
-page('account.html', 'My Account | Black Daily Deals', 'Your saved deals, alerts and settings.', 'data-page="account"', '<section class="page-head"><div class="wrap"><div class="crumbs"><a class="back" href="index.html">&larr; Home</a></div><h1 class="display">My account</h1><p class="sub">Saved deals, alerts and settings.</p></div></section><div class="wrap" style="padding:30px 0 60px"><div id="acct"></div></div>')
+page('account.html', 'My Account | Black Daily Deals', 'Your saved deals, alerts and settings.', 'data-page="account"', '<section class="page-head"><div class="wrap"><div class="crumbs"><a class="back" href="index.html">&larr; Home</a></div><h1 class="display">My account</h1><p class="sub">Saved deals, alerts and settings.</p></div></section><div class="wrap" style="padding-top:30px;padding-bottom:60px"><div id="acct"></div></div>')
 
 page('guide.html', 'Black Friday Survival Guide | Black Daily Deals', 'How to find real Black Friday deals and skip the fake ones.', 'data-page="guide"', prose('Black Friday Survival Guide', 'How to get the real deals and skip the fake ones.', """
 <h2>1. Make a list before the sales start</h2><p>Write down what you actually need and the most you will pay. Set a deal alert for each one in your account and we will email you when it drops.</p>
@@ -176,7 +176,7 @@ page('submit.html', 'Submit a Deal | Black Daily Deals', 'Brands and stores: sen
 
 page('credits.html', 'Photo Credits | Black Daily Deals', 'Credits for product photos.', 'data-page="credits"', prose('Photo credits', 'Product photos come from Wikimedia Commons, shared under free licenses. Thank you to every photographer.', '<div id="credits"></div>'))
 
-page('404.html', 'Page not found | Black Daily Deals', 'Page not found.', 'data-page="404"', """<section class="section"><div class="wrap" style="text-align:center;padding:60px 0">
+page('404.html', 'Page not found | Black Daily Deals', 'Page not found.', 'data-page="404"', """<section class="section"><div class="wrap" style="text-align:center;padding-top:60px;padding-bottom:60px">
 <img src="assets/img/brand/cart.png" alt="" style="width:140px;margin:0 auto 20px">
 <h1 class="display" style="font-size:48px">This deal is gone</h1><p class="muted" style="margin:10px 0 24px">The page you are looking for does not exist.</p>
 <a class="btn btn-gold btn-lg" href="index.html">See today's deals</a></div></section>""")
