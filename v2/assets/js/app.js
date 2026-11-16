@@ -144,7 +144,7 @@
       '<div><h5>Your account</h5><a href="account.html">Sign in / Account</a><a href="account.html#saved">Saved deals</a><a href="account.html#alerts">Deal alerts</a><a href="index.html#subscribe">Daily deals email</a><a href="guide.html">Black Friday Survival Guide</a></div>' +
       '<div><h5>Company</h5><a href="about.html">About us</a><a href="about.html#money">How we make money</a><a href="submit.html">Brands: submit a deal</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="credits.html">Photo credits</a></div>' +
       '</div>' +
-      '<div class="foot-bottom"><span>&copy; ' + new Date().getFullYear() + ' Black Daily Deals. As an Amazon Associate we earn from qualifying purchases. Prices can change at any time; always check the store before you buy.</span><span>Made in Brooklyn, NY</span></div>' +
+      '<div class="foot-bottom"><span>&copy; ' + new Date().getFullYear() + ' Black Daily Deals. As an Amazon Associate we earn from qualifying purchases. Prices can change at any time; always check the store before you buy.</span></div>' +
       '</div></footer>' +
       modals();
   }
