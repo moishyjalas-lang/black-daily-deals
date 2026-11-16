@@ -333,3 +333,6 @@ textarea.field{height:110px;padding:12px 16px;resize:vertical}
   .dotd .info{padding:22px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.detail .photo .credit{position:absolute;right:12px;bottom:10px;font-size:11px;color:#6b6f7a;background:rgba(255,255,255,.85);padding:2px 8px;border-radius:999px}
+.detail .photo .credit:hover{color:#111}

@@ -500,10 +500,13 @@
     });
   }
 
+  function credit(file) { var c = (window.BDD_CREDITS || {})[file]; return c ? 'Photo: ' + c[0] + ', ' + c[1] : 'Photo from Wikimedia Commons'; }
+
   function renderCredits() {
     var box = $('#credits'); if (!box) return;
     box.innerHTML = '<ul>' + DEALS.filter(function (d) { return d.img; }).map(function (d) {
-      return '<li>' + esc(d.name) + ': photo <a href="https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(d.img) + '" target="_blank" rel="noopener">' + esc(d.img) + '</a> from Wikimedia Commons (see the page for the author and license).</li>';
+      var c = (window.BDD_CREDITS || {})[d.img] || ['see file page', 'see file page'];
+      return '<li><b>' + esc(d.name) + '</b>: photo by ' + esc(c[0]) + ', ' + esc(c[1]) + ', via <a href="https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(d.img) + '" target="_blank" rel="noopener">Wikimedia Commons</a>.</li>';
     }).join('') + '</ul>';
   }
 
