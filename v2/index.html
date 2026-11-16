@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Daily Deals | Black Friday prices every day</title>
+<meta name="description" content="Black Friday prices every single day. A hand-checked Crazy Deal of the Day, the top deals every day, and alerts for what you want.">
+<meta name="theme-color" content="#07070a">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daily Deals">
+<meta property="og:title" content="Black Daily Deals | Black Friday prices every day">
+<meta property="og:description" content="Black Friday prices every single day. A hand-checked Crazy Deal of the Day, the top deals every day, and alerts for what you want.">
+<meta property="og:image" content="assets/img/brand/emblem.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="home">
+<div id="site-head"></div>
+<main>
+<section class="hero"><div class="wrap hero-grid">
+  <div>
+    <span class="eyebrow">Black Friday every day</span>
+    <h1 class="display">Black Friday prices.<br><em>Every single day.</em></h1>
+    <p class="lead">Hand-picked deals from the stores you already shop. A new Crazy Deal of the Day every morning, the top ten every day, and alerts for what you want.</p>
+    <div class="hero-cta"><a class="btn btn-gold btn-lg" href="#today">See today's deals</a><button class="btn btn-dark btn-lg" data-signin>Sign in free</button></div>
+    <div class="count-title">Black Friday starts in</div><div class="countdown" id="countdown"></div>
+  </div>
+  <div class="hero-badge"><img src="assets/img/brand/deal-of-the-day.png" alt="Deal of the Day"></div>
+</div></section>
+
+<section class="section" id="today"><div class="wrap">
+  <div class="sec-head"><div><h2 class="display">Crazy Deal of the Day</h2><p>One deal, checked by hand. A new one every midnight.</p></div></div>
+  <div class="dotd" id="dotd"></div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head"><div><h2 class="display">Shop by category</h2><p>Pick a category, then a section inside it.</p></div><a class="link-more" href="deals.html">All deals</a></div>
+  <div class="cat-tiles" id="cat-tiles"></div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head"><div><h2 class="display">Today's top deals</h2><p>The deals people like most right now.</p></div><a class="link-more" href="deals.html">See all</a></div>
+  <div class="grid" id="top-ten"></div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head"><div><h2 class="display">Why people come back every day</h2></div></div>
+  <div class="reasons">
+    <div class="reason"><div class="n">01</div><b>A new deal every morning</b><p>The Crazy Deal of the Day changes at midnight.</p></div>
+    <div class="reason"><div class="n">02</div><b>Alerts that work for you</b><p>Tell us what you want. We email you when it drops.</p></div>
+    <div class="reason"><div class="n">03</div><b>Only real deals</b><p>Every deal gets a verdict: Real Deal, Good Deal or Meh.</p></div>
+    <div class="reason"><div class="n">04</div><b>Spin the Deal Wheel</b><p>One free spin a day for a surprise deal.</p></div>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head"><div><h2 class="display">Best deal in every category</h2><p>The biggest discount in each section today.</p></div></div>
+  <div class="grid" id="best-by-cat"></div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="wheel-box">
+    <div class="wheel-wrap"><div class="pointer"></div><div class="wheel" id="wheel"></div><div class="wheel-hub"><img src="assets/img/brand/cart.png" alt=""></div></div>
+    <div><span class="eyebrow">Once a day</span><h2 class="display" style="font-size:clamp(30px,3.6vw,44px);margin:12px 0 8px">Spin the Deal Wheel</h2><p class="muted">One free spin every day. Land on a surprise deal.</p>
+    <button class="btn btn-gold btn-lg" id="spin" style="margin-top:18px">Spin now</button><div id="wheel-result" style="margin-top:20px"></div></div>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head"><div><h2 class="display">Trending now</h2><p>Hot deals going fast.</p></div></div>
+  <div class="grid" id="trending"></div>
+</div></section>
+<section class="section" id="subscribe"><div class="wrap"><div class="signup">
+  <div><span class="eyebrow">Free daily email</span><h2 class="display">Get the top 10 deals<br>every morning</h2>
+  <p>One short email at 7 AM with the ten best deals of the day. Nothing else.</p>
+  <ul class="perks"><li>The Crazy Deal of the Day before anyone else</li><li>Early access to Black Friday deals</li><li>Price-drop alerts for the things you want</li></ul></div>
+  <form class="form" data-subscribe><input class="field" name="name" placeholder="First name" autocomplete="given-name"><input class="field" name="email" type="email" placeholder="Your email" required autocomplete="email"><button class="btn btn-gold btn-lg" type="submit">Send me the daily deals</button><p class="fine">Free. One email a day. Unsubscribe any time.</p></form>
+</div></div></section>
+</main>
+<div id="site-foot"></div>
+<script src="assets/js/deals.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
