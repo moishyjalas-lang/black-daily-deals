@@ -305,7 +305,9 @@
         send('Daily email sign-up', { email: email, name: name });
         var u = user(); if (!u) store.set('user', { name: name, email: email, method: 'subscribe', daily: true, since: new Date().toISOString() });
         renderAccount();
-        sf.innerHTML = '<p class="ok">You are in! Your first daily deals email is on its way. Check your inbox to confirm.</p>';
+        sf.innerHTML = CONFIG.FORM_ENDPOINT
+          ? '<p class="ok">You are in! Check your inbox and tap the link to confirm your email.</p>'
+          : '<p class="ok">You are on the list! The daily email starts soon. We will send you a short email to confirm it is really you.</p>';
       });
     });
   }
