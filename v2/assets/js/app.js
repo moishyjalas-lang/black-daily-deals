@@ -6,7 +6,9 @@
   /* ================= SETTINGS (fill these in, nothing else to change) ================= */
   var CONFIG = {
     // Google sign-in: paste the "Client ID" from Google Cloud here. Empty = email sign-in only.
-    GOOGLE_CLIENT_ID: '',
+    GOOGLE_CLIENT_ID: '426235659035-nktej4ugb450g4f67ocbce07c5c8j5lj.apps.googleusercontent.com',
+    // Google only allows sign-in from addresses listed on the Google Cloud client. Add the new domain there and here when it is bought.
+    GOOGLE_ORIGINS: ['https://moishyjalas-lang.github.io'],
     // Where sign-ups, alerts, reports and deal submissions are sent (FormSubmit / Formspree / MailerLite URL).
     // Empty = they are kept in the visitor's browser and sent the moment this is filled in.
     FORM_ENDPOINT: '',
@@ -201,7 +203,7 @@
   }
   function setupGoogle() {
     var holder = $('#gbtn'), or = $('#gor');
-    if (!CONFIG.GOOGLE_CLIENT_ID) { if (holder) holder.style.display = 'none'; if (or) or.style.display = 'none'; return; }
+    if (!CONFIG.GOOGLE_CLIENT_ID || (CONFIG.GOOGLE_ORIGINS || []).indexOf(location.origin) < 0) { if (holder) holder.style.display = 'none'; if (or) or.style.display = 'none'; return; }
     var s = document.createElement('script');
     s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
     s.onload = function () {
