@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Daily Deals 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --orange:#ff6600;
+  --gold:#ffb300;
+  --green:#22c55e;
+  --red:#ef4444;
+  --bg:#080808;
+  --bg2:#0f0f0f;
+  --bg3:#161616;
+  --border:#1e1e1e;
+  --text:#f0f0f0;
+  --muted:#666;
+  --fire:#ff4500;
+  --lightning:#ffe033;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:#000;z-index:9000;display:flex;align-items:center;justify-content:center;transition:opacity .6s}
+#splash.gone{opacity:0;pointer-events:none}
+.sp-box{background:var(--bg3);border:1px solid #2a2a2a;border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center}
+.sp-logo{font-size:3rem;margin-bottom:8px;line-height:1}
+.sp-brand{font-size:1.5rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px}
+.sp-brand .o{color:var(--orange)}
+.sp-brand .l{color:var(--lightning)}
+.sp-tagline{color:var(--muted);font-size:.85rem;margin-bottom:24px}
+.sp-claim{color:var(--gold);font-size:.82rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:20px}
+.sp-form{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.sp-form input{background:#111;border:1px solid #2a2a2a;color:var(--text);padding:13px 16px;border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
+.sp-form input:focus{border-color:var(--orange)}
+.sp-form button{background:linear-gradient(135deg,var(--orange),var(--fire));color:#fff;border:none;padding:14px;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:inherit}
+.sp-form button:hover{opacity:.85}
+.sp-or{color:var(--muted);font-size:.8rem;margin:4px 0;text-align:center}
+.g-signin-btn{width:100%;background:#fff;color:#333;border:none;padding:12px 16px;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit;transition:box-shadow .2s}
+.g-signin-btn:hover{box-shadow:0 2px 12px rgba(255,255,255,.2)}
+.sp-skip{background:none;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;margin-top:12px;text-decoration:underline;font-family:inherit}
+.sp-skip:hover{color:var(--text)}
+#sp-ok{display:none;color:var(--green);font-weight:700;padding:12px;background:#0a1f0a;border-radius:10px;margin-top:8px}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:800;background:rgba(8,8,8,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-icon{font-size:1.6rem;line-height:1}
+.logo-text{font-size:1.1rem;font-weight:900;letter-spacing:-0.3px;line-height:1.1}
+.logo-text .fire{color:var(--orange)}
+.logo-text .bolt{color:var(--lightning)}
+.logo-text .white{color:#fff}
+.logo-sub{font-size:.6rem;color:var(--muted);font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+.header-cta{background:linear-gradient(135deg,var(--orange),var(--fire));color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.header-cta:hover{opacity:.85}
+
+/* ── ALERT TICKER ── */
+.alert-bar{background:linear-gradient(90deg,var(--fire),var(--orange),var(--gold),var(--orange),var(--fire));padding:9px 0;overflow:hidden}
+.alert-scroll{display:flex;gap:40px;animation:scroll-x 30s linear infinite;width:max-content}
+.alert-scroll:hover{animation-play-state:paused}
+@keyframes scroll-x{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.alert-item{color:#000;font-size:.78rem;font-weight:800;white-space:nowrap;letter-spacing:.2px}
+
+/* ── VIDEO HERO ── */
+.hero-video-wrap{position:relative;width:100%;height:520px;overflow:hidden;background:#000}
+#hero-vid{width:100%;height:100%;object-fit:cover;opacity:.45}
+.hero-video-fallback{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,#1a0a00 0%,#000 70%);display:flex;align-items:center;justify-content:center}
+.hero-video-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(to bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,.5) 100%)}
+.hero-video-content{text-align:center;padding:20px}
+.hero-eyebrow{display:inline-block;background:rgba(255,102,0,.15);border:1px solid rgba(255,102,0,.35);color:var(--orange);font-size:.75rem;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:18px;letter-spacing:.5px;text-transform:uppercase}
+.hero-video-content h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:16px}
+.hero-video-content h1 .o{color:var(--orange)}
+.hero-video-content h1 .g{color:var(--gold)}
+.hero-sub{font-size:1.1rem;color:rgba(240,240,240,.8);max-width:480px;margin:0 auto 28px}
+.hero-sub strong{color:var(--gold)}
+
+/* ── COUNTDOWN ── */
+.countdown-wrap{background:rgba(0,0,0,.7);border:1px solid rgba(255,102,0,.3);border-radius:14px;display:inline-flex;align-items:center;gap:6px;padding:12px 20px}
+.cd-unit{text-align:center;min-width:52px}
+.cd-num{font-size:1.8rem;font-weight:900;color:var(--orange);line-height:1;display:block}
+.cd-label{font-size:.6rem;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}
+.cd-sep{font-size:1.5rem;font-weight:900;color:var(--orange);opacity:.5;align-self:flex-start;padding-top:4px}
+.cd-title{font-size:.7rem;text-transform:uppercase;color:var(--muted);letter-spacing:1px;margin-bottom:8px;text-align:center}
+
+/* ── CATEGORY TILES ── */
+.cat-tiles{max-width:1200px;margin:0 auto;padding:40px 20px 10px}
+.cat-tiles h2{font-size:1.3rem;font-weight:800;margin-bottom:20px;color:var(--text)}
+.cat-tiles h2 span{color:var(--orange)}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.cat-tile{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px 12px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text)}
+.cat-tile:hover,.cat-tile.on{background:rgba(255,102,0,.1);border-color:var(--orange);transform:translateY(-2px)}
+.cat-tile-icon{font-size:2rem;margin-bottom:8px;display:block}
+.cat-tile-name{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.cat-tile-count{font-size:.7rem;color:var(--muted);margin-top:2px}
+
+/* ── SUBSCRIBE STRIP ── */
+.sub-strip{background:linear-gradient(135deg,rgba(255,102,0,.12),rgba(255,179,0,.08));border-top:1px solid rgba(255,102,0,.2);border-bottom:1px solid rgba(255,102,0,.2);padding:30px 20px}
+.sub-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.sub-copy h3{font-size:1.1rem;font-weight:800;margin-bottom:4px}
+.sub-copy p{font-size:.85rem;color:var(--muted)}
+.sub-copy span{color:var(--orange)}
+.sub-form{display:flex;gap:8px;flex-wrap:wrap}
+.sub-form input{background:#111;border:1px solid #2a2a2a;color:var(--text);padding:11px 16px;border-radius:8px;font-size:.88rem;font-family:inherit;outline:none;min-width:220px}
+.sub-form input:focus{border-color:var(--orange)}
+.sub-form button{background:var(--orange);color:#fff;border:none;padding:11px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+/* ── FILTER / SORT BAR ── */
+.filter-bar{max-width:1200px;margin:0 auto;padding:24px 20px 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
+.filter-left{display:flex;gap:8px;flex-wrap:wrap}
+.fb{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.fb:hover{border-color:var(--orange);color:var(--text)}
+.fb.on{background:var(--orange);border-color:var(--orange);color:#fff}
+.sort-row{display:flex;gap:6px;align-items:center}
+.sort-label{font-size:.75rem;color:var(--muted);font-weight:600;white-space:nowrap}
+.sort-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:16px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.sort-btn:hover{border-color:var(--gold);color:var(--text)}
+.sort-btn.on{background:var(--gold);border-color:var(--gold);color:#000}
+
+/* ── DEAL SECTION HEADER ── */
+.deals-section-header{max-width:1200px;margin:0 auto;padding:8px 20px 16px;display:flex;align-items:center;gap:12px}
+.deals-section-title{font-size:1.1rem;font-weight:900;color:var(--text)}
+.deals-section-title span{color:var(--fire)}
+.deals-live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse-dot 1.5s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.deals-count{color:var(--muted);font-size:.8rem;font-weight:600}
+
+/* ── DEALS GRID ── */
+#deals-grid{max-width:1200px;margin:0 auto;padding:0 20px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s,transform .2s;position:relative}
+.card:hover{border-color:rgba(255,102,0,.5);transform:translateY(-3px)}
+.card.featured{grid-column:span 2}
+.card-img-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#111;overflow:hidden}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.img-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,#111,#1a1a1a)}
+.badge-row{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap;z-index:2}
+.badge{padding:3px 9px;border-radius:20px;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+.badge-hot{background:var(--fire);color:#fff}
+.badge-dotd{background:linear-gradient(135deg,var(--gold),var(--orange));color:#000}
+.badge-pct{background:var(--green);color:#000}
+.card-body{padding:14px}
+.card-store{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.card-title{font-size:.9rem;font-weight:700;line-height:1.3;margin-bottom:10px;color:var(--text)}
+.card-price-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-price{font-size:1.4rem;font-weight:900;color:var(--gold)}
+.card-orig{font-size:.85rem;color:var(--muted);text-decoration:line-through}
+.card-pct{background:rgba(34,197,94,.15);color:var(--green);font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:10px;border:1px solid rgba(34,197,94,.2)}
+.card-btn{display:block;width:100%;background:linear-gradient(135deg,var(--orange),var(--fire));color:#fff;border:none;padding:11px;border-radius:9px;font-size:.85rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:opacity .2s;font-family:inherit}
+.card-btn:hover{opacity:.85}
+
+/* ── HOW IT WORKS ── */
+.how{max-width:1200px;margin:0 auto;padding:60px 20px}
+.how h2{font-size:1.5rem;font-weight:900;text-align:center;margin-bottom:36px}
+.how h2 span{color:var(--orange)}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.how-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:24px 20px;text-align:center}
+.how-icon{font-size:2.2rem;margin-bottom:12px}
+.how-title{font-size:.95rem;font-weight:800;margin-bottom:6px}
+.how-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 20px;text-align:center}
+.footer-logo{font-size:1.5rem;font-weight:900;margin-bottom:8px}
+.footer-logo .o{color:var(--orange)}.footer-logo .l{color:var(--lightning)}
+.footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:16px 0}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.82rem}
+.footer-links a:hover{color:var(--text)}
+.footer-disc{font-size:.7rem;color:#333;max-width:600px;margin:0 auto;line-height:1.6}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;background:#111;border:1px solid var(--green);color:var(--green);padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;z-index:5000;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:600px){
+  .hero-video-wrap{height:380px}
+  .card.featured{grid-column:span 1}
+  .sub-inner{flex-direction:column;align-items:flex-start}
+  .sort-row{margin-top:4px}
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-box">
+    <div class="sp-logo">🔥⚡</div>
+    <div class="sp-brand"><span class="o">Black</span><span class="white">Daily</span><span class="l">Deals</span></div>
+    <div class="sp-tagline">Black Friday prices — 365 days a year</div>
+    <div class="sp-claim">🎁 Get today's best deals in your inbox</div>
+    <form id="sp-form" class="sp-form" action="https://formspree.io/f/YOUR_ID" method="POST" onsubmit="splashSubmit(event)">
+      <input type="text" name="name" id="sp-name" placeholder="Your first name" required>
+      <input type="email" name="email" id="sp-email" placeholder="your@email.com" required>
+      <button type="submit">🔥 Get Free Deal Alerts</button>
+    </form>
+    <div class="sp-or">— or sign in faster —</div>
+    <div class="g-signin-wrap">
+      <button class="g-signin-btn" onclick="handleGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.2 0 24 0 14.7 0 6.7 5.5 2.7 13.6l7.8 6C12.4 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8C43.6 37.2 46.5 31.3 46.5 24.5z"/><path fill="#FBBC05" d="M10.5 28.4A14.6 14.6 0 0 1 9.5 24c0-1.5.3-3 .7-4.4l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.7 10.6l7.8-6.2z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2.1 1.4-4.7 2.2-7.7 2.2-6.3 0-11.6-3.7-13.5-9.1l-7.8 6.1C6.7 42.5 14.7 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+    <div id="sp-ok"></div>
+    <button class="sp-skip" onclick="closeSplash()">Skip for now →</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🔥⚡</div>
+      <div>
+        <div class="logo-text"><span class="fire">Black</span><span class="white">Daily</span><span class="bolt">Deals</span></div>
+        <div class="logo-sub">Black Friday prices every day</div>
+      </div>
+    </a>
+    <button class="header-cta" onclick="document.getElementById('splash').style.display='flex';document.getElementById('splash').classList.remove('gone')">🔔 Get Alerts</button>
+  </div>
+</header>
+
+<!-- ALERT TICKER -->
+<div class="alert-bar">
+  <div class="alert-scroll">
+    <span class="alert-item">⚡ AirPods Pro 2 — just dropped to $169</span>
+    <span class="alert-item">🔥 KitchenAid Stand Mixer 50% OFF</span>
+    <span class="alert-item">⚡ Nintendo Switch OLED Bundle — $299</span>
+    <span class="alert-item">🔥 Levi's 501 Jeans — $29 today only</span>
+    <span class="alert-item">⚡ Echo Dot 5th Gen — 56% OFF</span>
+    <span class="alert-item">🔥 Shark Robot Vacuum — $170 w/ auto-empty base</span>
+    <span class="alert-item">⚡ AirPods Pro 2 — just dropped to $169</span>
+    <span class="alert-item">🔥 KitchenAid Stand Mixer 50% OFF</span>
+    <span class="alert-item">⚡ Nintendo Switch OLED Bundle — $299</span>
+    <span class="alert-item">🔥 Levi's 501 Jeans — $29 today only</span>
+    <span class="alert-item">⚡ Echo Dot 5th Gen — 56% OFF</span>
+    <span class="alert-item">🔥 Shark Robot Vacuum — $170 w/ auto-empty base</span>
+  </div>
+</div>
+
+<!-- VIDEO HERO -->
+<div class="hero-video-wrap">
+  <video id="hero-vid" autoplay muted loop playsinline
+    onerror="this.style.display='none';document.getElementById('hero-fallback').style.display='flex'">
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-shopping-bags-on-a-gray-background-18075-large.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-fallback" id="hero-fallback" style="display:none"></div>
+  <div class="hero-video-overlay">
+    <div class="hero-video-content">
+      <div class="hero-eyebrow">🔥⚡ Black Friday prices — every single day</div>
+      <h1>Not Just <span class="o">November</span>.<br>Not Just <span class="g">One Day</span>.</h1>
+      <p class="hero-sub">We hunt jaw-dropping deals <strong>365 days a year</strong></p>
+      <div>
+        <div class="cd-title">⏳ BLACK FRIDAY COUNTDOWN</div>
+        <div class="countdown-wrap">
+          <div class="cd-unit"><span class="cd-num" id="d">00</span><span class="cd-label">Days</span></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><span class="cd-num" id="h">00</span><span class="cd-label">Hrs</span></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><span class="cd-num" id="m">00</span><span class="cd-label">Min</span></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><span class="cd-num" id="s">00</span><span class="cd-label">Sec</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY TILES -->
+<div class="cat-tiles">
+  <h2>Shop by <span>Category</span></h2>
+  <div class="cat-grid">
+    <div class="cat-tile on" onclick="filterCat('all',this)"><span class="cat-tile-icon">🔥</span><span class="cat-tile-name">All Deals</span><span class="cat-tile-count">14 deals</span></div>
+    <div class="cat-tile" onclick="filterCat('electronics',this)"><span class="cat-tile-icon">📱</span><span class="cat-tile-name">Electronics</span><span class="cat-tile-count">6 deals</span></div>
+    <div class="cat-tile" onclick="filterCat('kitchen',this)"><span class="cat-tile-icon">🍳</span><span class="cat-tile-name">Kitchen</span><span class="cat-tile-count">3 deals</span></div>
+    <div class="cat-tile" onclick="filterCat('home',this)"><span class="cat-tile-icon">🏠</span><span class="cat-tile-name">Home</span><span class="cat-tile-count">3 deals</span></div>
+    <div class="cat-tile" onclick="filterCat('fashion',this)"><span class="cat-tile-icon">👗</span><span class="cat-tile-name">Fashion</span><span class="cat-tile-count">2 deals</span></div>
+    <div class="cat-tile" onclick="filterCat('toys',this)"><span class="cat-tile-icon">🎮</span><span class="cat-tile-name">Toys</span><span class="cat-tile-count">2 deals</span></div>
+  </div>
+</div>
+
+<!-- SUBSCRIBE STRIP -->
+<div class="sub-strip">
+  <div class="sub-inner">
+    <div class="sub-copy">
+      <h3>🔔 Never Miss a Deal</h3>
+      <p>Join <span>12,400+</span> smart shoppers getting daily alerts</p>
+    </div>
+    <form class="sub-form" action="https://formspree.io/f/YOUR_ID" method="POST" onsubmit="subStripSubmit(event)">
+      <input type="email" name="email" placeholder="your@email.com" required>
+      <button type="submit">Subscribe Free</button>
+    </form>
+  </div>
+</div>
+
+<!-- FILTER + SORT BAR -->
+<div class="filter-bar">
+  <div class="filter-left">
+    <button class="fb on" onclick="filter('all',this)">🔥 All</button>
+    <button class="fb" onclick="filter('electronics',this)">📱 Electronics</button>
+    <button class="fb" onclick="filter('kitchen',this)">🍳 Kitchen</button>
+    <button class="fb" onclick="filter('home',this)">🏠 Home</button>
+    <button class="fb" onclick="filter('fashion',this)">👗 Fashion</button>
+    <button class="fb" onclick="filter('toys',this)">🎮 Toys</button>
+  </div>
+  <div class="sort-row">
+    <span class="sort-label">Sort:</span>
+    <button class="sort-btn on" onclick="sortDeals('hot',this)">🔥 Hottest</button>
+    <button class="sort-btn" onclick="sortDeals('pct',this)">% Off</button>
+    <button class="sort-btn" onclick="sortDeals('price',this)">Price ↑</button>
+  </div>
+</div>
+
+<!-- DEALS SECTION HEADER -->
+<div class="deals-section-header">
+  <div class="deals-live-dot"></div>
+  <div class="deals-section-title"><span>Today's Best Deals</span> — Updated Live</div>
+  <div class="deals-count" id="deals-count">14 deals</div>
+</div>
+
+<!-- DEALS GRID -->
+<div id="deals-grid"></div>
+
+<!-- HOW IT WORKS -->
+<div class="how">
+  <h2>How <span>BlackDailyDeals</span> Works</h2>
+  <div class="how-grid">
+    <div class="how-card"><div class="how-icon">🕵️</div><div class="how-title">We Hunt Deals</div><div class="how-desc">Our team monitors hundreds of retailers daily to surface only the best discounts.</div></div>
+    <div class="how-card"><div class="how-icon">✅</div><div class="how-title">We Verify Prices</div><div class="how-desc">Every deal is checked against price history. No fake "original" prices.</div></div>
+    <div class="how-card"><div class="how-icon">🔔</div><div class="how-title">You Get Alerts</div><div class="how-desc">Subscribe and get the best deals straight to your inbox every morning.</div></div>
+    <div class="how-card"><div class="how-icon">💰</div><div class="how-title">You Save Big</div><div class="how-desc">Click through to the retailer and check out — we never mark up prices.</div></div>
+  </div>
+</div>
+
+<!-- SUBSCRIBE FOOTER STRIP -->
+<div class="sub-strip">
+  <div class="sub-inner">
+    <div class="sub-copy">
+      <h3>⚡ One Last Thing</h3>
+      <p>Black Friday is <span>11 days away</span>. Get on the list now.</p>
+    </div>
+    <form class="sub-form" action="https://formspree.io/f/YOUR_ID" method="POST" onsubmit="subStripSubmit(event)">
+      <input type="email" name="email" placeholder="your@email.com" required>
+      <button type="submit">Get Black Friday Alerts</button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span class="o">Black</span>Daily<span class="l">Deals</span> 🔥⚡</div>
+  <div class="footer-links">
+    <a href="#">Home</a><a href="#">All Deals</a><a href="#">Electronics</a><a href="#">Kitchen</a><a href="#">Fashion</a><a href="#">About</a><a href="#">Contact</a>
+  </div>
+  <div class="footer-disc">We may earn a commission on purchases made through our links. Prices and availability are subject to change. BlackDailyDeals is not affiliated with Amazon, Best Buy, Target or any retailer unless explicitly stated.</div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+var deals=[
+  {t:"Apple AirPods Pro 2nd Gen",s:"Amazon",c:"electronics",o:249,p:169,d:32,hot:true,feat:false,dotd:true,
+   img:"https://images-na.ssl-images-amazon.com/images/I/61f1YfTkTDL._AC_SL400_.jpg",fb:"🎧",
+   u:"https://www.amazon.com/s?k=Apple+AirPods+Pro+2nd+Gen"},
+  {t:"Sony WH-1000XM5 Wireless Noise Canceling Headphones",s:"Best Buy",c:"electronics",o:400,p:279,d:30,hot:true,feat:true,dotd:false,
+   img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6505/6505727_sd.jpg",fb:"🎵",
+   u:"https://www.bestbuy.com/site/searchpage.jsp?st=Sony+WH-1000XM5"},
+  {t:"Apple iPad 10th Generation 64GB WiFi",s:"Amazon",c:"electronics",o:449,p:299,d:33,hot:false,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/81gC7frwBRL._AC_SL400_.jpg",fb:"📱",
+   u:"https://www.amazon.com/s?k=Apple+iPad+10th+Generation+64GB"},
+  {t:"Amazon Echo Dot 5th Gen with Clock + Alexa",s:"Amazon",c:"electronics",o:50,p:22,d:56,hot:true,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/61xHGQrIHSL._AC_SL400_.jpg",fb:"🔊",
+   u:"https://www.amazon.com/s?k=Amazon+Echo+Dot+5th+Gen+with+Clock"},
+  {t:"Samsung 65\" 4K QLED Smart TV",s:"Best Buy",c:"electronics",o:1299,p:699,d:46,hot:true,feat:true,dotd:false,
+   img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6401/6401789_sd.jpg",fb:"📺",
+   u:"https://www.bestbuy.com/site/searchpage.jsp?st=Samsung+65+4K+QLED"},
+  {t:"Apple Watch Series 9 GPS 41mm",s:"Amazon",c:"electronics",o:399,p:269,d:33,hot:false,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/71nS3SN5rLL._AC_SL400_.jpg",fb:"⌚",
+   u:"https://www.amazon.com/s?k=Apple+Watch+Series+9+GPS+41mm"},
+  {t:"Instant Pot Duo 7-in-1 Electric Pressure Cooker 6qt",s:"Amazon",c:"kitchen",o:99,p:59,d:40,hot:true,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/71sYVPqTkxL._AC_SL400_.jpg",fb:"🍲",
+   u:"https://www.amazon.com/s?k=Instant+Pot+Duo+7-in-1+6qt"},
+  {t:"KitchenAid Artisan 5-Quart Stand Mixer",s:"Target",c:"kitchen",o:499,p:249,d:50,hot:true,feat:true,dotd:false,
+   img:"https://target.scene7.com/is/image/Target/GUEST_1a3c0f2e-ce45-4d13-abe2-ab1b9faf5b32?wid=400&hei=400",fb:"🍰",
+   u:"https://www.target.com/s?searchTerm=KitchenAid+Artisan+5+Quart+Stand+Mixer"},
+  {t:"Vitamix 5200 Professional Grade Blender",s:"Costco",c:"kitchen",o:450,p:299,d:34,hot:false,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/51c-OBsN8nL._AC_SL400_.jpg",fb:"🥤",
+   u:"https://www.costco.com/CatalogSearch?keyword=Vitamix+5200"},
+  {t:"Ring Video Doorbell 1080p HD with Motion Alerts",s:"Amazon",c:"home",o:100,p:59,d:41,hot:true,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/51qmq-XvQAL._AC_SL400_.jpg",fb:"🔔",
+   u:"https://www.amazon.com/s?k=Ring+Video+Doorbell+1080p"},
+  {t:"Dyson V8 Cordless Stick Vacuum",s:"Dyson",c:"home",o:420,p:279,d:34,hot:false,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/61UoiCNxaGL._AC_SL400_.jpg",fb:"🌀",
+   u:"https://www.dyson.com/vacuum-cleaners/sticks/dyson-v8"},
+  {t:"Shark Robot Vacuum with Auto-Empty Base",s:"Amazon",c:"home",o:349,p:179,d:49,hot:true,feat:false,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/71rI3NiMnhL._AC_SL400_.jpg",fb:"🤖",
+   u:"https://www.amazon.com/s?k=Shark+Robot+Vacuum+Auto+Empty+Base"},
+  {t:"Nike Air Max 270 Running Shoes",s:"Nike",c:"fashion",o:150,p:89,d:41,hot:false,feat:false,dotd:false,
+   img:"https://static.nike.com/a/images/t_PDP_400_v1/f_auto,q_auto:eco/92571e44-be91-430a-9596-7cdc4c68b2cc/air-max-270-shoes-2V5C4p.png",fb:"👟",
+   u:"https://www.nike.com/w?q=Air+Max+270&vst=Air+Max+270"},
+  {t:"Levi's 501 Original Fit Jeans — Classic Blue",s:"Levi's",c:"fashion",o:69,p:29,d:58,hot:true,feat:false,dotd:false,
+   img:"https://lsco.scene7.com/is/image/lsco/005010194-front-pdp?fmt=jpeg&qlt=70&resMode=bisharp&op_usm=0.3,0.6,0,0&wid=400",fb:"👖",
+   u:"https://www.levi.com/US/en_US/clothing/men/jeans/501-original-fit-mens-jeans/p/005010194"},
+  {t:"Nintendo Switch OLED + Mario Kart 8 Bundle",s:"Amazon",c:"toys",o:399,p:299,d:25,hot:true,feat:true,dotd:false,
+   img:"https://images-na.ssl-images-amazon.com/images/I/71nCUVNFAnL._AC_SL400_.jpg",fb:"🎮",
+   u:"https://www.amazon.com/s?k=Nintendo+Switch+OLED+Mario+Kart+8+Bundle"},
+  {t:"LEGO Technic Formula E Race Car 1:7 Set",s:"LEGO",c:"toys",o:200,p:120,d:40,hot:false,feat:false,dotd:false,
+   img:"https://www.lego.com/cdn/cs/set/assets/blt51082a0d82afb7b9/42169.jpg?fit=bounds&format=png&width=400&height=400",fb:"🏎️",
+   u:"https://www.lego.com/en-us/search?q=Technic+Formula+E+Race+Car"}
+];
+
+var currentCat='all',currentSort='hot';
+
+function getFiltered(){return currentCat==='all'?deals:deals.filter(function(d){return d.c===currentCat})}
+function getSorted(list){
+  var l=list.slice();
+  if(currentSort==='hot') return l.sort(function(a,b){return (b.hot-a.hot)||b.d-a.d});
+  if(currentSort==='pct') return l.sort(function(a,b){return b.d-a.d});
+  if(currentSort==='price') return l.sort(function(a,b){return a.p-b.p});
+  return l;
+}
+
+function render(list){
+  document.getElementById('deals-count').textContent=list.length+' deals';
+  var g=document.getElementById('deals-grid');
+  g.innerHTML=list.map(function(d){
+    var badges='';
+    if(d.dotd) badges+='<span class="badge badge-dotd">🏆 Deal of the Day</span>';
+    if(d.hot&&!d.dotd) badges+='<span class="badge badge-hot">🔥 Hot</span>';
+    if(d.d>=50) badges+='<span class="badge badge-pct">'+d.d+'% OFF</span>';
+    return '<div class="card'+(d.feat?' featured':'')+'">'+
+      '<div class="card-img-wrap">'+
+        '<div class="badge-row">'+badges+'</div>'+
+        '<img src="'+d.img+'" alt="'+d.t+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
+        '<div class="img-fallback" style="display:none">'+d.fb+'</div>'+
+      '</div>'+
+      '<div class="card-body">'+
+        '<div class="card-store">'+d.s+'</div>'+
+        '<div class="card-title">'+d.t+'</div>'+
+        '<div class="card-price-row">'+
+          '<span class="card-price">$'+d.p+'</span>'+
+          '<span class="card-orig">$'+d.o+'</span>'+
+          '<span class="card-pct">-'+d.d+'%</span>'+
+        '</div>'+
+        '<a href="'+d.u+'" target="_blank" rel="noopener" class="card-btn" onclick="showToast(\'🔥 Opening '+d.s+' deal!\')">See Deal →</a>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function filter(cat,btn){
+  currentCat=cat;
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  render(getSorted(getFiltered()));
+}
+
+function filterCat(cat,tile){
+  currentCat=cat;
+  document.querySelectorAll('.cat-tile').forEach(function(t){t.classList.remove('on')});
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on')});
+  tile.classList.add('on');
+  document.querySelectorAll('.fb').forEach(function(b){
+    if((cat==='all'&&b.textContent.includes('All'))||(b.textContent.toLowerCase().includes(cat))) b.classList.add('on');
+  });
+  render(getSorted(getFiltered()));
+}
+
+function sortDeals(mode,btn){
+  currentSort=mode;
+  document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  render(getSorted(getFiltered()));
+}
+
+render(getSorted(deals));
+
+(function tick(){
+  var t=new Date('2026-11-27T00:00:00')-new Date();
+  if(t>0){
+    var pad=function(n){return String(Math.floor(n)).padStart(2,'0')};
+    document.getElementById('d').textContent=pad(t/864e5);
+    document.getElementById('h').textContent=pad(t%864e5/36e5);
+    document.getElementById('m').textContent=pad(t%36e5/6e4);
+    document.getElementById('s').textContent=pad(t%6e4/1e3);
+  }
+  setTimeout(tick,1000);
+})();
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},3200);
+}
+
+function closeSplash(){
+  var el=document.getElementById('splash');
+  el.classList.add('gone');
+  setTimeout(function(){el.style.display='none'},600);
+  sessionStorage.setItem('splashSeen','1');
+}
+if(sessionStorage.getItem('splashSeen')){
+  document.getElementById('splash').style.display='none';
+}
+
+function splashSubmit(e){
+  e.preventDefault();
+  document.getElementById('sp-ok').textContent='🎉 You\'re in! Deals incoming.';
+  document.getElementById('sp-ok').style.display='block';
+  document.getElementById('sp-form').style.display='none';
+  document.querySelector('.g-signin-wrap').style.display='none';
+  document.querySelector('.sp-or').style.display='none';
+  setTimeout(closeSplash,2000);
+  showToast('🎉 Subscribed! Welcome to the squad.');
+}
+
+function subStripSubmit(e){
+  e.preventDefault();
+  var inp=e.target.querySelector('input');
+  inp.value='';
+  inp.placeholder='✅ You\'re subscribed!';
+  showToast('🔔 Subscribed! Deals incoming.');
+}
+
+function handleGoogleSignIn(){
+  if(window.google&&window.google.accounts){
+    google.accounts.id.initialize({
+      client_id:'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+      callback:function(resp){
+        var payload=JSON.parse(atob(resp.credential.split('.')[1]));
+        document.getElementById('sp-ok').textContent='👋 Welcome, '+payload.name+'! You\'re subscribed.';
+        document.getElementById('sp-ok').style.display='block';
+        document.getElementById('sp-form').style.display='none';
+        document.querySelector('.g-signin-wrap').style.display='none';
+        document.querySelector('.sp-or').style.display='none';
+        setTimeout(closeSplash,2000);
+        showToast('👋 Welcome, '+payload.name+'!');
+      }
+    });
+    google.accounts.id.prompt();
+  } else {
+    document.querySelector('.sp-or').style.display='none';
+    document.getElementById('sp-email').focus();
+    showToast('Enter your email below 👇');
+  }
+}
+</script>
+</body>
+</html>
