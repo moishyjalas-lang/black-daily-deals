@@ -61,7 +61,7 @@
     return 'Ends in ' + days + ' days';
   }
   function isExpired(d) { return d.ends && new Date(d.ends + 'T23:59:59-05:00') < Date.now(); }
-  function isNew(d) { return d.added && (Date.now() - new Date(d.added + 'T00:00:00-05:00')) < 3 * 86400000; }
+  function isNew(d) { return d.added && (Date.now() - new Date(d.added + 'T00:00:00-05:00')) < 36 * 3600000; }
   function score(d) { var v = votes()[d.id] || 0; return (d.votes || 0) + v * 5 + pct(d); }
   function toast(msg) {
     var t = $('#toast'); if (!t) return;
@@ -231,7 +231,6 @@
       '<div class="body">' +
       '<div class="meta"><span class="store">' + esc(d.store) + '</span>' + (e ? '<span>' + e + '</span>' : '') + '</div>' +
       '<h3><a href="deal.html?id=' + encodeURIComponent(d.id) + '">' + esc(d.name) + '</a></h3>' +
-      (dots ? '<div class="dots">' + dots + '</div>' : '') +
       '<p class="desc">' + esc(d.desc) + '</p>' +
       '<div class="price-row"><span class="price">' + money(d.price) + '</span>' + (d.was > d.price ? '<span class="was">' + money(d.was) + '</span>' : '') + '</div>' +
       (vlabel ? '<span class="verdict ' + d.verdict + '">' + vlabel + '</span>' : '') +

@@ -128,8 +128,9 @@ input,select,textarea{font:inherit;color:inherit}
 .cat-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .cat-tile{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:190px;padding:18px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);overflow:hidden;transition:transform .2s,border-color .2s}
 .cat-tile:hover{transform:translateY(-4px);border-color:var(--gold)}
-.cat-tile .pic{position:absolute;inset:0 0 56px 0;background:linear-gradient(180deg,#fff,#eceef2);display:grid;place-items:center;padding:16px}
-.cat-tile .pic img{max-height:110px;object-fit:contain}
+.cat-tile .pic{position:absolute;inset:0 0 62px 0;background:#fff;overflow:hidden}
+.cat-tile .pic img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.cat-tile:hover .pic img{transform:scale(1.05)}
 .cat-tile b{position:relative;font-size:16px}
 .cat-tile small{position:relative;color:var(--muted)}
 
@@ -137,8 +138,8 @@ input,select,textarea{font:inherit;color:inherit}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .card{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s}
 .card:hover{transform:translateY(-4px);border-color:#3a3a48;box-shadow:var(--shadow)}
-.card .photo{position:relative;aspect-ratio:4/3;background:linear-gradient(180deg,#ffffff,#eef0f4);display:grid;place-items:center;padding:18px}
-.card .photo img{width:100%;height:100%;object-fit:contain}
+.card .photo{position:relative;display:block;aspect-ratio:4/3;background:linear-gradient(180deg,#ffffff,#eef0f4);overflow:hidden}
+.card .photo img{position:absolute;inset:18px;width:calc(100% - 36px);height:calc(100% - 36px);object-fit:contain}
 .tags{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap}
 .tag{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:7px;background:#111;color:#fff}
 .tag.hot{background:var(--orange)}
