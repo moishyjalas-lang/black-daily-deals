@@ -354,6 +354,8 @@
         '<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-gold btn-lg" href="' + esc(buyUrl(d)) + '" target="_blank" rel="sponsored noopener">Get this deal</a><button class="btn btn-dark btn-lg" data-save="' + esc(d.id) + '">Save it</button></div></div>';
       dealTimer($('#dotd-timer'));
     }
+    var jump = $('#hero-tags');
+    if (jump) jump.innerHTML = CATS.map(function (c) { return '<a class="chip" href="' + c.page + '">' + esc(c.name) + '</a>'; }).join('');
     var tiles = $('#cat-tiles');
     if (tiles) tiles.innerHTML = CATS.map(function (c) {
       var n = DEALS.filter(function (x) { return x.cat === c.id; }).length;
@@ -398,11 +400,14 @@
       var title = cat ? cat.name : (q ? 'Results for "' + qs('q') + '"' : 'All Deals');
       var subtitle = cat ? cat.blurb : (q ? 'Every deal that matches your search.' : 'Every live deal on the site, in one place.');
       var chips = cat ? '<div class="subcats"><a class="chip' + (!sub ? ' on' : '') + '" href="' + cat.page + '">All ' + esc(cat.name) + '</a>' + cat.subs.map(function (s) {
-        return '<a class="chip' + (sub === s.id ? ' on' : '') + '" href="' + cat.page + '?sub=' + s.id + '">' + esc(s.name) + '</a>';
+        var n = visible(DEALS).filter(function (x) { return x.cat === cat.id && x.sub === s.id; }).length;
+        return '<a class="chip' + (sub === s.id ? ' on' : '') + '" href="' + cat.page + '?sub=' + s.id + '">' + esc(s.name) + ' <span class="n">' + n + '</span></a>';
       }).join('') + '</div>' : '';
+      var top = cat ? visible(DEALS).filter(function (x) { return x.cat === cat.id && (!sub || x.sub === sub); }).sort(function (a, b) { return pct(b) - pct(a); })[0] : null;
+      var bestStrip = top ? '<a class="best-strip" href="deal.html?id=' + encodeURIComponent(top.id) + '"><span class="bs-pic"><img src="' + img(top, 240) + '" alt=""></span><span class="bs-info"><span class="bs-eye">Best deal in ' + esc(sub ? subName(cat, sub) : cat.name) + '</span><b>' + esc(top.name) + '</b><span class="bs-row"><span class="price">' + money(top.price) + '</span>' + (top.was > top.price ? '<span class="was">' + money(top.was) + '</span><span class="off">-' + pct(top) + '%</span>' : '') + '</span></span><span class="btn btn-gold bs-cta">See deal</span></a>' : '';
       var crumb = '<div class="crumbs"><a class="back" href="javascript:history.length>1?history.back():location.href=\'index.html\'">' + I.back + ' Back</a><a href="index.html">Home</a><span>/</span>' +
         (cat ? (sub ? '<a href="' + cat.page + '">' + esc(cat.name) + '</a><span>/</span><span>' + esc(subName(cat, sub)) + '</span>' : '<span>' + esc(cat.name) + '</span>') : '<span>' + (q ? 'Search' : 'All Deals') + '</span>') + '</div>';
-      head.innerHTML = '<div class="wrap">' + crumb + '<h1 class="display">' + esc(sub ? subName(cat, sub) : title) + '</h1><p class="sub">' + esc(subtitle) + '</p>' + chips + '</div>';
+      head.innerHTML = '<div class="wrap">' + crumb + '<h1 class="display">' + esc(sub ? subName(cat, sub) : title) + '</h1><p class="sub">' + esc(subtitle) + '</p>' + chips + bestStrip + '</div>';
       if (cat) document.title = (sub ? subName(cat, sub) + ' - ' : '') + cat.name + ' Deals | Black Daily Deals';
     }
     var base = DEALS.filter(function (d) {
