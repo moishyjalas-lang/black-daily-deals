@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Black Daily Deals – Black Friday Every Day</title>
-<meta name="description" content="The hottest Black Friday deals every single day. Electronics, fashion, home & more.">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0a0a'/><text x='16' y='22' font-family='sans-serif' font-weight='900' font-size='16' fill='%23FFD700' text-anchor='middle'>BD</text></svg>">
+<title>Everyday Black Friday – Black Friday Prices All Year Round</title>
+<meta name="description" content="Black Friday prices. All year round. Great deals from stores you trust — electronics, home, fashion, and more.">
+<link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="BlackDeals">
+<meta name="apple-mobile-web-app-title" content="EverydayBF">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
@@ -428,6 +428,133 @@
   .signin-google-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#fff;color:#222;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;width:100%;justify-content:center;}
   .signin-google-btn:hover{background:#f0f0f0;}
   .signin-skip{display:block;margin-top:14px;color:var(--muted);font-size:13px;cursor:pointer;background:none;border:none;text-decoration:underline;}
+
+  /* ── EBF NAVBAR LOGO ── */
+  .nav-logo-img{width:36px;height:36px;object-fit:contain;flex-shrink:0;}
+
+  /* ── HERO REDESIGN ── */
+  .hero{
+    background: radial-gradient(ellipse 80% 60% at 60% 50%, #1a1400 0%, #0a0a0a 100%);
+    padding:0;min-height:420px;overflow:hidden;
+  }
+  .hero-inner{
+    max-width:1200px;margin:0 auto;padding:60px 24px 48px;
+    display:flex;align-items:center;gap:48px;
+  }
+  .hero-left{flex:1;min-width:0;}
+  .hero-right{flex:0 0 460px;display:flex;align-items:center;justify-content:center;}
+  .hero-img{width:100%;max-width:460px;height:auto;object-fit:contain;filter:drop-shadow(0 0 40px rgba(255,215,0,0.15));}
+  .hero-headline{
+    font-size:clamp(32px,4vw,54px);font-weight:900;line-height:1.1;
+    color:#fff;letter-spacing:-1.5px;margin-bottom:16px;
+  }
+  .hero-gold{color:var(--gold);}
+  .hero-sub{font-size:18px;color:#ccc;margin-bottom:28px;font-weight:400;}
+  .hero-cta{
+    display:inline-block;padding:14px 32px;
+    background:var(--gold);color:#0a0a0a;
+    font-weight:800;font-size:15px;border-radius:10px;
+    text-decoration:none;margin-bottom:36px;
+    transition:background .15s,transform .15s;
+  }
+  .hero-cta:hover{background:var(--gold2);transform:translateY(-1px);}
+  .hero-badge{
+    display:inline-block;padding:5px 12px;
+    border:1px solid var(--gold);color:var(--gold);
+    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    border-radius:999px;margin-bottom:20px;
+  }
+  .countdown{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .countdown-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:4px;}
+
+  /* ── CATEGORIES SECTION ── */
+  .categories-section{max-width:1200px;margin:0 auto;padding:48px 24px 32px;}
+  .categories-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;margin-top:20px;
+  }
+  .cat-tile{
+    display:flex;flex-direction:column;align-items:flex-start;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:22px 20px;
+    text-decoration:none;cursor:pointer;
+    transition:border-color .15s,transform .15s,box-shadow .15s;
+  }
+  .cat-tile:hover{
+    border-color:var(--gold);transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(255,215,0,0.08);
+  }
+  .cat-tile-icon{
+    width:52px;height:52px;border-radius:12px;
+    background:rgba(255,215,0,0.08);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold);margin-bottom:14px;
+  }
+  .cat-tile-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .cat-tile-sub{font-size:12px;color:var(--muted);}
+
+  /* ── NEWSLETTER BAR ── */
+  .newsletter-bar{
+    background:linear-gradient(135deg,#111 0%,#1a1400 100%);
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    padding:40px 24px;
+  }
+  .newsletter-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:32px;
+    flex-wrap:wrap;
+  }
+  .newsletter-left{flex:1;min-width:200px;}
+  .newsletter-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
+  .newsletter-sub{font-size:14px;color:var(--muted);}
+  .newsletter-form{display:flex;gap:10px;flex:0 0 auto;}
+  .newsletter-input{
+    padding:12px 16px;background:var(--card);border:1px solid var(--border);
+    border-radius:10px;color:#fff;font-size:14px;width:260px;outline:none;
+  }
+  .newsletter-input:focus{border-color:var(--gold);}
+  .newsletter-btn{
+    padding:12px 24px;background:var(--gold);color:#0a0a0a;
+    font-weight:800;font-size:14px;border:none;border-radius:10px;cursor:pointer;
+    white-space:nowrap;transition:background .15s;
+  }
+  .newsletter-btn:hover{background:var(--gold2);}
+
+  /* ── FOOTER REDESIGN ── */
+  footer{background:#060606;border-top:1px solid var(--border);padding:0;}
+  .footer-inner{
+    max-width:1200px;margin:0 auto;padding:48px 24px 32px;
+    display:flex;gap:48px;flex-wrap:wrap;
+  }
+  .footer-brand{display:flex;align-items:center;gap:14px;flex:0 0 220px;align-self:flex-start;}
+  .footer-links{flex:1;display:flex;gap:32px;flex-wrap:wrap;}
+  .footer-col{display:flex;flex-direction:column;gap:10px;min-width:120px;}
+  .footer-col-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+  .footer-col a{font-size:13px;color:var(--muted);text-decoration:none;}
+  .footer-col a:hover{color:var(--text);}
+  .footer-bottom{
+    border-top:1px solid var(--border);padding:20px 24px;
+    text-align:center;font-size:12px;color:var(--muted);
+    max-width:100%;
+  }
+
+  @media(max-width:900px){
+    .hero-right{display:none;}
+    .hero-inner{padding:48px 20px 40px;}
+    .categories-grid{grid-template-columns:repeat(2,1fr);}
+    .footer-brand{flex:0 0 100%;}
+  }
+  @media(max-width:600px){
+    .nav-search{display:none;}
+    .spotlight{flex-direction:column;}
+    .spotlight-img{width:100%;height:180px;}
+    .categories-grid{grid-template-columns:repeat(2,1fr);}
+    .newsletter-form{width:100%;flex-wrap:wrap;}
+    .newsletter-input{width:100%;}
+    .newsletter-btn{width:100%;}
+    .footer-links{gap:20px;}
+  }
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -467,10 +594,10 @@
 <!-- NAVBAR -->
 <nav>
   <a class="nav-logo" href="#">
-    <div class="nav-logo-icon">BD</div>
+    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
     <div class="nav-logo-text">
-      BLACK DAILY DEALS
-      <span>Black Friday Every Day</span>
+      Everyday Black Friday
+      <span>Black Friday prices. All year round.</span>
     </div>
   </a>
   <div class="nav-search">
@@ -500,7 +627,8 @@
 <!-- SIGN-IN OVERLAY -->
 <div class="signin-overlay" id="signin-overlay">
   <div class="signin-box">
-    <h2>Welcome to Black Daily Deals</h2>
+    <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px;">
+    <h2>Welcome to Everyday Black Friday</h2>
     <p>Sign in to save your wishlist, set deal alerts, and get personalized picks.</p>
     <button class="signin-google-btn" onclick="triggerGoogleSignIn()">
       <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -542,23 +670,93 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">Black Friday Countdown Active</div>
-  <h1>
-    <span class="black">BLACK</span><br>
-    <span class="deals">DEALS</span>
-  </h1>
-  <p class="hero-sub">The hottest prices. Every single day.</p>
-  <div class="countdown">
-    <span class="countdown-label">Until Black Friday</span>
-    <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-label">Days</div></div>
-    <div class="cd-sep">:</div>
-    <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Hrs</div></div>
-    <div class="cd-sep">:</div>
-    <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Min</div></div>
-    <div class="cd-sep">:</div>
-    <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Sec</div></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">Black Friday Countdown Active</div>
+      <h1 class="hero-headline">Black Friday prices.<br><span class="hero-gold">All year round.</span></h1>
+      <p class="hero-sub">Great deals from stores you trust.</p>
+      <a class="hero-cta" href="#main-content">Shop All Deals →</a>
+      <div class="countdown">
+        <span class="countdown-label">Until Black Friday</span>
+        <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-label">Days</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Hrs</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Min</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Sec</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="assets/hero-ebf.png" alt="Everyday Black Friday — 8 categories" class="hero-img">
+    </div>
   </div>
 </div>
+
+<!-- SHOP BY CATEGORY -->
+<section class="categories-section">
+  <div class="section-header">
+    <div class="section-title"><span class="dot"></span> Shop by Category</div>
+  </div>
+  <div class="categories-grid">
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'electronics\']'),\'electronics\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div class="cat-tile-name">Electronics &amp; Tech</div>
+      <div class="cat-tile-sub">TVs, gadgets, cameras</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'home\']'),\'home\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="cat-tile-name">Home &amp; Living</div>
+      <div class="cat-tile-sub">Furniture, décor, bedding</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'fashion\']'),\'fashion\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+      </div>
+      <div class="cat-tile-name">Fashion &amp; Care</div>
+      <div class="cat-tile-sub">Clothing, shoes, beauty</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'grocery\']'),\'grocery\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <div class="cat-tile-name">Family &amp; Everyday</div>
+      <div class="cat-tile-sub">Grocery, kids, pets</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'sports\']'),\'sports\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M14.83 9.17a4 4 0 0 1 0 5.66"/><path d="M9.17 14.83a4 4 0 0 1 0-5.66"/></svg>
+      </div>
+      <div class="cat-tile-name">Sports &amp; Outdoors</div>
+      <div class="cat-tile-sub">Fitness, camping, cycling</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'automotive\']'),\'automotive\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div class="cat-tile-name">Auto &amp; Tools</div>
+      <div class="cat-tile-sub">Car accessories, tools</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'travel\']'),\'travel\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2"/><path d="m2 2 20 20"/><path d="M16 11 7 7l-5 5"/><path d="M8 20v-4l4-2"/></svg>
+      </div>
+      <div class="cat-tile-name">Travel</div>
+      <div class="cat-tile-sub">Luggage, accessories</div>
+    </a>
+    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'seasonal\']'),\'seasonal\');return false;">
+      <div class="cat-tile-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      </div>
+      <div class="cat-tile-name">Seasonal &amp; Gifts</div>
+      <div class="cat-tile-sub">Holiday, gifts, special events</div>
+    </a>
+  </div>
+</section>
 
 <!-- SPOTLIGHT DEAL -->
 <div class="section" id="main-content">
@@ -590,11 +788,62 @@
   <div class="deals-grid" id="deals-grid"></div>
 </div>
 
+<!-- NEWSLETTER BAR -->
+<section class="newsletter-bar">
+  <div class="newsletter-inner">
+    <div class="newsletter-left">
+      <div class="newsletter-title">Free Daily Newsletter</div>
+      <div class="newsletter-sub">The best deals delivered to your inbox every morning.</div>
+    </div>
+    <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+      <input type="email" class="newsletter-input" placeholder="your@email.com" required>
+      <button type="submit" class="newsletter-btn">Subscribe</button>
+    </form>
+  </div>
+</section>
+
 <footer>
-  <p style="margin-bottom:8px;">
-    <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Contact</a>
-  </p>
-  <p>© 2026 Black Daily Deals · Prices and availability subject to change. We may earn commissions on purchases.</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:44px;height:44px;object-fit:contain;">
+      <div>
+        <div style="font-weight:800;font-size:14px;color:#fff;">Everyday Black Friday</div>
+        <div style="font-size:11px;color:var(--muted);">Black Friday prices. All year round.</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <div class="footer-col-title">Deals</div>
+        <a href="#" onclick="filterCat(document.querySelectorAll('.cat-btn')[0],'all');return false;">All Deals</a>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'electronics\']'),'electronics');return false;">Electronics</a>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'home\']'),'home');return false;">Home &amp; Living</a>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'fashion\']'),'fashion');return false;">Fashion</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">More</div>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'sports\']'),'sports');return false;">Sports</a>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'kitchen\']'),'kitchen');return false;">Kitchen</a>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'travel\']'),'travel');return false;">Travel</a>
+        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'seasonal\']'),'seasonal');return false;">Seasonal</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">About</div>
+        <a href="#">About Us</a>
+        <a href="#">How It Works</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Support</div>
+        <a href="#">Contact Us</a>
+        <a href="#" onclick="openAlertModal();return false;">Deal Alerts</a>
+        <a href="#" onclick="showSignIn();return false;">Sign In</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Everyday Black Friday · Prices and availability subject to change. We may earn commissions on qualifying purchases.</p>
+  </div>
 </footer>
 
 <script>
@@ -718,6 +967,28 @@ function showToast(msg){
 
 let currentCat = 'all';
 let currentSearch = '';
+
+// ── NEWSLETTER SUBSCRIBE ──
+function handleNewsletterSubmit(e){
+  e.preventDefault();
+  const input = e.target.querySelector('.newsletter-input');
+  const btn = e.target.querySelector('.newsletter-btn');
+  const email = input.value.trim();
+  if(!email) return;
+  btn.textContent = 'Subscribing…';
+  btn.disabled = true;
+  // Store locally + show confirmation (Sender.net/EmailJS wired separately)
+  const subs = JSON.parse(localStorage.getItem('ebf_subscribers') || '[]');
+  if(!subs.includes(email)) subs.push(email);
+  localStorage.setItem('ebf_subscribers', JSON.stringify(subs));
+  setTimeout(()=>{
+    input.value = '';
+    btn.textContent = 'Subscribed ✓';
+    btn.style.background = 'var(--green)';
+    setTimeout(()=>{ btn.textContent = 'Subscribe'; btn.disabled = false; btn.style.background = ''; }, 3000);
+    showToast('You\'re subscribed to daily deals!');
+  }, 600);
+}
 
 /* ═══════════════════════════════════════════
    DEAL ALERTS — EmailJS-powered watchlist
