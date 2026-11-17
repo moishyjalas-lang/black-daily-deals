@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="BlackDeals">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   :root{
@@ -337,6 +338,73 @@
   }
   #toast.show{transform:translateX(-50%) translateY(0);}
 
+/* ── Deal Alert Button ── */
+.nav-alert-btn{
+  display:flex;align-items:center;gap:6px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text);border-radius:8px;
+  padding:8px 14px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.nav-alert-btn:hover{border-color:var(--gold);color:var(--gold);}
+.nav-alert-btn svg{flex-shrink:0;}
+
+/* ── Alert Modal ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.75);
+  z-index:10000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px;width:100%;max-width:440px;
+  max-height:85vh;overflow-y:auto;
+  transform:translateY(16px);transition:transform 0.2s;
+}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-title{font-size:18px;font-weight:700;color:var(--text);}
+.modal-close{
+  background:none;border:none;color:var(--muted);font-size:22px;
+  cursor:pointer;line-height:1;padding:0 4px;
+}
+.modal-close:hover{color:var(--text);}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;}
+.modal-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;}
+.modal-input{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:11px 14px;font-size:14px;color:var(--text);
+  box-sizing:border-box;margin-bottom:14px;outline:none;
+  font-family:inherit;
+}
+.modal-input:focus{border-color:var(--gold);}
+.modal-input::placeholder{color:var(--muted);}
+.modal-btn{
+  width:100%;background:var(--gold);color:#000;border:none;
+  border-radius:10px;padding:13px;font-size:14px;font-weight:700;
+  cursor:pointer;transition:opacity 0.2s;margin-top:4px;
+  font-family:inherit;
+}
+.modal-btn:hover{opacity:0.88;}
+.modal-divider{border:none;border-top:1px solid var(--border);margin:22px 0;}
+.modal-alerts-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.modal-alerts-list{display:flex;flex-direction:column;gap:8px;}
+.alert-item{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;
+}
+.alert-info{flex:1;min-width:0;}
+.alert-keyword{font-size:13px;font-weight:600;color:var(--gold);margin-bottom:2px;}
+.alert-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.alert-remove{
+  background:none;border:none;color:var(--muted);font-size:18px;
+  cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;
+}
+.alert-remove:hover{color:var(--red);}
+.modal-empty{font-size:13px;color:var(--muted);text-align:center;padding:16px 0;}
+
   @media(max-width:600px){
     .nav-search{display:none;}
     .hero h1{letter-spacing:-2px;}
@@ -350,6 +418,25 @@
 
 <!-- TOAST -->
 <div id="toast"></div>
+
+<!-- DEAL ALERT MODAL -->
+<div class="modal-overlay" id="alertModal" onclick="handleModalOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Deal Alerts</span>
+      <button class="modal-close" onclick="closeAlertModal()">&#x2715;</button>
+    </div>
+    <p class="modal-sub">Type a keyword and your email. We'll notify you the moment a matching deal goes live.</p>
+    <div class="modal-label">Keyword</div>
+    <input class="modal-input" id="alertKeyword" type="text" placeholder="e.g. laptop, headphones, camera" maxlength="60">
+    <div class="modal-label">Your Email</div>
+    <input class="modal-input" id="alertEmail" type="email" placeholder="you@example.com">
+    <button class="modal-btn" onclick="saveAlert()">Set Alert</button>
+    <hr class="modal-divider">
+    <div class="modal-alerts-title">Your Active Alerts</div>
+    <div class="modal-alerts-list" id="alertsList"></div>
+  </div>
+</div>
 
 <!-- STAR PICKER (global) -->
 <div class="star-picker" id="star-picker">
@@ -378,6 +465,10 @@
       <span class="label">Black Friday</span>
       <span class="time" id="nav-timer">--d --h</span>
     </div>
+    <button class="nav-alert-btn" onclick="openAlertModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Deal Alerts
+    </button>
   </div>
 </nav>
 
@@ -590,6 +681,126 @@ function showToast(msg){
 let currentCat = 'all';
 let currentSearch = '';
 
+/* ═══════════════════════════════════════════
+   DEAL ALERTS — EmailJS-powered watchlist
+   ═══════════════════════════════════════════ */
+
+// ── EmailJS credentials (fill these in after creating your free EmailJS account) ──
+const EMAILJS_PUBLIC_KEY    = 'YOUR_PUBLIC_KEY';   // from emailjs.com → Account → API Keys
+const EMAILJS_SERVICE_ID    = 'YOUR_SERVICE_ID';   // from emailjs.com → Email Services
+const EMAILJS_TEMPLATE_ID   = 'YOUR_TEMPLATE_ID';  // from emailjs.com → Email Templates
+
+function initEmailJS(){
+  if(typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'){
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
+}
+
+function getWatchlist(){
+  try{ return JSON.parse(localStorage.getItem('bdd_watchlist') || '[]'); }
+  catch(e){ return []; }
+}
+function saveWatchlist(list){
+  localStorage.setItem('bdd_watchlist', JSON.stringify(list));
+}
+
+function openAlertModal(){
+  document.getElementById('alertModal').classList.add('open');
+  renderAlertsList();
+  document.getElementById('alertKeyword').focus();
+}
+function closeAlertModal(){
+  document.getElementById('alertModal').classList.remove('open');
+}
+function handleModalOverlayClick(e){
+  if(e.target === document.getElementById('alertModal')) closeAlertModal();
+}
+
+function renderAlertsList(){
+  const list = getWatchlist();
+  const el = document.getElementById('alertsList');
+  if(!list.length){
+    el.innerHTML = '<div class="modal-empty">No alerts set yet.</div>';
+    return;
+  }
+  el.innerHTML = list.map((a,i)=>`
+    <div class="alert-item">
+      <div class="alert-info">
+        <div class="alert-keyword">${escHTML(a.keyword)}</div>
+        <div class="alert-email">${escHTML(a.email)}</div>
+      </div>
+      <button class="alert-remove" onclick="removeAlert(${i})" title="Remove alert">&#x2715;</button>
+    </div>
+  `).join('');
+}
+
+function escHTML(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function removeAlert(index){
+  const list = getWatchlist();
+  list.splice(index, 1);
+  saveWatchlist(list);
+  renderAlertsList();
+  showToast('Alert removed');
+}
+
+function saveAlert(){
+  const kw  = document.getElementById('alertKeyword').value.trim().toLowerCase();
+  const em  = document.getElementById('alertEmail').value.trim().toLowerCase();
+  if(!kw){ showToast('Please enter a keyword'); return; }
+  if(!em || !em.includes('@')){ showToast('Please enter a valid email'); return; }
+  const list = getWatchlist();
+  const dup  = list.find(a => a.keyword === kw && a.email === em);
+  if(dup){ showToast('Alert already set!'); return; }
+  list.push({ keyword: kw, email: em, notifiedIds: [] });
+  saveWatchlist(list);
+  document.getElementById('alertKeyword').value = '';
+  document.getElementById('alertEmail').value   = '';
+  renderAlertsList();
+  showToast('Alert saved!');
+}
+
+function checkWatchlist(){
+  const list = getWatchlist();
+  if(!list.length) return;
+  let changed = false;
+  list.forEach(alert => {
+    DEALS.forEach(deal => {
+      if(alert.notifiedIds.includes(deal.id)) return;
+      const haystack = (deal.name + ' ' + (deal.desc||'') + ' ' + deal.cat).toLowerCase();
+      if(haystack.includes(alert.keyword)){
+        alert.notifiedIds.push(deal.id);
+        changed = true;
+        sendAlertEmail(alert, deal);
+      }
+    });
+  });
+  if(changed) saveWatchlist(list);
+}
+
+function sendAlertEmail(alert, deal){
+  if(typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY'){
+    // EmailJS not configured yet — log to console for debugging
+    console.log('[Deal Alert] Match found but EmailJS not configured:', alert.keyword, '→', deal.name);
+    return;
+  }
+  const params = {
+    to_email:   alert.email,
+    keyword:    alert.keyword,
+    deal_name:  deal.name,
+    deal_price: '$' + deal.price,
+    deal_was:   '$' + deal.was,
+    deal_pct:   deal.pct + '% off',
+    deal_url:   'https://www.amazon.com/dp/' + deal.asin + '?tag=blackdailydeals-20',
+    site_url:   'https://moishyjalas-lang.github.io/black-daily-deals/'
+  };
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+    .then(()  => console.log('[Deal Alert] Email sent for:', deal.name))
+    .catch(err => console.warn('[Deal Alert] Email failed:', err));
+}
+
 function renderDeals(){
   const grid = document.getElementById('deals-grid');
   let filtered = DEALS.filter(d=>{
@@ -663,7 +874,8 @@ function updateCountdown(){
 }
 setInterval(updateCountdown,1000);
 updateCountdown();
-
+initEmailJS();
+checkWatchlist();
 renderDeals();
 </script>
 </body>
