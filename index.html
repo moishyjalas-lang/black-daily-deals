@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Black Daily Deals – Black Friday Every Day</title>
-<meta name="description" content="The hottest Black Friday deals every single day. Electronics, fashion, home & more.">
+<meta name="description" content="The hottest Black Friday deals every single day. Electronics, fashion, home &amp; more.">
 <link rel="icon" type="image/png" href="https://em-content.zobj.net/source/apple/354/fire_1f525.png">
 <link rel="apple-touch-icon" href="https://em-content.zobj.net/source/apple/354/fire_1f525.png">
 <meta name="theme-color" content="#0a0a0a">
@@ -13,362 +13,105 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  :root{
-    --bg:#0a0a0a;
-    --surface:#111111;
-    --card:#181818;
-    --border:#222222;
-    --gold:#FFD700;
-    --gold2:#FFA500;
-    --text:#ffffff;
-    --muted:#888888;
-    --red:#ff3b3b;
-    --green:#22c55e;
-  }
-  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
-
-  /* ── NAVBAR ── */
-  nav{
-    position:sticky;top:0;z-index:100;
-    background:rgba(10,10,10,0.95);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    padding:0 20px;
-    height:64px;
-    display:flex;align-items:center;gap:16px;
-  }
-  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-  .nav-logo img{height:38px;width:38px;object-fit:contain;}
-  .nav-logo-text{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-0.5px;line-height:1.1;}
-  .nav-logo-text span{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-  .nav-search{
-    flex:1;max-width:420px;margin:0 auto;
-    position:relative;
-  }
-  .nav-search input{
-    width:100%;padding:10px 16px 10px 40px;
-    background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
-    color:#fff;font-size:14px;outline:none;
-    transition:border-color 0.2s;
-  }
-  .nav-search input:focus{border-color:var(--gold);}
-  .nav-search input::placeholder{color:#555;}
-  .nav-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;}
-  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
-  .nav-countdown{
-    display:flex;align-items:center;gap:6px;
-    background:#1a1a1a;border:1px solid #2a2a2a;
-    border-radius:8px;padding:6px 12px;
-    font-size:12px;
-  }
-  .nav-countdown .label{color:var(--muted);}
-  .nav-countdown .time{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;}
-  #signin-btn{
-    background:var(--gold);color:#000;
-    border:none;border-radius:8px;
-    padding:8px 16px;font-size:13px;font-weight:700;
-    cursor:pointer;white-space:nowrap;
-    transition:background 0.2s;
-  }
-  #signin-btn:hover{background:#ffe44d;}
-  #user-pill{
-    display:none;align-items:center;gap:8px;
-    background:#1a1a1a;border:1px solid #2a2a2a;
-    border-radius:24px;padding:4px 12px 4px 4px;
-    cursor:pointer;
-  }
-  #user-pill img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
-  #user-pill span{font-size:13px;font-weight:600;color:#fff;}
-
-  /* ── HERO ── */
-  .hero{
-    background:linear-gradient(135deg,#0a0a0a 0%,#111111 40%,#1a1200 100%);
-    padding:60px 20px 50px;
-    text-align:center;
-    border-bottom:1px solid var(--border);
-    position:relative;overflow:hidden;
-  }
-  .hero::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(ellipse at 50% 0%, rgba(255,165,0,0.12) 0%, transparent 70%);
-    pointer-events:none;
-  }
-  .hero-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    background:#1a1200;border:1px solid rgba(255,165,0,0.3);
-    border-radius:20px;padding:6px 16px;
-    font-size:12px;font-weight:600;color:var(--gold2);
-    text-transform:uppercase;letter-spacing:1px;
-    margin-bottom:24px;
-  }
-  .hero h1{
-    font-size:clamp(42px,8vw,88px);
-    font-weight:900;
-    line-height:0.95;
-    letter-spacing:-3px;
-    margin-bottom:8px;
-  }
-  .hero h1 .black{color:#333;-webkit-text-stroke:1px #444;}
-  .hero h1 .deals{color:var(--gold);}
-  .hero-sub{
-    font-size:16px;color:var(--muted);
-    margin-bottom:36px;font-weight:400;
-  }
-  /* Countdown */
-  .countdown{
-    display:inline-flex;align-items:center;gap:4px;
-    background:#111;border:1px solid #222;
-    border-radius:12px;padding:16px 24px;
-    margin-bottom:16px;
-  }
-  .countdown-label{
-    font-size:11px;color:var(--muted);
-    text-transform:uppercase;letter-spacing:1px;
-    margin-right:8px;
-  }
-  .cd-unit{text-align:center;}
-  .cd-num{
-    font-size:clamp(28px,5vw,42px);font-weight:900;
-    color:var(--gold);font-variant-numeric:tabular-nums;
-    line-height:1;
-  }
-  .cd-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-  .cd-sep{font-size:28px;color:#333;font-weight:900;padding:0 4px;align-self:flex-start;margin-top:4px;}
-
-  /* ── CATEGORY BAR ── */
-  .cat-bar{
-    position:sticky;top:64px;z-index:90;
-    background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    padding:0 20px;
-    display:flex;align-items:center;gap:8px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    height:52px;
-  }
-  .cat-bar::-webkit-scrollbar{display:none;}
-  .cat-btn{
-    white-space:nowrap;padding:7px 16px;
-    border-radius:20px;border:1px solid #2a2a2a;
-    background:transparent;color:var(--muted);
-    font-size:13px;font-weight:600;cursor:pointer;
-    transition:all 0.2s;flex-shrink:0;
-  }
-  .cat-btn:hover{border-color:#444;color:#ccc;}
-  .cat-btn.active{background:var(--gold);border-color:var(--gold);color:#000;}
-
-  /* ── DEALS GRID ── */
-  .section{padding:32px 20px 0;}
-  .section-header{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:20px;
-  }
-  .section-title{
-    font-size:20px;font-weight:800;
-    display:flex;align-items:center;gap:8px;
-  }
-  .section-title .dot{
-    width:8px;height:8px;border-radius:50%;
-    background:var(--gold);display:inline-block;
-  }
-
-  .deals-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:16px;
-  }
-
-  /* ── DEAL CARD ── */
-  .deal-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:14px;
-    overflow:hidden;
-    transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;
-    cursor:pointer;
-    text-decoration:none;
-    display:block;
-    color:inherit;
-  }
-  .deal-card:hover{
-    transform:translateY(-3px);
-    border-color:#333;
-    box-shadow:0 8px 32px rgba(255,165,0,0.08);
-  }
-  .card-img{
-    width:100%;
-    aspect-ratio:1;
-    background:#1a1a1a;
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-    position:relative;
-  }
-  .card-img img{
-    width:100%;height:100%;
-    object-fit:contain;
-    padding:16px;
-    transition:transform 0.3s;
-  }
-  .deal-card:hover .card-img img{transform:scale(1.04);}
-  .badge-pct{
-    position:absolute;top:10px;left:10px;
-    background:var(--red);color:#fff;
-    font-size:11px;font-weight:800;
-    padding:3px 8px;border-radius:6px;
-    letter-spacing:0.5px;
-  }
-  .badge-hot{
-    position:absolute;top:10px;right:10px;
-    font-size:16px;line-height:1;
-  }
-  .card-body{padding:14px 14px 16px;}
-  .card-category{
-    font-size:10px;font-weight:600;color:var(--muted);
-    text-transform:uppercase;letter-spacing:1px;
-    margin-bottom:6px;
-  }
-  .card-name{
-    font-size:14px;font-weight:700;
-    line-height:1.3;margin-bottom:10px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .card-prices{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;}
-  .price-now{font-size:22px;font-weight:900;color:var(--gold);}
-  .price-was{font-size:13px;color:var(--muted);text-decoration:line-through;}
-  .card-desc{
-    font-size:12px;color:var(--muted);line-height:1.5;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-    margin-bottom:12px;
-  }
-  .card-cta{
-    display:flex;align-items:center;justify-content:center;
-    gap:6px;
-    background:var(--gold);color:#000;
-    border-radius:8px;padding:9px;
-    font-size:13px;font-weight:800;
-    transition:background 0.2s;
-  }
-  .deal-card:hover .card-cta{background:#ffe44d;}
-
-  /* ── SPOTLIGHT ── */
-  .spotlight{
-    background:linear-gradient(135deg,#111111,#1a1200);
-    border:1px solid rgba(255,165,0,0.2);
-    border-radius:16px;
-    padding:28px;
-    display:flex;align-items:center;gap:28px;
-    margin-bottom:32px;
-    text-decoration:none;color:inherit;
-    transition:border-color 0.2s;
-  }
-  .spotlight:hover{border-color:rgba(255,165,0,0.5);}
-  .spotlight-img{
-    width:140px;height:140px;flex-shrink:0;
-    background:#1a1a1a;border-radius:12px;
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
-  }
-  .spotlight-img img{width:100%;height:100%;object-fit:contain;padding:12px;}
-  .spotlight-info{flex:1;}
-  .spotlight-label{
-    font-size:10px;font-weight:700;color:var(--gold2);
-    text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;
-  }
-  .spotlight-name{font-size:22px;font-weight:900;line-height:1.2;margin-bottom:8px;}
-  .spotlight-desc{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
-  .spotlight-price{font-size:32px;font-weight:900;color:var(--gold);}
-  .spotlight-was{font-size:14px;color:var(--muted);text-decoration:line-through;margin-left:8px;}
-  .spotlight-cta{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--gold);color:#000;
-    border-radius:10px;padding:12px 24px;
-    font-size:14px;font-weight:800;margin-top:16px;
-    transition:background 0.2s;
-  }
-  .spotlight:hover .spotlight-cta{background:#ffe44d;}
-
-  /* ── SUBSCRIBE ── */
-  .subscribe{
-    margin:48px 20px;
-    background:linear-gradient(135deg,#111111,#0d0d00);
-    border:1px solid rgba(255,165,0,0.15);
-    border-radius:16px;
-    padding:40px 32px;
-    text-align:center;
-  }
-  .subscribe h2{font-size:28px;font-weight:900;margin-bottom:8px;}
-  .subscribe h2 span{color:var(--gold);}
-  .subscribe p{color:var(--muted);font-size:15px;margin-bottom:24px;}
-  .subscribe-form{
-    display:flex;gap:10px;max-width:440px;margin:0 auto;
-  }
-  .subscribe-form input{
-    flex:1;padding:13px 16px;
-    background:#1a1a1a;border:1px solid #2a2a2a;
-    border-radius:10px;color:#fff;font-size:14px;outline:none;
-  }
-  .subscribe-form input:focus{border-color:var(--gold);}
-  .subscribe-form button{
-    padding:13px 20px;background:var(--gold);color:#000;
-    border:none;border-radius:10px;font-size:14px;font-weight:800;
-    cursor:pointer;white-space:nowrap;
-  }
-
-  /* ── FOOTER ── */
-  footer{
-    border-top:1px solid var(--border);
-    padding:24px 20px;
-    text-align:center;
-    color:var(--muted);font-size:12px;
-  }
-  footer a{color:var(--muted);text-decoration:none;}
-  footer a:hover{color:var(--gold);}
-
-  /* ── SIGN-IN OVERLAY ── */
-  #signin-overlay{
-    display:none;
-    position:fixed;inset:0;z-index:999;
-    background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);
-    align-items:center;justify-content:center;
-  }
-  #signin-overlay.show{display:flex;}
-  .signin-box{
-    background:#111;border:1px solid #2a2a2a;
-    border-radius:20px;padding:48px 40px;
-    text-align:center;max-width:380px;width:90%;
-  }
-  .signin-box img.logo{width:80px;height:80px;margin-bottom:20px;}
-  .signin-box h2{font-size:24px;font-weight:900;margin-bottom:8px;}
-  .signin-box h2 span{color:var(--gold);}
-  .signin-box p{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6;}
-  .g-btn{
-    display:flex;align-items:center;justify-content:center;gap:12px;
-    background:#fff;color:#000;
-    border:none;border-radius:10px;
-    padding:14px 20px;width:100%;
-    font-size:15px;font-weight:700;cursor:pointer;
-    transition:background 0.2s;
-  }
-  .g-btn:hover{background:#f0f0f0;}
-  .g-btn svg{flex-shrink:0;}
-  .signin-skip{
-    margin-top:16px;font-size:12px;color:var(--muted);
-    cursor:pointer;text-decoration:underline;
-  }
-
-  @media(max-width:600px){
-    .nav-search{display:none;}
-    .hero h1{letter-spacing:-2px;}
-    .spotlight{flex-direction:column;}
-    .spotlight-img{width:100%;height:180px;}
-    .subscribe-form{flex-direction:column;}
-    .countdown{flex-wrap:wrap;justify-content:center;}
-  }
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;height:64px;display:flex;align-items:center;gap:16px;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo img{height:38px;width:38px;object-fit:contain;}
+.nav-logo-text{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-0.5px;line-height:1.1;}
+.nav-logo-text span{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.nav-search{flex:1;max-width:420px;margin:0 auto;position:relative;}
+.nav-search input{width:100%;padding:10px 16px 10px 40px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;color:#fff;font-size:14px;outline:none;transition:border-color 0.2s;}
+.nav-search input:focus{border-color:var(--gold);}
+.nav-search input::placeholder{color:#555;}
+.nav-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.nav-countdown{display:flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:6px 12px;font-size:12px;}
+.nav-countdown .label{color:var(--muted);}
+.nav-countdown .time{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;}
+#signin-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.2s;}
+#signin-btn:hover{background:#ffe44d;}
+#user-pill{display:none;align-items:center;gap:8px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:24px;padding:4px 12px 4px 4px;cursor:pointer;}
+#user-pill img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
+#user-pill span{font-size:13px;font-weight:600;color:#fff;}
+.hero{background:linear-gradient(135deg,#0a0a0a 0%,#111111 40%,#1a1200 100%);padding:60px 20px 50px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,165,0,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:#1a1200;border:1px solid rgba(255,165,0,0.3);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;color:var(--gold2);text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;}
+.hero h1{font-size:clamp(42px,8vw,88px);font-weight:900;line-height:0.95;letter-spacing:-3px;margin-bottom:8px;}
+.hero h1 .black{color:#333;-webkit-text-stroke:1px #444;}
+.hero h1 .deals{color:var(--gold);}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:36px;font-weight:400;}
+.countdown{display:inline-flex;align-items:center;gap:4px;background:#111;border:1px solid #222;border-radius:12px;padding:16px 24px;margin-bottom:16px;}
+.countdown-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-right:8px;}
+.cd-unit{text-align:center;}
+.cd-num{font-size:clamp(28px,5vw,42px);font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
+.cd-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.cd-sep{font-size:28px;color:#333;font-weight:900;padding:0 4px;align-self:flex-start;margin-top:4px;}
+.cat-bar{position:sticky;top:64px;z-index:90;background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;height:52px;}
+.cat-bar::-webkit-scrollbar{display:none;}
+.cat-btn{white-space:nowrap;padding:7px 16px;border-radius:20px;border:1px solid #2a2a2a;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.cat-btn:hover{border-color:#444;color:#ccc;}
+.cat-btn.active{background:var(--gold);border-color:var(--gold);color:#000;}
+.section{padding:32px 20px 0;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-title{font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px;}
+.section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block;}
+.deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.deal-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;cursor:pointer;text-decoration:none;display:block;color:inherit;}
+.deal-card:hover{transform:translateY(-3px);border-color:#333;box-shadow:0 8px 32px rgba(255,165,0,0.08);}
+.card-img{width:100%;aspect-ratio:1;background:#1a1a1a;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.card-img img{width:100%;height:100%;object-fit:contain;padding:16px;transition:transform 0.3s;}
+.deal-card:hover .card-img img{transform:scale(1.04);}
+.badge-pct{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:0.5px;}
+.badge-hot{position:absolute;top:10px;right:10px;font-size:16px;line-height:1;}
+.card-body{padding:14px 14px 16px;}
+.card-category{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.card-name{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-prices{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;}
+.price-now{font-size:22px;font-weight:900;color:var(--gold);}
+.price-was{font-size:13px;color:var(--muted);text-decoration:line-through;}
+.card-desc{font-size:12px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px;}
+.card-cta{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--gold);color:#000;border-radius:8px;padding:9px;font-size:13px;font-weight:800;transition:background 0.2s;}
+.deal-card:hover .card-cta{background:#ffe44d;}
+.spotlight{background:linear-gradient(135deg,#111111,#1a1200);border:1px solid rgba(255,165,0,0.2);border-radius:16px;padding:28px;display:flex;align-items:center;gap:28px;margin-bottom:32px;text-decoration:none;color:inherit;transition:border-color 0.2s;}
+.spotlight:hover{border-color:rgba(255,165,0,0.5);}
+.spotlight-img{width:140px;height:140px;flex-shrink:0;background:#1a1a1a;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.spotlight-img img{width:100%;height:100%;object-fit:contain;padding:12px;}
+.spotlight-info{flex:1;}
+.spotlight-label{font-size:10px;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
+.spotlight-name{font-size:22px;font-weight:900;line-height:1.2;margin-bottom:8px;}
+.spotlight-desc{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.spotlight-price{font-size:32px;font-weight:900;color:var(--gold);}
+.spotlight-was{font-size:14px;color:var(--muted);text-decoration:line-through;margin-left:8px;}
+.spotlight-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#000;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:800;margin-top:16px;transition:background 0.2s;}
+.spotlight:hover .spotlight-cta{background:#ffe44d;}
+.subscribe{margin:48px 20px;background:linear-gradient(135deg,#111111,#0d0d00);border:1px solid rgba(255,165,0,0.15);border-radius:16px;padding:40px 32px;text-align:center;}
+.subscribe h2{font-size:28px;font-weight:900;margin-bottom:8px;}
+.subscribe h2 span{color:var(--gold);}
+.subscribe p{color:var(--muted);font-size:15px;margin-bottom:24px;}
+.subscribe-form{display:flex;gap:10px;max-width:440px;margin:0 auto;}
+.subscribe-form input{flex:1;padding:13px 16px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;color:#fff;font-size:14px;outline:none;}
+.subscribe-form input:focus{border-color:var(--gold);}
+.subscribe-form button{padding:13px 20px;background:var(--gold);color:#000;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;}
+footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center;color:var(--muted);font-size:12px;}
+footer a{color:var(--muted);text-decoration:none;}
+footer a:hover{color:var(--gold);}
+#signin-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;}
+#signin-overlay.show{display:flex;}
+.signin-box{background:#111;border:1px solid #2a2a2a;border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;}
+.signin-box img.logo{width:80px;height:80px;margin-bottom:20px;}
+.signin-box h2{font-size:24px;font-weight:900;margin-bottom:8px;}
+.signin-box h2 span{color:var(--gold);}
+.signin-box p{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6;}
+.g-btn{display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;color:#000;border:none;border-radius:10px;padding:14px 20px;width:100%;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.g-btn:hover{background:#f0f0f0;}
+.g-btn svg{flex-shrink:0;}
+.signin-skip{margin-top:16px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;}
+@media(max-width:600px){.nav-search{display:none;}.hero h1{letter-spacing:-2px;}.spotlight{flex-direction:column;}.spotlight-img{width:100%;height:180px;}.subscribe-form{flex-direction:column;}.countdown{flex-wrap:wrap;justify-content:center;}}
 </style>
 </head>
 <body>
-
-<!-- SIGN-IN OVERLAY -->
 <div id="signin-overlay">
   <div class="signin-box">
     <img class="logo" src="https://em-content.zobj.net/source/apple/354/fire_1f525.png" alt="Black Daily Deals">
@@ -378,37 +121,24 @@
       <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.4 30.2 0 24 0 14.7 0 6.7 5.5 2.7 13.6l7.8 6C12.4 13.3 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7c4.3-4 6.8-9.9 6.8-16.9z"/><path fill="#FBBC05" d="M10.5 28.5c-.7-2-1-4.1-1-6.5s.4-4.5 1-6.5l-7.8-6C1 12.6 0 18.1 0 24s1 11.4 2.7 16.5l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.4-5.7c-2 1.4-4.6 2.2-7.8 2.2-6.2 0-11.6-3.8-13.5-9.5l-7.8 6C6.7 42.5 14.7 48 24 48z"/></svg>
       Continue with Google
     </button>
-    <div class="signin-skip" onclick="closeOverlay()">Browse without signing in →</div>
+    <div class="signin-skip" onclick="closeOverlay()">Browse without signing in &rarr;</div>
   </div>
 </div>
-
-<!-- NAVBAR -->
 <nav>
   <a class="nav-logo" href="#">
     <img src="https://em-content.zobj.net/source/apple/354/fire_1f525.png" alt="logo">
-    <div class="nav-logo-text">
-      BLACK DAILY DEALS
-      <span>Black Friday Every Day</span>
-    </div>
+    <div class="nav-logo-text">BLACK DAILY DEALS<span>Black Friday Every Day</span></div>
   </a>
   <div class="nav-search">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Search deals…" oninput="filterSearch(this.value)">
+    <input type="text" placeholder="Search deals&hellip;" oninput="filterSearch(this.value)">
   </div>
   <div class="nav-right">
-    <div class="nav-countdown">
-      <span class="label">🖤 Black Friday</span>
-      <span class="time" id="nav-timer">--d --h</span>
-    </div>
+    <div class="nav-countdown"><span class="label">🖤 Black Friday</span><span class="time" id="nav-timer">--d --h</span></div>
     <button id="signin-btn" onclick="showOverlay()">Sign In</button>
-    <div id="user-pill" onclick="showOverlay()">
-      <img id="user-avatar" src="" alt="">
-      <span id="user-name"></span>
-    </div>
+    <div id="user-pill" onclick="showOverlay()"><img id="user-avatar" src="" alt=""><span id="user-name"></span></div>
   </div>
 </nav>
-
-<!-- CATEGORY BAR -->
 <div class="cat-bar">
   <button class="cat-btn active" onclick="filterCat(this,'all')">🔥 All Deals</button>
   <button class="cat-btn" onclick="filterCat(this,'electronics')">📱 Electronics</button>
@@ -420,14 +150,9 @@
   <button class="cat-btn" onclick="filterCat(this,'fashion')">👟 Fashion</button>
   <button class="cat-btn" onclick="filterCat(this,'kitchen')">🍳 Kitchen</button>
 </div>
-
-<!-- HERO -->
 <div class="hero">
   <div class="hero-badge">🔥 Black Friday Countdown Active</div>
-  <h1>
-    <span class="black">BLACK</span><br>
-    <span class="deals">DEALS</span>
-  </h1>
+  <h1><span class="black">BLACK</span><br><span class="deals">DEALS</span></h1>
   <p class="hero-sub">The hottest prices. Every single day.</p>
   <div class="countdown">
     <span class="countdown-label">Until Black Friday</span>
@@ -440,38 +165,21 @@
     <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Sec</div></div>
   </div>
 </div>
-
-<!-- SPOTLIGHT DEAL -->
 <div class="section" id="main-content">
-  <div class="section-header">
-    <div class="section-title"><span class="dot"></span> Deal of the Day</div>
-  </div>
+  <div class="section-header"><div class="section-title"><span class="dot"></span> Deal of the Day</div></div>
   <a class="spotlight" href="https://www.amazon.com/dp/B0BDHWDR12?tag=blackdailydeals-20" target="_blank" rel="noopener">
-    <div class="spotlight-img">
-      <img src="https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_SL1500_.jpg" alt="AirPods Pro">
-    </div>
+    <div class="spotlight-img"><img src="https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_SL1500_.jpg" alt="AirPods Pro"></div>
     <div class="spotlight-info">
       <div class="spotlight-label">🏆 Today's #1 Deal</div>
       <div class="spotlight-name">Apple AirPods Pro (2nd Gen)</div>
       <div class="spotlight-desc">Active Noise Cancellation, Adaptive Transparency, Personalized Spatial Audio. MagSafe Charging Case included.</div>
-      <div>
-        <span class="spotlight-price">$189</span>
-        <span class="spotlight-was">$249</span>
-        <span style="background:#ff3b3b;color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;margin-left:8px;">24% OFF</span>
-      </div>
-      <div class="spotlight-cta">Shop This Deal →</div>
+      <div><span class="spotlight-price">$189</span><span class="spotlight-was">$249</span><span style="background:#ff3b3b;color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;margin-left:8px;">24% OFF</span></div>
+      <div class="spotlight-cta">Shop This Deal &rarr;</div>
     </div>
   </a>
-
-  <!-- DEALS GRID -->
-  <div class="section-header">
-    <div class="section-title"><span class="dot"></span> Hot Deals Right Now</div>
-    <div style="font-size:12px;color:var(--muted);" id="deal-count"></div>
-  </div>
+  <div class="section-header"><div class="section-title"><span class="dot"></span> Hot Deals Right Now</div><div style="font-size:12px;color:var(--muted);" id="deal-count"></div></div>
   <div class="deals-grid" id="deals-grid"></div>
 </div>
-
-<!-- SUBSCRIBE -->
 <div class="subscribe">
   <h2>Get Deals Before <span>They Sell Out</span></h2>
   <p>Join thousands of deal hunters. We'll alert you the second prices drop.</p>
@@ -480,17 +188,12 @@
     <button type="submit">🔔 Alert Me</button>
   </form>
 </div>
-
 <footer>
-  <p style="margin-bottom:8px;">
-    <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Contact</a>
-  </p>
-  <p>© 2026 Black Daily Deals · Prices and availability subject to change. We may earn commissions on purchases.</p>
+  <p style="margin-bottom:8px;"><a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="#">Contact</a></p>
+  <p>&copy; 2026 Black Daily Deals &middot; Prices and availability subject to change. We may earn commissions on purchases.</p>
 </footer>
-
 <script>
-// ── DEALS DATA ──
-const DEALS = [
+const DEALS=[
   {id:1,cat:'audio',name:'Beats Studio Pro Wireless Headphones',price:179,was:349,pct:49,img:'https://m.media-amazon.com/images/I/71pAjlqMWqL._AC_SL1500_.jpg',asin:'B0C8PVLT71',desc:'Personalized Spatial Audio, lossless audio with Apple devices, 40-hr battery',hot:true},
   {id:2,cat:'electronics',name:'Apple iPhone 15 (128GB) – Black',price:699,was:799,pct:13,img:'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg',asin:'B0CHX2DSTG',desc:'Dynamic Island, 48MP camera, USB-C, Ceramic Shield front'},
   {id:3,cat:'audio',name:'JBL Flip 6 Portable Bluetooth Speaker',price:79,was:129,pct:39,img:'https://m.media-amazon.com/images/I/71K9Jg-s1-L._AC_SL1500_.jpg',asin:'JBLFLIP6BLKAM',desc:'Waterproof, 12-hour playtime, PartyBoost compatible',hot:true},
@@ -500,143 +203,59 @@ const DEALS = [
   {id:7,cat:'cameras',name:'GoPro HERO12 Black Action Camera',price:299,was:399,pct:25,img:'https://m.media-amazon.com/images/I/61prBpvAFCL._AC_SL1500_.jpg',asin:'B0C6PVNLYK',desc:'5.3K60 video, HyperSmooth 6.0, water resistant to 33ft',hot:true},
   {id:8,cat:'computers',name:'Samsung Galaxy Tab S9 FE (256GB)',price:349,was:499,pct:30,img:'https://m.media-amazon.com/images/I/71Sv-3GMsUL._AC_SL1500_.jpg',asin:'B0CMDLPVXM',desc:'10.9" display, 8000mAh battery, S Pen included, IP68 water resistant'},
   {id:9,cat:'home',name:'Dyson V15 Detect Cordless Vacuum',price:549,was:749,pct:27,img:'https://m.media-amazon.com/images/I/51D6YmvlNdL._AC_SL1500_.jpg',asin:'B09R2JXKPQ',desc:'Laser Slim Fluffy head, HEPA filtration, 60 min run time'},
-  {id:10,cat:'kitchen',name:'Ninja Creami Ice Cream Maker',price:159,was:229,pct:31,img:'https://m.media-amazon.com/images/I/71AkEuFn5vL._AC_SL1500_.jpg',asin:'B08PPFFF3P',desc:'7 programs: ice cream, sorbet, gelato, milkshake & more',hot:true},
+  {id:10,cat:'kitchen',name:'Ninja Creami Ice Cream Maker',price:159,was:229,pct:31,img:'https://m.media-amazon.com/images/I/71AkEuFn5vL._AC_SL1500_.jpg',asin:'B08PPFFF3P',desc:'7 programs: ice cream, sorbet, gelato, milkshake and more',hot:true},
   {id:11,cat:'gaming',name:'Razer BlackShark V2 Pro Headset',price:129,was:179,pct:28,img:'https://m.media-amazon.com/images/I/51c6WNLP0bL._AC_SL1500_.jpg',asin:'B09BN7QFM7',desc:'Wireless, THX Spatial Audio, 70-hour battery, detachable mic'},
   {id:12,cat:'fashion',name:'Nike Air Max 270 Sneakers',price:89,was:150,pct:41,img:'https://m.media-amazon.com/images/I/41Jg3PqSb9L._AC_SR700,525_.jpg',asin:'B07CLPW2F3',desc:"Air Max cushioning, breathable mesh upper, Nike's largest Air unit ever"},
   {id:13,cat:'electronics',name:'Apple Watch Series 9 (45mm)',price:329,was:429,pct:23,img:'https://m.media-amazon.com/images/I/71r5PxN4TsL._AC_SL1500_.jpg',asin:'B0CSVDL3GH',desc:'Always-On Retina display, crash detection, blood oxygen, ECG app'},
-  {id:14,cat:'home',name:'Instant Pot Duo 7-in-1 (8 Qt)',price:69,was:119,pct:42,img:'https://m.media-amazon.com/images/I/71V1cPDvsML._AC_SL1500_.jpg',asin:'B00FLYWNYQ',desc:'Pressure cooker, slow cooker, rice cooker, steamer, sauté, yogurt maker'},
+  {id:14,cat:'home',name:'Instant Pot Duo 7-in-1 (8 Qt)',price:69,was:119,pct:42,img:'https://m.media-amazon.com/images/I/71V1cPDvsML._AC_SL1500_.jpg',asin:'B00FLYWNYQ',desc:'Pressure cooker, slow cooker, rice cooker, steamer, saute, yogurt maker'},
   {id:15,cat:'computers',name:'Logitech MX Master 3S Mouse',price:79,was:99,pct:20,img:'https://m.media-amazon.com/images/I/61ni3t1ryQL._AC_SL1500_.jpg',asin:'B09HMKFDXC',desc:'8K DPI, MagSpeed scroll, Quiet clicks, works on any surface',hot:true},
   {id:16,cat:'audio',name:'Sony WH-1000XM5 Noise Canceling',price:279,was:399,pct:30,img:'https://m.media-amazon.com/images/I/61oYqNxBGeL._AC_SL1500_.jpg',asin:'B09XS7JWHH',desc:'Industry-leading ANC, 30-hr battery, multipoint Bluetooth'},
   {id:17,cat:'cameras',name:'Canon EOS R50 Mirrorless Camera',price:599,was:799,pct:25,img:'https://m.media-amazon.com/images/I/51lA+eNDORL._AC_SL1500_.jpg',asin:'B0BT2MLGNL',desc:'24.2MP CMOS, 4K video, Dual Pixel CMOS AF, Wi-Fi + Bluetooth'},
   {id:18,cat:'gaming',name:'Nintendo Switch OLED Model',price:299,was:349,pct:14,img:'https://m.media-amazon.com/images/I/61OiM9L4lxL._AC_SL1500_.jpg',asin:'B09BVQK8KM',desc:'7-inch OLED screen, enhanced audio, wide adjustable stand'},
   {id:19,cat:'kitchen',name:'Keurig K-Elite Coffee Maker',price:99,was:189,pct:48,img:'https://m.media-amazon.com/images/I/61ZkjnGTx0L._AC_SL1500_.jpg',asin:'B078NN8234',desc:'Strong brew, iced coffee mode, 75oz removable reservoir'},
   {id:20,cat:'fashion',name:'Ray-Ban Aviator Classic Sunglasses',price:89,was:154,pct:42,img:'https://m.media-amazon.com/images/I/51-vFb+9hPL._AC_UL1500_.jpg',asin:'B002YHHCZQ',desc:'Gold metal frame, G-15 glass lens, UV protection, unisex'},
-  {id:21,cat:'home',name:'iRobot Roomba j7+ Self-Emptying',price:399,was:649,pct:39,img:'https://m.media-amazon.com/images/I/61hR6cT9WkL._AC_SL1500_.jpg',asin:'B09413CXVK',desc:'Avoids obstacles & cords, Clean Base auto-empty, PrecisionVision Nav',hot:true},
-  {id:22,cat:'electronics',name:'Kindle Paperwhite (16GB)',price:99,was:139,pct:29,img:'https://m.media-amazon.com/images/I/61PbPT4Ys2L._AC_SY879_.jpg',asin:'B09TMF6742',desc:'6.8" glare-free display, waterproof, weeks of battery, adjustable warm light'},
-  {id:23,cat:'computers',name:'Dell XPS 13 Plus Laptop (i7, 16GB)',price:1199,was:1699,pct:29,img:'https://m.media-amazon.com/images/I/61Ds2FmIklL._AC_SL1500_.jpg',asin:'B09NHLVW7M',desc:'13.4" OLED touchscreen, 512GB SSD, 12th Gen Intel Core i7'},
+  {id:21,cat:'home',name:'iRobot Roomba j7+ Self-Emptying',price:399,was:649,pct:39,img:'https://m.media-amazon.com/images/I/61hR6cT9WkL._AC_SL1500_.jpg',asin:'B09413CXVK',desc:'Avoids obstacles and cords, Clean Base auto-empty, PrecisionVision Nav',hot:true},
+  {id:22,cat:'electronics',name:'Kindle Paperwhite (16GB)',price:99,was:139,pct:29,img:'https://m.media-amazon.com/images/I/61PbPT4Ys2L._AC_SY879_.jpg',asin:'B09TMF6742',desc:'6.8-inch glare-free display, waterproof, weeks of battery, adjustable warm light'},
+  {id:23,cat:'computers',name:'Dell XPS 13 Plus Laptop (i7, 16GB)',price:1199,was:1699,pct:29,img:'https://m.media-amazon.com/images/I/61Ds2FmIklL._AC_SL1500_.jpg',asin:'B09NHLVW7M',desc:'13.4-inch OLED touchscreen, 512GB SSD, 12th Gen Intel Core i7'},
   {id:24,cat:'audio',name:'Amazon Echo Dot (5th Gen)',price:22,was:49,pct:55,img:'https://m.media-amazon.com/images/I/51CqMiEBH7L._AC_SL1500_.jpg',asin:'B09B8V1LZ3',desc:'Improved bass, motion detection, Alexa, smart home hub',hot:true},
 ];
-
-let currentCat = 'all';
-let currentSearch = '';
-
+let currentCat='all',currentSearch='';
 function renderDeals(){
-  const grid = document.getElementById('deals-grid');
-  let filtered = DEALS.filter(d=>{
-    const catMatch = currentCat==='all' || d.cat===currentCat;
-    const q = currentSearch.toLowerCase();
-    const searchMatch = !q || d.name.toLowerCase().includes(q) || d.cat.includes(q) || d.desc.toLowerCase().includes(q);
-    return catMatch && searchMatch;
+  const grid=document.getElementById('deals-grid');
+  let filtered=DEALS.filter(d=>{
+    const catMatch=currentCat==='all'||d.cat===currentCat;
+    const q=currentSearch.toLowerCase();
+    const searchMatch=!q||d.name.toLowerCase().includes(q)||d.cat.includes(q)||d.desc.toLowerCase().includes(q);
+    return catMatch&&searchMatch;
   });
-  document.getElementById('deal-count').textContent = filtered.length + ' deals';
-  grid.innerHTML = filtered.map(d=>`
-    <a class="deal-card" href="https://www.amazon.com/dp/${d.asin}?tag=blackdailydeals-20" target="_blank" rel="noopener">
-      <div class="card-img">
-        <img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x300/181818/333?text=Deal'">
-        <div class="badge-pct">-${d.pct}%</div>
-        ${d.hot?'<div class="badge-hot">🔥</div>':''}
-      </div>
-      <div class="card-body">
-        <div class="card-category">${d.cat}</div>
-        <div class="card-name">${d.name}</div>
-        <div class="card-prices">
-          <span class="price-now">$${d.price}</span>
-          <span class="price-was">$${d.was}</span>
-        </div>
-        <div class="card-desc">${d.desc}</div>
-        <div class="card-cta">View Deal →</div>
-      </div>
-    </a>
-  `).join('');
+  document.getElementById('deal-count').textContent=filtered.length+' deals';
+  grid.innerHTML=filtered.map(d=>`<a class="deal-card" href="https://www.amazon.com/dp/${d.asin}?tag=blackdailydeals-20" target="_blank" rel="noopener"><div class="card-img"><img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x300/181818/333?text=Deal'"><div class="badge-pct">-${d.pct}%</div>${d.hot?'<div class="badge-hot">🔥</div>':''}</div><div class="card-body"><div class="card-category">${d.cat}</div><div class="card-name">${d.name}</div><div class="card-prices"><span class="price-now">$${d.price}</span><span class="price-was">$${d.was}</span></div><div class="card-desc">${d.desc}</div><div class="card-cta">View Deal &rarr;</div></div></a>`).join('');
 }
-
-function filterCat(btn, cat){
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  currentCat = cat;
-  renderDeals();
-}
-
-function filterSearch(q){
-  currentSearch = q;
-  renderDeals();
-}
-
-// ── COUNTDOWN ──
+function filterCat(btn,cat){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentCat=cat;renderDeals();}
+function filterSearch(q){currentSearch=q;renderDeals();}
 function updateCountdown(){
-  const target = new Date('2026-11-27T00:00:00');
-  const now = new Date();
-  const diff = target - now;
-  if(diff<=0){
-    document.getElementById('cd-d').textContent='0';
-    document.getElementById('cd-h').textContent='00';
-    document.getElementById('cd-m').textContent='00';
-    document.getElementById('cd-s').textContent='00';
-    document.getElementById('nav-timer').textContent='🖤 NOW!';
-    return;
-  }
-  const d = Math.floor(diff/86400000);
-  const h = Math.floor((diff%86400000)/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
+  const target=new Date('2026-11-27T00:00:00');
+  const now=new Date();
+  const diff=target-now;
+  if(diff<=0){document.getElementById('cd-d').textContent='0';document.getElementById('cd-h').textContent='00';document.getElementById('cd-m').textContent='00';document.getElementById('cd-s').textContent='00';document.getElementById('nav-timer').textContent='NOW!';return;}
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
   document.getElementById('cd-d').textContent=d;
   document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
   document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
   document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
   document.getElementById('nav-timer').textContent=d+'d '+String(h).padStart(2,'0')+'h';
 }
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-// ── GOOGLE SIGN-IN ──
-function showOverlay(){
-  document.getElementById('signin-overlay').classList.add('show');
-}
-function closeOverlay(){
-  document.getElementById('signin-overlay').classList.remove('show');
-  localStorage.setItem('skipped_signin','1');
-}
-function triggerGoogleSignIn(){
-  google.accounts.id.initialize({
-    client_id:'YOUR_GOOGLE_CLIENT_ID',
-    callback:handleCredential
-  });
-  google.accounts.id.prompt();
-}
-function handleCredential(response){
-  try{
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    setUser(payload.name, payload.picture, payload.email);
-    document.getElementById('signin-overlay').classList.remove('show');
-    localStorage.setItem('bdd_user', JSON.stringify({name:payload.name,picture:payload.picture,email:payload.email}));
-  }catch(e){console.error(e);}
-}
-function setUser(name, picture, email){
-  document.getElementById('signin-btn').style.display='none';
-  const pill = document.getElementById('user-pill');
-  pill.style.display='flex';
-  document.getElementById('user-avatar').src=picture||'';
-  document.getElementById('user-name').textContent=name.split(' ')[0];
-}
-// Auto-restore session
-(function(){
-  try{
-    const u = JSON.parse(localStorage.getItem('bdd_user')||'null');
-    if(u) setUser(u.name,u.picture,u.email);
-    else if(!localStorage.getItem('skipped_signin')) setTimeout(showOverlay,1500);
-  }catch(e){}
-})();
-
-// ── SUBSCRIBE ──
-function handleSubscribe(e){
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.textContent='✅ You\'re on the list!';
-  btn.style.background='var(--green)';
-  e.target.querySelector('input').value='';
-  setTimeout(()=>{btn.textContent='🔔 Alert Me';btn.style.background='';},3000);
-}
-
+setInterval(updateCountdown,1000);updateCountdown();
+function showOverlay(){document.getElementById('signin-overlay').classList.add('show');}
+function closeOverlay(){document.getElementById('signin-overlay').classList.remove('show');localStorage.setItem('skipped_signin','1');}
+function triggerGoogleSignIn(){google.accounts.id.initialize({client_id:'426235659035-nktej4ugb450g4f67ocbce07c5c8j5lj.apps.googleusercontent.com',callback:handleCredential});google.accounts.id.prompt();}
+function handleCredential(response){try{const payload=JSON.parse(atob(response.credential.split('.')[1]));setUser(payload.name,payload.picture,payload.email);document.getElementById('signin-overlay').classList.remove('show');localStorage.setItem('bdd_user',JSON.stringify({name:payload.name,picture:payload.picture,email:payload.email}));}catch(e){console.error(e);}}
+function setUser(name,picture,email){document.getElementById('signin-btn').style.display='none';const pill=document.getElementById('user-pill');pill.style.display='flex';document.getElementById('user-avatar').src=picture||'';document.getElementById('user-name').textContent=name.split(' ')[0];}
+(function(){try{const u=JSON.parse(localStorage.getItem('bdd_user')||'null');if(u)setUser(u.name,u.picture,u.email);else if(!localStorage.getItem('skipped_signin'))setTimeout(showOverlay,1500);}catch(e){}})();
+function handleSubscribe(e){e.preventDefault();const btn=e.target.querySelector('button');btn.textContent="You're on the list!";btn.style.background='var(--green)';e.target.querySelector('input').value='';setTimeout(()=>{btn.textContent='🔔 Alert Me';btn.style.background='';},3000);}
 renderDeals();
 </script>
 </body>
