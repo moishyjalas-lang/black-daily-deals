@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership – Everyday Black Friday</title>
+<meta name="description" content="Upgrade to Pro — unlimited alerts, early deal access, and no ads. Black Friday prices all year round.">
+<link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
+<meta name="theme-color" content="#0a0a0a">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#0a0a0a;
+    --surface:#111111;
+    --card:#181818;
+    --border:#222222;
+    --gold:#FFD700;
+    --gold2:#FFA500;
+    --text:#ffffff;
+    --muted:#888888;
+    --red:#ff3b3b;
+    --green:#22c55e;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+
+  /* ── NAVBAR ── */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(10,10,10,0.95);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:0 20px;
+    height:64px;
+    display:flex;align-items:center;gap:16px;
+  }
+  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .nav-logo-img{height:36px;width:auto;}
+  .nav-logo-text{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-0.5px;line-height:1.1;}
+  .nav-logo-text span{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .nav-links{display:flex;align-items:center;gap:4px;}
+  .nav-link{
+    padding:6px 12px;border-radius:6px;text-decoration:none;
+    font-size:13px;font-weight:500;color:var(--muted);
+    transition:color 0.2s,background 0.2s;white-space:nowrap;
+  }
+  .nav-link:hover{color:#fff;background:#1a1a1a;}
+  .nav-link.active{color:var(--gold);background:#1a1200;}
+  .nav-search{
+    flex:1;min-width:0;max-width:420px;margin:0 auto;
+    position:relative;
+  }
+  .nav-search input{
+    width:100%;padding:10px 16px 10px 40px;
+    background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
+    color:#fff;font-size:14px;outline:none;
+    transition:border-color 0.2s;
+  }
+  .nav-search input:focus{border-color:var(--gold);}
+  .nav-search input::placeholder{color:#555;}
+  .nav-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+  .nav-countdown{
+    display:flex;align-items:center;gap:6px;
+    background:#1a1a1a;border:1px solid #2a2a2a;
+    border-radius:8px;padding:6px 12px;
+    font-size:12px;
+  }
+  .nav-countdown .label{color:var(--muted);}
+  .nav-countdown .time{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;}
+  .btn-signin{
+    padding:8px 16px;background:var(--gold);border:none;border-radius:8px;
+    color:#000;font-size:13px;font-weight:700;cursor:pointer;
+    transition:background 0.2s,transform 0.1s;white-space:nowrap;
+  }
+  .btn-signin:hover{background:var(--gold2);}
+  .btn-signin:active{transform:scale(0.97);}
+  .user-pill{
+    display:flex;align-items:center;gap:8px;
+    background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
+    padding:5px 12px 5px 5px;cursor:pointer;
+    font-size:13px;font-weight:500;
+    transition:border-color 0.2s;
+  }
+  .user-pill:hover{border-color:#444;}
+  .user-pill img,.user-pill .pill-initials{
+    width:26px;height:26px;border-radius:50%;object-fit:cover;
+    background:var(--gold);color:#000;font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ── SIGN-IN OVERLAY ── */
+  .signin-overlay{
+    display:none;position:fixed;inset:0;z-index:999;
+    background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);
+    align-items:center;justify-content:center;
+  }
+  .signin-overlay.show{display:flex;}
+  .signin-box{
+    background:var(--card);border:1px solid #333;border-radius:16px;
+    padding:40px 32px;max-width:400px;width:90%;text-align:center;
+  }
+  .signin-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
+  .signin-box p{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.5;}
+  .signin-skip{
+    margin-top:16px;font-size:12px;color:var(--muted);
+    cursor:pointer;text-decoration:underline;
+  }
+  .signin-skip:hover{color:#fff;}
+
+  /* ── PAGE HEADER ── */
+  .page-header{
+    background:linear-gradient(135deg,#0a0a0a 0%,#111111 40%,#1a1200 100%);
+    padding:60px 20px 50px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    position:relative;overflow:hidden;
+  }
+  .page-header::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 100%,rgba(255,215,0,0.08) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .page-header h1{
+    font-size:clamp(28px,5vw,46px);font-weight:900;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:12px;letter-spacing:-1px;line-height:1.1;
+  }
+  .page-header p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto;}
+
+  /* ── BILLING TOGGLE ── */
+  .billing-toggle{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    margin:36px 0 0;
+  }
+  .billing-label{font-size:14px;font-weight:600;color:var(--muted);}
+  .billing-label.active{color:#fff;}
+  .toggle-switch{
+    width:48px;height:26px;background:#2a2a2a;border-radius:13px;
+    position:relative;cursor:pointer;border:1px solid #333;
+    transition:background 0.2s;
+  }
+  .toggle-switch.on{background:#1a1200;border-color:var(--gold);}
+  .toggle-knob{
+    position:absolute;top:3px;left:3px;
+    width:18px;height:18px;border-radius:50%;
+    background:var(--muted);transition:left 0.2s,background 0.2s;
+  }
+  .toggle-switch.on .toggle-knob{left:25px;background:var(--gold);}
+  .save-badge{
+    background:#1a1200;border:1px solid #3a2f00;color:var(--gold);
+    font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;
+    margin-left:4px;
+  }
+
+  /* ── PLANS ── */
+  .plans-wrap{max-width:900px;margin:0 auto;padding:40px 20px 60px;}
+  .plans-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:20px;
+    margin-bottom:48px;
+  }
+  @media(max-width:640px){.plans-grid{grid-template-columns:1fr;}}
+  .plan-card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:32px 28px;position:relative;
+    transition:border-color 0.2s;
+  }
+  .plan-card.pro{
+    border-color:#3a2f00;
+    background:linear-gradient(160deg,#181400,#111100,var(--card));
+    box-shadow:0 0 40px rgba(255,215,0,0.06);
+  }
+  .plan-badge{
+    position:absolute;top:-1px;right:24px;
+    background:linear-gradient(90deg,var(--gold),var(--gold2));
+    color:#000;font-size:11px;font-weight:800;
+    padding:4px 12px;border-radius:0 0 8px 8px;
+    letter-spacing:0.5px;
+  }
+  .plan-name{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+  .plan-price{
+    font-size:clamp(36px,6vw,48px);font-weight:900;line-height:1;
+    color:#fff;margin-bottom:4px;letter-spacing:-2px;
+  }
+  .plan-price sup{font-size:20px;font-weight:700;vertical-align:top;margin-top:8px;display:inline-block;letter-spacing:0;}
+  .plan-price .cents{font-size:20px;font-weight:600;color:var(--muted);}
+  .plan-period{font-size:13px;color:var(--muted);margin-bottom:24px;}
+  .plan-period .annual-note{color:var(--gold);font-weight:600;}
+  .plan-cta{
+    width:100%;padding:14px 20px;border-radius:10px;
+    font-size:15px;font-weight:700;cursor:pointer;
+    border:none;transition:all 0.2s;margin-bottom:28px;
+  }
+  .plan-cta.free{background:#1a1a1a;border:1px solid #333;color:#fff;}
+  .plan-cta.free:hover{border-color:#555;}
+  .plan-cta.pro{
+    background:linear-gradient(90deg,var(--gold),var(--gold2));
+    color:#000;
+  }
+  .plan-cta.pro:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(255,215,0,0.25);}
+  .plan-cta.pro:active{transform:translateY(0);}
+  .plan-divider{border:none;border-top:1px solid var(--border);margin-bottom:24px;}
+  .plan-features{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .plan-features li{
+    display:flex;align-items:flex-start;gap:10px;
+    font-size:14px;line-height:1.4;
+  }
+  .feat-icon{flex-shrink:0;margin-top:1px;}
+  .feat-icon.check svg{color:var(--green);}
+  .feat-icon.cross svg{color:#444;}
+  .feat-text{color:#ccc;}
+  .feat-text.dim{color:#555;}
+  .feat-highlight{color:var(--gold);font-weight:600;}
+
+  /* ── COMPARISON TABLE ── */
+  .compare-section{margin-bottom:60px;}
+  .compare-section h2{
+    font-size:22px;font-weight:800;text-align:center;margin-bottom:24px;
+    color:#fff;
+  }
+  .compare-table{
+    width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;
+    border:1px solid var(--border);font-size:14px;
+  }
+  .compare-table th{
+    background:#111;padding:14px 20px;text-align:left;
+    font-size:12px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;
+  }
+  .compare-table th:not(:first-child){text-align:center;}
+  .compare-table th.pro-col{color:var(--gold);}
+  .compare-table td{
+    padding:14px 20px;border-top:1px solid var(--border);
+    color:#ccc;
+  }
+  .compare-table td:not(:first-child){text-align:center;}
+  .compare-table tr:hover td{background:#111;}
+  .check-cell{color:var(--green);}
+  .cross-cell{color:#444;}
+  .text-cell{font-weight:600;color:#fff;}
+  .text-cell.gold{color:var(--gold);}
+
+  /* ── FAQ ── */
+  .faq-section{margin-bottom:60px;}
+  .faq-section h2{font-size:22px;font-weight:800;text-align:center;margin-bottom:24px;}
+  .faq-list{display:flex;flex-direction:column;gap:4px;}
+  .faq-item{
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    overflow:hidden;
+  }
+  .faq-q{
+    width:100%;background:none;border:none;color:#fff;
+    padding:16px 20px;text-align:left;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+    transition:background 0.2s;
+  }
+  .faq-q:hover{background:#1a1a1a;}
+  .faq-q svg{flex-shrink:0;transition:transform 0.2s;color:var(--muted);}
+  .faq-q.open svg{transform:rotate(180deg);}
+  .faq-a{
+    display:none;padding:0 20px 16px;
+    color:var(--muted);font-size:14px;line-height:1.6;
+  }
+  .faq-a.show{display:block;}
+
+  /* ── TRUST STRIP ── */
+  .trust-strip{
+    display:flex;flex-wrap:wrap;gap:20px;justify-content:center;
+    padding:32px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    margin-bottom:60px;
+  }
+  .trust-item{
+    display:flex;align-items:center;gap:10px;
+    font-size:13px;font-weight:500;color:var(--muted);
+  }
+  .trust-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:#1a1a1a;border:1px solid #2a2a2a;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+
+  /* ── FOOTER ── */
+  footer{
+    background:var(--surface);border-top:1px solid var(--border);
+    padding:40px 20px 24px;
+  }
+  .footer-inner{max-width:1100px;margin:0 auto;}
+  .footer-cols{
+    display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+    margin-bottom:32px;
+  }
+  @media(max-width:800px){.footer-cols{grid-template-columns:1fr 1fr;gap:28px;}}
+  @media(max-width:500px){.footer-cols{grid-template-columns:1fr;}}
+  .footer-brand p{color:var(--muted);font-size:13px;line-height:1.6;margin-top:10px;max-width:260px;}
+  .footer-col h4{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+  .footer-col a{display:block;color:#aaa;font-size:13px;text-decoration:none;margin-bottom:9px;transition:color 0.2s;}
+  .footer-col a:hover{color:var(--gold);}
+  .footer-bottom{
+    border-top:1px solid var(--border);padding-top:20px;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+    font-size:12px;color:var(--muted);
+  }
+  .footer-bottom a{color:var(--muted);text-decoration:none;}
+  .footer-bottom a:hover{color:#fff;}
+
+  /* ── TOAST ── */
+  #toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:#1a1a1a;border:1px solid #333;border-radius:10px;
+    padding:12px 20px;font-size:13px;font-weight:600;
+    white-space:nowrap;z-index:9999;opacity:0;
+    transition:transform 0.3s,opacity 0.3s;pointer-events:none;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  #toast.success{border-color:var(--green);color:var(--green);}
+  #toast.error{border-color:var(--red);color:var(--red);}
+
+  /* ── STRIPE MODAL ── */
+  .stripe-modal{
+    display:none;position:fixed;inset:0;z-index:900;
+    background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);
+    align-items:center;justify-content:center;
+  }
+  .stripe-modal.show{display:flex;}
+  .stripe-box{
+    background:var(--card);border:1px solid #3a2f00;border-radius:16px;
+    padding:40px 32px;max-width:460px;width:90%;text-align:center;
+  }
+  .stripe-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
+  .stripe-box p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;}
+  .stripe-plan-summary{
+    background:#111;border:1px solid #2a2a2a;border-radius:10px;
+    padding:16px 20px;margin-bottom:24px;text-align:left;
+  }
+  .stripe-plan-summary .s-row{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:14px;padding:4px 0;
+  }
+  .stripe-plan-summary .s-row .label{color:var(--muted);}
+  .stripe-plan-summary .s-row .value{font-weight:700;color:#fff;}
+  .stripe-plan-summary .s-row.total .value{color:var(--gold);font-size:18px;}
+  .stripe-plan-summary hr{border:none;border-top:1px solid var(--border);margin:10px 0;}
+  .btn-stripe{
+    width:100%;padding:14px;border-radius:10px;
+    background:linear-gradient(90deg,var(--gold),var(--gold2));
+    color:#000;font-size:15px;font-weight:700;border:none;cursor:pointer;
+    transition:filter 0.2s,transform 0.1s;margin-bottom:12px;
+  }
+  .btn-stripe:hover{filter:brightness(1.1);transform:translateY(-1px);}
+  .btn-stripe:active{transform:translateY(0);}
+  .stripe-secure{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    font-size:11px;color:var(--muted);margin-bottom:16px;
+  }
+  .btn-cancel{
+    background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;
+    text-decoration:underline;font-family:'Inter',sans-serif;
+  }
+  .btn-cancel:hover{color:#fff;}
+  .stripe-note{
+    margin-top:16px;font-size:11px;color:#555;line-height:1.5;
+  }
+
+  @media(max-width:800px){
+    .nav-links{display:none;}
+    .nav-countdown{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
+    <div class="nav-logo-text">
+      Everyday Black Friday
+      <span>Black Friday prices. All year round.</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="search.html">Deals</a>
+    <a class="nav-link" href="alerts.html">Alerts</a>
+    <a class="nav-link active" href="membership.html">Pro</a>
+  </div>
+  <div class="nav-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="nav-search-input" placeholder="Search deals…" autocomplete="off">
+  </div>
+  <div class="nav-right">
+    <div class="nav-countdown">
+      <span class="label">Deals reset in</span>
+      <span class="time" id="nav-timer">--:--:--</span>
+    </div>
+    <div id="auth-btn-wrap">
+      <button class="btn-signin" id="btn-open-signin">Sign In</button>
+    </div>
+  </div>
+</nav>
+
+<!-- SIGN-IN OVERLAY -->
+<div class="signin-overlay" id="signin-overlay">
+  <div class="signin-box">
+    <div id="g_id_onload"
+      data-client_id="875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com"
+      data-callback="handleGoogleSignIn"
+      data-auto_prompt="false">
+    </div>
+    <h2>Sign in to Upgrade</h2>
+    <p>Create a free account to save deals, set alerts, and unlock Pro features.</p>
+    <div class="g_id_signin"
+      data-type="standard"
+      data-shape="pill"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-size="large"
+      data-logo_alignment="left">
+    </div>
+    <div class="signin-skip" onclick="skipSignin()">Continue without signing in</div>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Go Pro. Save More.</h1>
+  <p>Unlock unlimited alerts, early deal access, and an ad-free experience — for less than a cup of coffee a month.</p>
+  <div class="billing-toggle">
+    <span class="billing-label active" id="label-monthly">Monthly</span>
+    <div class="toggle-switch" id="billing-toggle" onclick="toggleBilling()">
+      <div class="toggle-knob"></div>
+    </div>
+    <span class="billing-label" id="label-annual">Annual <span class="save-badge">Save 40%</span></span>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div class="plans-wrap">
+  <div class="plans-grid">
+    <!-- FREE -->
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price"><sup>$</sup>0</div>
+      <div class="plan-period">Forever free</div>
+      <button class="plan-cta free" id="btn-free-cta" onclick="handleFreeCta()">Get Started Free</button>
+      <hr class="plan-divider">
+      <ul class="plan-features">
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Browse all deals</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Save to wishlist</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Up to <strong>5 price alerts</strong></span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Email notifications</span>
+        </li>
+        <li>
+          <span class="feat-icon cross"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+          <span class="feat-text dim">Early deal access</span>
+        </li>
+        <li>
+          <span class="feat-icon cross"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+          <span class="feat-text dim">Unlimited alerts</span>
+        </li>
+        <li>
+          <span class="feat-icon cross"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+          <span class="feat-text dim">Ad-free browsing</span>
+        </li>
+        <li>
+          <span class="feat-icon cross"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+          <span class="feat-text dim">Priority support</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan-card pro">
+      <div class="plan-badge">MOST POPULAR</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price" id="pro-price"><sup>$</sup>4<span class="cents">.99</span></div>
+      <div class="plan-period" id="pro-period">per month · billed monthly</div>
+      <button class="plan-cta pro" id="btn-pro-cta" onclick="handleProCta()">Upgrade to Pro</button>
+      <hr class="plan-divider">
+      <ul class="plan-features">
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Everything in Free</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text"><span class="feat-highlight">Early deal access</span> — 2 hrs before public</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text"><span class="feat-highlight">Unlimited</span> price alerts</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text"><span class="feat-highlight">Ad-free</span> browsing</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Priority email support</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Flash deal SMS alerts</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Advanced price history charts</span>
+        </li>
+        <li>
+          <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="feat-text">Cancel anytime</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-section">
+    <h2>Full Feature Comparison</h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th class="pro-col">Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Browse all deals</td>
+          <td class="check-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></td>
+          <td class="check-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></td>
+        </tr>
+        <tr>
+          <td>Wishlist</td>
+          <td class="check-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></td>
+          <td class="check-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></td>
+        </tr>
+        <tr>
+          <td>Price alerts</td>
+          <td class="text-cell">Up to 5</td>
+          <td class="text-cell gold">Unlimited</td>
+        </tr>
+        <tr>
+          <td>Early deal access</td>
+          <td class="cross-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+          <td class="text-cell gold">2 hrs early</td>
+        </tr>
+        <tr>
+          <td>Ad-free browsing</td>
+          <td class="cross-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+          <td class="check-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></td>
+        </tr>
+        <tr>
+          <td>Flash deal SMS alerts</td>
+          <td class="cross-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+          <td class="check-cell"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></td>
+        </tr>
+        <tr>
+          <td>Price history charts</td>
+          <td class="text-cell">Basic</td>
+          <td class="text-cell gold">Advanced</td>
+        </tr>
+        <tr>
+          <td>Support</td>
+          <td class="text-cell">Standard</td>
+          <td class="text-cell gold">Priority</td>
+        </tr>
+        <tr>
+          <td>Monthly price</td>
+          <td class="text-cell">Free</td>
+          <td class="text-cell gold" id="compare-price">$4.99 / mo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      Secure payment via Stripe
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      Cancel anytime — no commitment
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      No ads. No data selling. Ever.
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      Priority support included
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's included in the free plan?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">The free plan includes full access to all deals, wishlist saving, up to 5 price alerts, and email notifications. You can use Everyday Black Friday forever without paying a cent.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What does "early deal access" mean?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Pro members see new deals 2 hours before they're published to the general public. This gives you first pick on limited-quantity flash deals before they sell out.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I cancel my Pro plan at any time?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Yes — cancel anytime from your profile page with no questions asked. Your Pro features remain active until the end of the current billing period.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is my payment information secure?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Payments are processed securely by Stripe — the same payment infrastructure used by Amazon, Shopify, and millions of other businesses. We never store your card details.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the difference between monthly and annual billing?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Monthly billing is $4.99/month. Annual billing is $35.88/year — that's $2.99/month, saving you 40%. Both plans include all Pro features. The annual plan is billed as a single charge once per year.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRIPE UPGRADE MODAL -->
+<div class="stripe-modal" id="stripe-modal">
+  <div class="stripe-box">
+    <h2>Upgrade to Pro</h2>
+    <p>You're one step away from unlimited alerts, early deal access, and an ad-free experience.</p>
+    <div class="stripe-plan-summary">
+      <div class="s-row">
+        <span class="label">Plan</span>
+        <span class="value" id="stripe-plan-name">Everyday Black Friday Pro</span>
+      </div>
+      <div class="s-row">
+        <span class="label">Billing</span>
+        <span class="value" id="stripe-billing">Monthly</span>
+      </div>
+      <hr>
+      <div class="s-row total">
+        <span class="label">Total today</span>
+        <span class="value" id="stripe-total">$4.99</span>
+      </div>
+    </div>
+    <button class="btn-stripe" onclick="handleStripeCheckout()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Proceed to Secure Checkout
+    </button>
+    <div class="stripe-secure">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Secured by Stripe · SSL encrypted
+    </div>
+    <button class="btn-cancel" onclick="closeStripeModal()">Maybe later</button>
+    <div class="stripe-note">By proceeding you agree to our Terms of Service. Cancel anytime before your next billing date at no charge.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-cols">
+      <div class="footer-brand">
+        <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="height:32px;width:auto;">
+        <p>Black Friday prices, all year round. Discover the best deals from stores you trust — electronics, home, fashion, and more.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Browse</h4>
+        <a href="index.html">Home</a>
+        <a href="categories.html">Categories</a>
+        <a href="search.html">All Deals</a>
+        <a href="alerts.html">My Alerts</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="profile.html">My Profile</a>
+        <a href="alerts.html">Watchlist</a>
+        <a href="membership.html">Pro Membership</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Everyday Black Friday. All rights reserved.</span>
+      <span>As an Amazon Associate we earn from qualifying purchases.</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<script>
+// ── BILLING TOGGLE ──
+let isAnnual = false;
+function toggleBilling() {
+  isAnnual = !isAnnual;
+  const sw = document.getElementById('billing-toggle');
+  const lm = document.getElementById('label-monthly');
+  const la = document.getElementById('label-annual');
+  const pp = document.getElementById('pro-price');
+  const per = document.getElementById('pro-period');
+  const cp = document.getElementById('compare-price');
+  const sb = document.getElementById('stripe-billing');
+  const st = document.getElementById('stripe-total');
+  if (isAnnual) {
+    sw.classList.add('on');
+    lm.classList.remove('active'); la.classList.add('active');
+    pp.innerHTML = '<sup>$</sup>2<span class="cents">.99</span>';
+    per.innerHTML = 'per month · <span class="annual-note">billed $35.88/yr (save 40%)</span>';
+    cp.textContent = '$2.99 / mo (annual)';
+    if(sb) sb.textContent = 'Annual';
+    if(st) st.textContent = '$35.88 / year';
+  } else {
+    sw.classList.remove('on');
+    lm.classList.add('active'); la.classList.remove('active');
+    pp.innerHTML = '<sup>$</sup>4<span class="cents">.99</span>';
+    per.textContent = 'per month · billed monthly';
+    cp.textContent = '$4.99 / mo';
+    if(sb) sb.textContent = 'Monthly';
+    if(st) st.textContent = '$4.99';
+  }
+}
+
+// ── AUTH ──
+function getUser() {
+  try { return JSON.parse(localStorage.getItem('bdd_user')); } catch(e){ return null; }
+}
+function parseJwt(token) {
+  const b64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+  return JSON.parse(decodeURIComponent(atob(b64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+}
+function handleGoogleSignIn(response) {
+  const data = parseJwt(response.credential);
+  const user = { name: data.name, email: data.email, picture: data.picture, joined: Date.now() };
+  const existing = getUser();
+  if (existing && existing.joined) user.joined = existing.joined;
+  localStorage.setItem('bdd_user', JSON.stringify(user));
+  localStorage.removeItem('skipped_signin');
+  closeSignin();
+  updateAuthUI();
+  showToast('Welcome, ' + data.given_name + '!', 'success');
+}
+function closeSignin() {
+  document.getElementById('signin-overlay').classList.remove('show');
+}
+function skipSignin() {
+  localStorage.setItem('skipped_signin', '1');
+  closeSignin();
+}
+function updateAuthUI() {
+  const user = getUser();
+  const wrap = document.getElementById('auth-btn-wrap');
+  if (!wrap) return;
+  if (user) {
+    if (user.picture) {
+      wrap.innerHTML = `<div class="user-pill" onclick="window.location='profile.html'"><img src="${user.picture}" alt="${user.name}"><span>${user.name.split(' ')[0]}</span></div>`;
+    } else {
+      const initials = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      wrap.innerHTML = `<div class="user-pill" onclick="window.location='profile.html'"><div class="pill-initials">${initials}</div><span>${user.name.split(' ')[0]}</span></div>`;
+    }
+  } else {
+    wrap.innerHTML = `<button class="btn-signin" id="btn-open-signin" onclick="document.getElementById('signin-overlay').classList.add('show')">Sign In</button>`;
+  }
+}
+
+// ── CTA HANDLERS ──
+function handleFreeCta() {
+  const user = getUser();
+  if (!user) {
+    document.getElementById('signin-overlay').classList.add('show');
+    showToast('Sign in to get started', 'success');
+  } else {
+    window.location.href = 'search.html';
+  }
+}
+function handleProCta() {
+  const user = getUser();
+  if (!user) {
+    document.getElementById('signin-overlay').classList.add('show');
+    showToast('Sign in to upgrade to Pro', 'success');
+    return;
+  }
+  // Update modal billing info
+  document.getElementById('stripe-billing').textContent = isAnnual ? 'Annual' : 'Monthly';
+  document.getElementById('stripe-total').textContent = isAnnual ? '$35.88 / year' : '$4.99';
+  document.getElementById('stripe-modal').classList.add('show');
+}
+function closeStripeModal() {
+  document.getElementById('stripe-modal').classList.remove('show');
+}
+function handleStripeCheckout() {
+  // Stripe placeholder — payment integration goes here
+  closeStripeModal();
+  showToast('Stripe integration coming soon — stay tuned!', 'success');
+}
+
+// ── FAQ ──
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = answer.classList.contains('show');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('show'));
+  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    answer.classList.add('show');
+    btn.classList.add('open');
+  }
+}
+
+// ── COUNTDOWN ──
+function updateTimer() {
+  const now = new Date();
+  const end = new Date(now);
+  end.setHours(23,59,59,999);
+  const diff = end - now;
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  const pad = n => String(n).padStart(2,'0');
+  const el = document.getElementById('nav-timer');
+  if (el) el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// ── NAV SEARCH ──
+document.getElementById('nav-search-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && this.value.trim()) {
+    window.location.href = 'search.html?q=' + encodeURIComponent(this.value.trim());
+  }
+});
+
+// ── TOAST ──
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + (type || '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', function() {
+  updateAuthUI();
+  const user = getUser();
+  const skipped = localStorage.getItem('skipped_signin');
+  if (!user && !skipped) {
+    setTimeout(() => document.getElementById('signin-overlay').classList.add('show'), 1200);
+  }
+  // If user is already Pro (future feature), update CTA
+  if (user && user.isPro) {
+    const cta = document.getElementById('btn-pro-cta');
+    if (cta) { cta.textContent = 'You\'re a Pro member ✓'; cta.style.opacity = '0.7'; cta.onclick = null; }
+  }
+});
+
+// Close modals on overlay click
+document.getElementById('stripe-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeStripeModal();
+});
+document.getElementById('signin-overlay').addEventListener('click', function(e) {
+  if (e.target === this) skipSignin();
+});
+</script>
+</body>
+</html>
