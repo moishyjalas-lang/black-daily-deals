@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile — Everyday Black Friday</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px;gap:20px;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-logo-img{width:36px;height:36px;object-fit:contain;}
+.nav-logo-text{line-height:1.2;}
+.nav-logo-text{font-size:14px;font-weight:800;color:#fff;white-space:nowrap;}
+.nav-logo-text span{display:block;font-size:9px;color:var(--gold);font-weight:500;letter-spacing:.4px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{text-decoration:none;color:var(--muted);font-size:13px;font-weight:500;padding:6px 12px;border-radius:6px;transition:.2s;}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.06);}
+.nav-link.active{color:var(--gold);background:rgba(255,215,0,.08);}
+.nav-search{flex:1;max-width:360px;position:relative;}
+.nav-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:#fff;font-size:13px;outline:none;transition:.2s;}
+.nav-search input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,0,.12);}
+.nav-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.4;}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.nav-timer{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+#nav-signin-btn{background:var(--gold);color:#000;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+#nav-signin-btn:hover{background:var(--gold2);}
+.nav-user-pill{display:none;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;text-decoration:none;}
+.nav-user-pill img{width:26px;height:26px;border-radius:50%;object-fit:cover;}
+.nav-user-pill span{font-size:12px;font-weight:600;color:#fff;}
+@media(max-width:600px){.nav-search{display:none;}}
+
+/* SIGN-IN OVERLAY */
+.signin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;}
+.signin-overlay.active{display:flex;}
+.signin-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;}
+.signin-logo{width:56px;height:56px;object-fit:contain;margin-bottom:16px;}
+.signin-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
+.signin-box p{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.5;}
+.g-signin-wrap{display:flex;justify-content:center;margin-bottom:16px;}
+.signin-skip{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 24px;font-size:13px;cursor:pointer;width:100%;}
+.signin-skip:hover{color:#fff;border-color:rgba(255,255,255,.2);}
+
+/* PAGE */
+.page-wrap{max-width:900px;margin:0 auto;padding:40px 24px 80px;}
+
+/* SIGNED OUT STATE */
+.auth-gate{text-align:center;padding:80px 24px;}
+.auth-gate-icon{width:72px;height:72px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.auth-gate h2{font-size:26px;font-weight:800;margin-bottom:10px;}
+.auth-gate p{color:var(--muted);font-size:15px;margin-bottom:32px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px);}
+
+/* PROFILE CARD */
+.profile-header{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;align-items:center;gap:24px;margin-bottom:24px;}
+.profile-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);flex-shrink:0;}
+.profile-avatar-placeholder{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#000;flex-shrink:0;}
+.profile-info h1{font-size:22px;font-weight:800;margin-bottom:4px;}
+.profile-info .profile-email{color:var(--muted);font-size:14px;margin-bottom:8px;}
+.profile-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.25);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--gold);}
+.profile-actions{margin-left:auto;display:flex;gap:10px;}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-outline:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);}
+.btn-danger{background:none;border:1px solid rgba(255,59,59,.35);color:var(--red);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-danger:hover{background:rgba(255,59,59,.08);}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+.stat-num{font-size:28px;font-weight:900;color:var(--gold);line-height:1;}
+.stat-label{font-size:12px;color:var(--muted);margin-top:5px;}
+
+/* SECTIONS */
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-title{font-size:16px;font-weight:700;}
+.section-link{font-size:13px;color:var(--gold);text-decoration:none;}
+.section-link:hover{text-decoration:underline;}
+
+/* WISHLIST PREVIEW */
+.wishlist-items{display:grid;gap:12px;}
+.wishlist-item{display:flex;align-items:center;gap:14px;padding:12px;background:var(--surface);border-radius:10px;border:1px solid var(--border);}
+.wishlist-item-icon{width:40px;height:40px;background:rgba(255,215,0,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold);}
+.wishlist-item-info{flex:1;}
+.wishlist-item-title{font-size:13px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;}
+.wishlist-item-price{font-size:12px;color:var(--green);font-weight:700;}
+.wishlist-item-remove{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;}
+.wishlist-item-remove:hover{color:var(--red);}
+.empty-state{text-align:center;padding:32px;color:var(--muted);font-size:14px;}
+.empty-state svg{opacity:.3;margin-bottom:10px;}
+
+/* SETTINGS */
+.settings-list{display:grid;gap:1px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.settings-row:last-child{border-bottom:none;}
+.settings-row-label{font-size:14px;font-weight:500;}
+.settings-row-desc{font-size:12px;color:var(--muted);margin-top:2px;}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:11px;cursor:pointer;transition:.25s;}
+.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;}
+.toggle input:checked + .toggle-slider{background:var(--gold);}
+.toggle input:checked + .toggle-slider:before{transform:translateX(18px);}
+
+/* MEMBER SINCE */
+.member-since{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#222;border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;max-width:280px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+
+@media(max-width:700px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .profile-header{flex-direction:column;text-align:center;}
+  .profile-actions{margin-left:0;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
+    <div class="nav-logo-text">Everyday Black Friday<span>Black Friday prices. All year round.</span></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="search.html">Deals</a>
+    <a class="nav-link" href="alerts.html">Alerts</a>
+    <a class="nav-link" href="membership.html">Pro</a>
+  </div>
+  <div class="nav-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search deals…" id="nav-search-input">
+  </div>
+  <div class="nav-right">
+    <div class="nav-timer" id="nav-timer">⚡ LIVE DEALS</div>
+    <button id="nav-signin-btn" onclick="openSignin()">Sign In</button>
+    <a class="nav-user-pill" id="nav-user-pill" href="profile.html">
+      <img id="nav-avatar" src="" alt="">
+      <span id="nav-name"></span>
+    </a>
+  </div>
+</nav>
+
+<!-- SIGN-IN OVERLAY -->
+<div class="signin-overlay" id="signin-overlay">
+  <div class="signin-box">
+    <img class="signin-logo" src="assets/logo-ebf.png" alt="EBF">
+    <h2>Sign in to EBF</h2>
+    <p>Save wishlist items, set deal alerts, and track your savings across devices.</p>
+    <div class="g-signin-wrap">
+      <div id="g_id_onload"
+        data-client_id="875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com"
+        data-callback="handleGoogleSignIn"
+        data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left">
+      </div>
+    </div>
+    <button class="signin-skip" onclick="closeSignin()">Maybe later</button>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrap">
+
+  <!-- SIGNED-OUT GATE -->
+  <div class="auth-gate" id="auth-gate" style="display:none;">
+    <div class="auth-gate-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <h2>Your Profile</h2>
+    <p>Sign in to view your wishlist, deal alerts, savings history, and account settings.</p>
+    <button class="btn-gold" onclick="openSignin()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Sign In with Google
+    </button>
+  </div>
+
+  <!-- SIGNED-IN PROFILE -->
+  <div id="profile-content" style="display:none;">
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div id="profile-avatar-wrap"></div>
+      <div class="profile-info">
+        <h1 id="profile-name">Loading…</h1>
+        <div class="profile-email" id="profile-email"></div>
+        <div class="member-since" id="member-since">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span></span>
+        </div>
+        <div style="margin-top:10px;"><span class="profile-badge">⭐ Free Member</span></div>
+      </div>
+      <div class="profile-actions">
+        <a href="membership.html" class="btn-outline" style="text-decoration:none;display:inline-block;text-align:center;">Upgrade to Pro</a>
+        <button class="btn-danger" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-wishlist">0</div>
+        <div class="stat-label">Wishlist Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-watchlist">0</div>
+        <div class="stat-label">Deal Alerts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-savings">$0</div>
+        <div class="stat-label">Est. Savings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-days">0</div>
+        <div class="stat-label">Days Active</div>
+      </div>
+    </div>
+
+    <!-- Wishlist Section -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">❤️ Wishlist</div>
+        <a class="section-link" href="search.html">Browse Deals →</a>
+      </div>
+      <div id="wishlist-preview"></div>
+    </div>
+
+    <!-- Alerts Section -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">🔔 Deal Alerts</div>
+        <a class="section-link" href="alerts.html">Manage Alerts →</a>
+      </div>
+      <div id="watchlist-preview"></div>
+    </div>
+
+    <!-- Settings -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">⚙️ Preferences</div>
+      </div>
+      <div class="settings-list">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Email Notifications</div>
+            <div class="settings-row-desc">Get notified when watched deals drop in price</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="pref-email" onchange="savePref('email_notif', this.checked)" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">New Deal Alerts</div>
+            <div class="settings-row-desc">Daily digest of top new deals in your categories</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="pref-daily" onchange="savePref('daily_digest', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Flash Sale Alerts</div>
+            <div class="settings-row-desc">Instant alerts for deals over 50% off</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="pref-flash" onchange="savePref('flash_alerts', this.checked)" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Show Affiliate Disclosure</div>
+            <div class="settings-row-desc">Display commission notice on deal links</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="pref-aff" onchange="savePref('aff_notice', this.checked)" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /profile-content -->
+</div><!-- /page-wrap -->
+
+<!-- FOOTER -->
+<footer style="background:var(--surface);border-top:1px solid var(--border);padding:48px 24px 24px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+      <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:44px;height:44px;object-fit:contain;">
+      <div>
+        <div style="font-weight:800;font-size:14px;color:#fff;">Everyday Black Friday</div>
+        <div style="font-size:11px;color:var(--muted);">Black Friday prices. All year round.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:40px;flex-wrap:wrap;margin-bottom:32px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Shop</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="categories.html" style="color:var(--muted);text-decoration:none;font-size:13px;">All Categories</a>
+          <a href="search.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Today's Deals</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Account</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="profile.html" style="color:var(--gold);text-decoration:none;font-size:13px;">Profile</a>
+          <a href="alerts.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Alerts</a>
+          <a href="membership.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Go Pro</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:20px;text-align:center;font-size:11px;color:var(--muted);">
+      © 2026 Everyday Black Friday · Prices and availability subject to change. We may earn commissions on qualifying purchases.
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- AUTH ----
+function handleGoogleSignIn(response) {
+  const data = parseJwt(response.credential);
+  const user = {
+    name: data.name,
+    email: data.email,
+    picture: data.picture,
+    joined: Date.now()
+  };
+  const existing = getUser();
+  if (existing && existing.joined) user.joined = existing.joined;
+  localStorage.setItem('bdd_user', JSON.stringify(user));
+  localStorage.removeItem('skipped_signin');
+  closeSignin();
+  updateAuthUI();
+  renderProfileContent();
+  showToast('Welcome, ' + data.given_name + '! 👋', 'success');
+}
+function parseJwt(token) {
+  const b64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+  return JSON.parse(decodeURIComponent(atob(b64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+}
+function getUser() {
+  try { return JSON.parse(localStorage.getItem('bdd_user')); } catch { return null; }
+}
+function signOut() {
+  localStorage.removeItem('bdd_user');
+  localStorage.setItem('skipped_signin', '1');
+  updateAuthUI();
+  renderProfileContent();
+  showToast('Signed out', 'success');
+}
+function openSignin() { document.getElementById('signin-overlay').classList.add('active'); }
+function closeSignin() { document.getElementById('signin-overlay').classList.remove('active'); }
+document.getElementById('signin-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeSignin(); });
+
+function updateAuthUI() {
+  const user = getUser();
+  const signinBtn = document.getElementById('nav-signin-btn');
+  const userPill = document.getElementById('nav-user-pill');
+  if (user) {
+    signinBtn.style.display = 'none';
+    userPill.style.display = 'flex';
+    document.getElementById('nav-avatar').src = user.picture || '';
+    document.getElementById('nav-name').textContent = user.name.split(' ')[0];
+  } else {
+    signinBtn.style.display = '';
+    userPill.style.display = 'none';
+  }
+}
+
+// ---- PROFILE RENDER ----
+function renderProfileContent() {
+  const user = getUser();
+  const gate = document.getElementById('auth-gate');
+  const content = document.getElementById('profile-content');
+  if (!user) {
+    gate.style.display = '';
+    content.style.display = 'none';
+    return;
+  }
+  gate.style.display = 'none';
+  content.style.display = '';
+
+  // Avatar
+  const avatarWrap = document.getElementById('profile-avatar-wrap');
+  if (user.picture) {
+    avatarWrap.innerHTML = `<img class="profile-avatar" src="${user.picture}" alt="${user.name}">`;
+  } else {
+    const initials = user.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    avatarWrap.innerHTML = `<div class="profile-avatar-placeholder">${initials}</div>`;
+  }
+
+  document.getElementById('profile-name').textContent = user.name;
+  document.getElementById('profile-email').textContent = user.email;
+
+  // Member since
+  const joined = user.joined ? new Date(user.joined) : new Date();
+  const daysActive = Math.floor((Date.now() - joined.getTime()) / 86400000) + 1;
+  const memberSince = document.getElementById('member-since').querySelector('span');
+  memberSince.textContent = 'Member since ' + joined.toLocaleDateString('en-US', {month:'long', year:'numeric'});
+
+  // Stats
+  const wishlist = getWishlist();
+  const watchlist = getWatchlist();
+  document.getElementById('stat-wishlist').textContent = wishlist.length;
+  document.getElementById('stat-watchlist').textContent = watchlist.length;
+  document.getElementById('stat-days').textContent = daysActive;
+
+  // Estimated savings (sum of discounts in wishlist)
+  let savings = 0;
+  wishlist.forEach(item => { if (item.savings) savings += item.savings; });
+  document.getElementById('stat-savings').textContent = savings > 0 ? '$' + savings.toFixed(0) : '$0';
+
+  // Wishlist preview
+  renderWishlistPreview(wishlist);
+  renderWatchlistPreview(watchlist);
+
+  // Prefs
+  const prefs = getPrefs();
+  document.getElementById('pref-email').checked = prefs.email_notif !== false;
+  document.getElementById('pref-daily').checked = prefs.daily_digest === true;
+  document.getElementById('pref-flash').checked = prefs.flash_alerts !== false;
+  document.getElementById('pref-aff').checked = prefs.aff_notice !== false;
+}
+
+function getWishlist() {
+  try { return JSON.parse(localStorage.getItem('bdd_wishlist')) || []; } catch { return []; }
+}
+function getWatchlist() {
+  try { return JSON.parse(localStorage.getItem('bdd_watchlist')) || []; } catch { return []; }
+}
+function getPrefs() {
+  try { return JSON.parse(localStorage.getItem('bdd_prefs')) || {}; } catch { return {}; }
+}
+function savePref(key, val) {
+  const prefs = getPrefs();
+  prefs[key] = val;
+  localStorage.setItem('bdd_prefs', JSON.stringify(prefs));
+  showToast('Preference saved', 'success');
+}
+
+function renderWishlistPreview(wishlist) {
+  const container = document.getElementById('wishlist-preview');
+  if (!wishlist.length) {
+    container.innerHTML = `<div class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><p>No wishlist items yet. <a href="search.html" style="color:var(--gold);">Browse deals</a> and tap the heart to save.</p></div>`;
+    return;
+  }
+  const preview = wishlist.slice(0, 5);
+  container.innerHTML = `<div class="wishlist-items">${preview.map(item => `
+    <div class="wishlist-item">
+      <div class="wishlist-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--gold)" stroke="var(--gold)"/></svg>
+      </div>
+      <div class="wishlist-item-info">
+        <div class="wishlist-item-title">${item.title || 'Saved Deal'}</div>
+        <div class="wishlist-item-price">${item.price ? '$' + item.price : ''}</div>
+      </div>
+      <button class="wishlist-item-remove" onclick="removeWishlistItem(${item.id})" title="Remove">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('')}</div>
+  ${wishlist.length > 5 ? `<div style="text-align:center;margin-top:12px;"><a href="search.html" style="color:var(--gold);font-size:13px;">View all ${wishlist.length} items →</a></div>` : ''}`;
+}
+
+function renderWatchlistPreview(watchlist) {
+  const container = document.getElementById('watchlist-preview');
+  if (!watchlist.length) {
+    container.innerHTML = `<div class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><p>No alerts set. <a href="alerts.html" style="color:var(--gold);">Set up deal alerts</a> to get notified when prices drop.</p></div>`;
+    return;
+  }
+  container.innerHTML = `<div class="wishlist-items">${watchlist.slice(0,3).map(a => `
+    <div class="wishlist-item">
+      <div class="wishlist-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="wishlist-item-info">
+        <div class="wishlist-item-title">${a.keyword || a.title || 'Alert'}</div>
+        <div class="wishlist-item-price">${a.targetPrice ? 'Target: $' + a.targetPrice : a.category || ''}</div>
+      </div>
+    </div>
+  `).join('')}</div>
+  ${watchlist.length > 3 ? `<div style="text-align:center;margin-top:12px;"><a href="alerts.html" style="color:var(--gold);font-size:13px;">Manage all ${watchlist.length} alerts →</a></div>` : ''}`;
+}
+
+function removeWishlistItem(id) {
+  let list = getWishlist().filter(i => i.id !== id);
+  localStorage.setItem('bdd_wishlist', JSON.stringify(list));
+  renderProfileContent();
+  showToast('Removed from wishlist');
+}
+
+// ---- NAV TIMER ----
+function updateNavTimer() {
+  const now = new Date();
+  const end = new Date(now); end.setHours(23,59,59,999);
+  const diff = end - now;
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('nav-timer').textContent = `⚡ ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// NAV SEARCH
+document.getElementById('nav-search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.value.trim()) {
+    window.location.href = 'search.html?q=' + encodeURIComponent(e.target.value.trim());
+  }
+});
+
+// TOAST
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+
+// INIT
+updateNavTimer();
+setInterval(updateNavTimer, 1000);
+updateAuthUI();
+renderProfileContent();
+</script>
+</body>
+</html>
