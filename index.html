@@ -3,1272 +3,941 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Everyday Black Friday – Black Friday Prices All Year Round</title>
+<title>Everyday Black Friday — Black Friday Prices. All Year Round.</title>
 <meta name="description" content="Black Friday prices. All year round. Great deals from stores you trust — electronics, home, fashion, and more.">
 <link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
 <meta name="theme-color" content="#0a0a0a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="EverydayBF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  :root{
-    --bg:#0a0a0a;
-    --surface:#111111;
-    --card:#181818;
-    --border:#222222;
-    --gold:#FFD700;
-    --gold2:#FFA500;
-    --text:#ffffff;
-    --muted:#888888;
-    --red:#ff3b3b;
-    --green:#22c55e;
-  }
-  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0a;
+  --surface:#111111;
+  --card:#181818;
+  --border:#222222;
+  --gold:#FFD700;
+  --gold2:#FFA500;
+  --gold3:#C8960C;
+  --text:#ffffff;
+  --muted:#888888;
+  --red:#ff3b3b;
+  --green:#22c55e;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
 
-  /* ── NAVBAR ── */
-  nav{
-    position:sticky;top:0;z-index:100;
-    background:rgba(10,10,10,0.95);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    padding:0 20px;
-    height:64px;
-    display:flex;align-items:center;gap:16px;
-  }
-  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-  .nav-logo-icon{
-    width:38px;height:38px;border-radius:8px;
-    background:#0a0a0a;border:1px solid #333;
-    display:flex;align-items:center;justify-content:center;
-    font-size:15px;font-weight:900;color:var(--gold);letter-spacing:-0.5px;
-    flex-shrink:0;
-  }
-  .nav-logo-text{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-0.5px;line-height:1.1;}
-  .nav-logo-text span{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-  .nav-links{display:flex;align-items:center;gap:4px;}
-  .nav-link{padding:6px 12px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:500;color:var(--muted);transition:color 0.2s,background 0.2s;white-space:nowrap;}
-  .nav-link:hover{color:#fff;background:#1a1a1a;}
-  .nav-link.active{color:var(--gold);background:#1a1200;}
-  @media(max-width:800px){.nav-links{display:none;}}
-  .nav-search{
-    flex:1;min-width:0;max-width:420px;margin:0 auto;
-    position:relative;
-  }
-  .nav-search input{
-    width:100%;padding:10px 16px 10px 40px;
-    background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
-    color:#fff;font-size:14px;outline:none;
-    transition:border-color 0.2s;
-  }
-  .nav-search input:focus{border-color:var(--gold);}
-  .nav-search input::placeholder{color:#555;}
-  .nav-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;}
-  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
-  .nav-countdown{
-    display:flex;align-items:center;gap:6px;
-    background:#1a1a1a;border:1px solid #2a2a2a;
-    border-radius:8px;padding:6px 12px;
-    font-size:12px;
-  }
-  .nav-countdown .label{color:var(--muted);}
-  .nav-countdown .time{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;}
-
-  /* ── HERO ── */
-  .hero{
-    background:linear-gradient(135deg,#0a0a0a 0%,#111111 40%,#1a1200 100%);
-    padding:60px 20px 50px;
-    text-align:center;
-    border-bottom:1px solid var(--border);
-    position:relative;overflow:hidden;
-  }
-  .hero::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(ellipse at 50% 0%, rgba(255,165,0,0.12) 0%, transparent 70%);
-    pointer-events:none;
-  }
-  .hero-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    background:#1a1200;border:1px solid rgba(255,165,0,0.3);
-    border-radius:20px;padding:6px 16px;
-    font-size:12px;font-weight:600;color:var(--gold2);
-    text-transform:uppercase;letter-spacing:1px;
-    margin-bottom:24px;
-  }
-  .hero h1{
-    font-size:clamp(42px,8vw,88px);
-    font-weight:900;
-    line-height:0.95;
-    letter-spacing:-3px;
-    margin-bottom:8px;
-  }
-  .hero h1 .black{color:#333;-webkit-text-stroke:1px #444;}
-  .hero h1 .deals{color:var(--gold);}
-  .hero-sub{
-    font-size:16px;color:var(--muted);
-    margin-bottom:36px;font-weight:400;
-  }
-  /* Countdown */
-  .countdown{
-    display:inline-flex;align-items:center;gap:4px;
-    background:#111;border:1px solid #222;
-    border-radius:12px;padding:16px 24px;
-    margin-bottom:16px;
-  }
-  .countdown-label{
-    font-size:11px;color:var(--muted);
-    text-transform:uppercase;letter-spacing:1px;
-    margin-right:8px;
-  }
-  .cd-unit{text-align:center;}
-  .cd-num{
-    font-size:clamp(28px,5vw,42px);font-weight:900;
-    color:var(--gold);font-variant-numeric:tabular-nums;
-    line-height:1;
-  }
-  .cd-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-  .cd-sep{font-size:28px;color:#333;font-weight:900;padding:0 4px;align-self:flex-start;margin-top:4px;}
-
-  /* ── CATEGORY BAR ── */
-  .cat-bar{
-    position:sticky;top:64px;z-index:90;
-    background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    padding:0 20px;
-    display:flex;align-items:center;gap:8px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    height:52px;
-  }
-  .cat-bar::-webkit-scrollbar{display:none;}
-  .cat-btn{
-    white-space:nowrap;padding:7px 16px;
-    border-radius:20px;border:1px solid #2a2a2a;
-    background:transparent;color:var(--muted);
-    font-size:13px;font-weight:600;cursor:pointer;
-    transition:all 0.2s;flex-shrink:0;
-  }
-  .cat-btn:hover{border-color:#444;color:#ccc;}
-  .cat-btn.active{background:var(--gold);border-color:var(--gold);color:#000;}
-
-  /* ── DEALS GRID ── */
-  .section{padding:32px 20px 0;}
-  .section-header{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:20px;
-  }
-  .section-title{
-    font-size:20px;font-weight:800;
-    display:flex;align-items:center;gap:8px;
-  }
-  .section-title .dot{
-    width:8px;height:8px;border-radius:50%;
-    background:var(--gold);display:inline-block;
-  }
-
-  .deals-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:16px;
-  }
-
-  /* ── DEAL CARD ── */
-  .deal-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:14px;
-    overflow:hidden;
-    transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;
-    cursor:pointer;
-    text-decoration:none;
-    display:block;
-    color:inherit;
-  }
-  .deal-card:hover{
-    transform:translateY(-3px);
-    border-color:#333;
-    box-shadow:0 8px 32px rgba(255,165,0,0.08);
-  }
-  .card-img{
-    width:100%;
-    aspect-ratio:1;
-    background:#1a1a1a;
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-    position:relative;
-  }
-  .card-img img{
-    width:100%;height:100%;
-    object-fit:contain;
-    padding:16px;
-    transition:transform 0.3s;
-  }
-  .deal-card:hover .card-img img{transform:scale(1.04);}
-  .badge-pct{
-    position:absolute;top:10px;left:10px;
-    background:var(--red);color:#fff;
-    font-size:11px;font-weight:800;
-    padding:3px 8px;border-radius:6px;
-    letter-spacing:0.5px;
-  }
-  .badge-hot{
-    position:absolute;top:10px;right:10px;
-    background:rgba(255,165,0,0.15);
-    border:1px solid rgba(255,165,0,0.4);
-    color:var(--gold);
-    font-size:9px;font-weight:800;
-    padding:3px 7px;border-radius:4px;
-    letter-spacing:1px;text-transform:uppercase;
-  }
-  .card-body{padding:14px 14px 16px;}
-  .card-category{
-    font-size:10px;font-weight:600;color:var(--muted);
-    text-transform:uppercase;letter-spacing:1px;
-    margin-bottom:6px;
-  }
-  .card-name{
-    font-size:14px;font-weight:700;
-    line-height:1.3;margin-bottom:8px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .card-prices{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
-  .price-now{font-size:22px;font-weight:900;color:var(--gold);}
-  .price-was{font-size:13px;color:var(--muted);text-decoration:line-through;}
-
-  /* Stars */
-  .card-stars{
-    display:flex;align-items:center;gap:4px;
-    margin-bottom:10px;cursor:pointer;
-  }
-  .stars-row{font-size:14px;letter-spacing:1px;line-height:1;}
-  .stars-count{font-size:11px;color:var(--muted);}
-
-  /* Card Actions Row */
-  .card-actions{
-    display:flex;gap:8px;
-    margin-bottom:10px;
-  }
-  .card-share, .card-wish{
-    flex:1;
-    display:flex;align-items:center;justify-content:center;gap:5px;
-    padding:7px 10px;
-    border-radius:8px;border:1px solid #2a2a2a;
-    background:transparent;color:var(--muted);
-    font-size:12px;font-weight:600;cursor:pointer;
-    transition:all 0.2s;
-  }
-  .card-share:hover{border-color:#444;color:#ccc;}
-  .card-wish:hover{border-color:#ff3b3b;color:#ff3b3b;}
-  .card-wish.wished{border-color:#ff3b3b;color:#ff3b3b;background:rgba(255,59,59,0.08);}
-
-  .card-cta{
-    display:flex;align-items:center;justify-content:center;
-    gap:6px;
-    background:var(--gold);color:#000;
-    border-radius:8px;padding:9px;
-    font-size:13px;font-weight:800;
-    transition:background 0.2s;
-  }
-  .deal-card:hover .card-cta{background:#ffe44d;}
-
-  /* ── STAR RATING PICKER ── */
-  .star-picker{
-    display:none;position:absolute;
-    background:#222;border:1px solid #333;
-    border-radius:10px;padding:8px 12px;
-    z-index:200;
-    gap:4px;
-    font-size:20px;cursor:pointer;
-    white-space:nowrap;
-  }
-  .star-picker.show{display:flex;}
-  .star-picker span:hover{transform:scale(1.3);}
-  .star-picker span{transition:transform 0.1s;display:inline-block;}
-
-  /* ── SPOTLIGHT ── */
-  .spotlight{
-    background:linear-gradient(135deg,#111111,#1a1200);
-    border:1px solid rgba(255,165,0,0.2);
-    border-radius:16px;
-    padding:28px;
-    display:flex;align-items:center;gap:28px;
-    margin-bottom:32px;
-    text-decoration:none;color:inherit;
-    transition:border-color 0.2s;
-  }
-  .spotlight:hover{border-color:rgba(255,165,0,0.5);}
-  .spotlight-img{
-    width:140px;height:140px;flex-shrink:0;
-    background:#1a1a1a;border-radius:12px;
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
-  }
-  .spotlight-img img{width:100%;height:100%;object-fit:contain;padding:12px;}
-  .spotlight-info{flex:1;}
-  .spotlight-label{
-    font-size:10px;font-weight:700;color:var(--gold2);
-    text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;
-  }
-  .spotlight-name{font-size:22px;font-weight:900;line-height:1.2;margin-bottom:8px;}
-  .spotlight-desc{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
-  .spotlight-price{font-size:32px;font-weight:900;color:var(--gold);}
-  .spotlight-was{font-size:14px;color:var(--muted);text-decoration:line-through;margin-left:8px;}
-  .spotlight-cta{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--gold);color:#000;
-    border-radius:10px;padding:12px 24px;
-    font-size:14px;font-weight:800;margin-top:16px;
-    transition:background 0.2s;
-  }
-  .spotlight:hover .spotlight-cta{background:#ffe44d;}
-
-  /* ── FOOTER ── */
-  footer{
-    border-top:1px solid var(--border);
-    padding:24px 20px;
-    text-align:center;
-    color:var(--muted);font-size:12px;
-  }
-  footer a{color:var(--muted);text-decoration:none;}
-  footer a:hover{color:var(--gold);}
-
-  /* ── TOAST ── */
-  #toast{
-    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
-    background:#222;border:1px solid #333;
-    border-radius:10px;padding:12px 20px;
-    font-size:14px;font-weight:600;color:#fff;
-    z-index:9999;transition:transform 0.3s ease;
-    white-space:nowrap;
-  }
-  #toast.show{transform:translateX(-50%) translateY(0);}
-
-/* ── Deal Alert Button ── */
-.nav-alert-btn{
-  display:flex;align-items:center;gap:6px;
-  background:transparent;border:1px solid var(--border);
-  color:var(--text);border-radius:8px;
-  padding:8px 14px;font-size:13px;font-weight:600;
+/* ───── NAVBAR ───── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(10,10,10,0.97);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid #1a1a1a;
+  padding:0 24px;
+  height:68px;
+  display:flex;align-items:center;gap:0;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:0;
+  text-decoration:none;flex-shrink:0;
+  margin-right:24px;
+  padding-right:24px;
+  border-right:1px solid #222;
+}
+.nav-logo img{height:40px;width:auto;object-fit:contain;}
+.nav-links{display:flex;align-items:center;gap:0;margin-right:16px;}
+.nav-link{
+  padding:8px 14px;border-radius:6px;
+  text-decoration:none;font-size:14px;font-weight:500;
+  color:var(--muted);transition:color 0.2s,background 0.2s;
+  white-space:nowrap;display:flex;align-items:center;gap:5px;
+}
+.nav-link:hover{color:#fff;background:#1a1a1a;}
+.nav-link.active{color:var(--gold);}
+.nav-link svg{opacity:0.6;}
+.nav-search{
+  flex:1;min-width:0;max-width:480px;
+  position:relative;margin:0 auto;
+}
+.nav-search input{
+  width:100%;padding:10px 16px 10px 44px;
+  background:#181818;border:1px solid #282828;border-radius:24px;
+  color:#fff;font-size:14px;outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.nav-search input:focus{border-color:rgba(255,165,0,0.5);box-shadow:0 0 0 2px rgba(255,165,0,0.1);}
+.nav-search input::placeholder{color:#555;}
+.nav-search .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.btn-signin{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:8px;
+  background:transparent;border:1px solid #333;
+  color:#ccc;font-size:14px;font-weight:500;
   cursor:pointer;transition:all 0.2s;white-space:nowrap;
 }
-.nav-alert-btn:hover{border-color:var(--gold);color:var(--gold);}
-.nav-alert-btn svg{flex-shrink:0;}
+.btn-signin:hover{border-color:var(--gold2);color:#fff;}
+.btn-signin svg{flex-shrink:0;}
+.user-pill{
+  display:none;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:8px;
+  background:#1a1a1a;border:1px solid #2a2a2a;
+  font-size:14px;font-weight:500;color:#fff;
+  cursor:pointer;
+}
+.user-pill img{width:26px;height:26px;border-radius:50%;object-fit:cover;}
+.btn-alerts{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:8px;
+  background:#1a1200;border:1px solid rgba(255,165,0,0.25);
+  color:var(--gold2);font-size:13px;font-weight:500;
+  cursor:pointer;text-decoration:none;transition:all 0.2s;white-space:nowrap;
+}
+.btn-alerts:hover{background:#241a00;border-color:rgba(255,165,0,0.4);}
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .btn-alerts{display:none;}
+}
+@media(max-width:600px){
+  nav{padding:0 16px;}
+  .nav-logo img{height:32px;}
+}
 
-/* ── Alert Modal ── */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.75);
-  z-index:10000;display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity 0.2s;
+/* ───── HERO ───── */
+.hero{
+  position:relative;overflow:hidden;
+  background:#0d0d0d;
+  min-height:420px;
+  display:flex;align-items:center;
 }
-.modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-box{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:16px;padding:28px;width:100%;max-width:440px;
-  max-height:85vh;overflow-y:auto;
-  transform:translateY(16px);transition:transform 0.2s;
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 80% at 65% 50%, rgba(180,120,20,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 100% at 100% 50%, rgba(100,60,0,0.15) 0%, transparent 60%),
+    linear-gradient(135deg, #0a0a0a 0%, #111108 50%, #0d0a00 100%);
 }
-.modal-overlay.open .modal-box{transform:translateY(0);}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.modal-title{font-size:18px;font-weight:700;color:var(--text);}
-.modal-close{
-  background:none;border:none;color:var(--muted);font-size:22px;
-  cursor:pointer;line-height:1;padding:0 4px;
+.hero-arch{
+  position:absolute;right:0;top:0;bottom:0;width:65%;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:flex-end;
 }
-.modal-close:hover{color:var(--text);}
-.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;}
-.modal-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;}
-.modal-input{
-  width:100%;background:var(--surface);border:1px solid var(--border);
-  border-radius:8px;padding:11px 14px;font-size:14px;color:var(--text);
-  box-sizing:border-box;margin-bottom:14px;outline:none;
-  font-family:inherit;
+.hero-arch::before{
+  content:'';position:absolute;
+  left:-80px;top:-40px;bottom:-40px;right:-80px;
+  border:3px solid rgba(255,165,0,0.15);
+  border-radius:50%;
 }
-.modal-input:focus{border-color:var(--gold);}
-.modal-input::placeholder{color:var(--muted);}
-.modal-btn{
-  width:100%;background:var(--gold);color:#000;border:none;
-  border-radius:10px;padding:13px;font-size:14px;font-weight:700;
-  cursor:pointer;transition:opacity 0.2s;margin-top:4px;
-  font-family:inherit;
+.hero-arch::after{
+  content:'';position:absolute;
+  left:-120px;top:-80px;bottom:-80px;right:-120px;
+  border:1px solid rgba(255,165,0,0.07);
+  border-radius:50%;
 }
-.modal-btn:hover{opacity:0.88;}
-.modal-divider{border:none;border-top:1px solid var(--border);margin:22px 0;}
-.modal-alerts-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;}
-.modal-alerts-list{display:flex;flex-direction:column;gap:8px;}
-.alert-item{
+.hero-img{
+  position:absolute;right:0;top:0;bottom:0;
+  width:62%;object-fit:cover;object-position:left center;
+  opacity:0.95;
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:60px 24px 60px 60px;
+  max-width:520px;
+}
+.hero-content h1{
+  font-size:clamp(36px,5vw,62px);
+  font-weight:900;
+  line-height:1.1;
+  letter-spacing:-1.5px;
+  color:#fff;
+  margin-bottom:4px;
+}
+.hero-content h1 span{color:var(--gold2);}
+.hero-sub{
+  font-size:17px;color:#ccc;margin:12px 0 32px;
+  font-weight:400;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:30px;
+  background:linear-gradient(135deg,#FFA500,#cc8400);
+  color:#000;font-size:15px;font-weight:700;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 4px 20px rgba(255,140,0,0.3);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(255,140,0,0.4);}
+@media(max-width:800px){
+  .hero-img{width:45%;opacity:0.4;}
+  .hero-content{padding:50px 20px;}
+}
+@media(max-width:500px){
+  .hero-img{display:none;}
+  .hero-content{padding:40px 20px;}
+  .hero-content h1{font-size:36px;}
+}
+
+/* ───── SECTION LAYOUT ───── */
+.section{padding:40px 24px;max-width:1360px;margin:0 auto;}
+.section-header{
   display:flex;align-items:center;justify-content:space-between;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:8px;padding:10px 12px;
+  margin-bottom:24px;
 }
-.alert-info{flex:1;min-width:0;}
-.alert-keyword{font-size:13px;font-weight:600;color:var(--gold);margin-bottom:2px;}
-.alert-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.alert-remove{
-  background:none;border:none;color:var(--muted);font-size:18px;
-  cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;
+.section-title{font-size:24px;font-weight:800;letter-spacing:-0.5px;}
+.section-link{
+  font-size:14px;font-weight:600;color:var(--gold2);
+  text-decoration:none;display:flex;align-items:center;gap:4px;
+  transition:color 0.2s;
 }
-.alert-remove:hover{color:var(--red);}
-.modal-empty{font-size:13px;color:var(--muted);text-align:center;padding:16px 0;}
+.section-link:hover{color:var(--gold);}
 
-  @media(max-width:600px){
-    .nav-search{display:none;}
-    .hero h1{letter-spacing:-2px;}
-    .spotlight{flex-direction:column;}
-    .spotlight-img{width:100%;height:180px;}
-    .countdown{flex-wrap:wrap;justify-content:center;}
-  }
-  /* Google Sign-In */
-  .signin-btn{display:flex;align-items:center;gap:8px;padding:7px 14px;background:#fff;color:#222;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
-  .signin-btn svg{flex-shrink:0;}
-  .signin-btn:hover{background:#f0f0f0;}
-  .user-pill{display:none;align-items:center;gap:8px;padding:5px 12px 5px 5px;background:var(--surface);border:1px solid var(--border);border-radius:999px;cursor:pointer;}
-  .user-pill:hover{border-color:var(--gold);}
-  .user-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;}
-  .user-name{font-size:13px;font-weight:600;color:var(--text);}
-  .signin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;}
-  .signin-overlay.show{display:flex;}
-  .signin-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;max-width:380px;width:90%;text-align:center;}
-  .signin-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
-  .signin-box p{color:var(--muted);font-size:14px;margin-bottom:24px;}
-  .signin-google-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#fff;color:#222;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;width:100%;justify-content:center;}
-  .signin-google-btn:hover{background:#f0f0f0;}
-  .signin-skip{display:block;margin-top:14px;color:var(--muted);font-size:13px;cursor:pointer;background:none;border:none;text-decoration:underline;}
+/* ───── CATEGORY TILES ───── */
+.cat-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.cat-tile{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  text-decoration:none;
+  overflow:hidden;
+  position:relative;
+  transition:border-color 0.2s,transform 0.15s;
+  cursor:pointer;
+}
+.cat-tile:hover{border-color:#333;transform:translateY(-1px);}
+.cat-tile:hover .cat-arrow{color:var(--gold2);}
+.cat-thumb{
+  width:72px;height:56px;flex-shrink:0;
+  border-radius:8px;overflow:hidden;
+  background:#222;
+}
+.cat-thumb img{width:100%;height:100%;object-fit:cover;}
+.cat-info{flex:1;min-width:0;}
+.cat-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;}
+.cat-subs{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cat-arrow{margin-left:auto;color:#444;flex-shrink:0;transition:color 0.2s;}
+@media(max-width:1000px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.cat-grid{grid-template-columns:1fr;}}
 
-  /* ── EBF NAVBAR LOGO ── */
-  .nav-logo-img{width:36px;height:36px;object-fit:contain;flex-shrink:0;}
+/* ───── DEALS GRID ───── */
+.deals-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+.deal-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s;
+  position:relative;
+}
+.deal-card:hover{
+  border-color:#333;
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+.deal-img{
+  width:100%;height:200px;
+  background:#151515;
+  position:relative;overflow:hidden;
+}
+.deal-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 0.3s;
+}
+.deal-card:hover .deal-img img{transform:scale(1.04);}
+.deal-badge{
+  position:absolute;top:10px;left:10px;
+  background:linear-gradient(135deg,#cc2200,#ff3300);
+  color:#fff;font-size:11px;font-weight:800;
+  padding:3px 8px;border-radius:4px;letter-spacing:0.5px;
+}
+.deal-wish{
+  position:absolute;top:10px;right:10px;
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(0,0,0,0.6);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background 0.2s;
+  color:#888;
+}
+.deal-wish:hover{background:rgba(0,0,0,0.9);color:var(--red);}
+.deal-wish.active{color:var(--red);}
+.deal-body{padding:14px 16px 16px;}
+.deal-name{
+  font-size:14px;font-weight:700;color:#fff;
+  margin-bottom:5px;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.deal-stars{display:flex;align-items:center;gap:5px;margin-bottom:5px;}
+.deal-stars svg{color:var(--gold);}
+.deal-rating{font-size:12px;color:var(--muted);}
+.deal-store{font-size:12px;color:var(--muted);margin-bottom:10px;}
+.deal-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px;}
+.deal-price{font-size:22px;font-weight:800;color:var(--gold);}
+.deal-orig{font-size:14px;color:var(--muted);text-decoration:line-through;}
+.btn-deal{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px;border-radius:8px;
+  background:linear-gradient(135deg,#FFA500,#cc8400);
+  color:#000;font-size:14px;font-weight:700;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:opacity 0.2s;
+}
+.btn-deal:hover{opacity:0.9;}
+@media(max-width:1000px){.deals-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.deals-grid{grid-template-columns:1fr;}}
 
-  /* ── HERO REDESIGN ── */
-  .hero{
-    background: radial-gradient(ellipse 80% 60% at 60% 50%, #1a1400 0%, #0a0a0a 100%);
-    padding:0;min-height:420px;overflow:hidden;
-  }
-  .hero-inner{
-    max-width:1200px;margin:0 auto;padding:60px 24px 48px;
-    display:flex;align-items:center;gap:48px;
-  }
-  .hero-left{flex:1;min-width:0;}
-  .hero-right{flex:0 0 460px;display:flex;align-items:center;justify-content:center;}
-  .hero-img{width:100%;max-width:460px;height:auto;object-fit:contain;filter:drop-shadow(0 0 40px rgba(255,215,0,0.15));}
-  .hero-headline{
-    font-size:clamp(32px,4vw,54px);font-weight:900;line-height:1.1;
-    color:#fff;letter-spacing:-1.5px;margin-bottom:16px;
-  }
-  .hero-gold{color:var(--gold);}
-  .hero-sub{font-size:18px;color:#ccc;margin-bottom:28px;font-weight:400;}
-  .hero-cta{
-    display:inline-block;padding:14px 32px;
-    background:var(--gold);color:#0a0a0a;
-    font-weight:800;font-size:15px;border-radius:10px;
-    text-decoration:none;margin-bottom:36px;
-    transition:background .15s,transform .15s;
-  }
-  .hero-cta:hover{background:var(--gold2);transform:translateY(-1px);}
-  .hero-badge{
-    display:inline-block;padding:5px 12px;
-    border:1px solid var(--gold);color:var(--gold);
-    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-    border-radius:999px;margin-bottom:20px;
-  }
-  .countdown{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .countdown-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:4px;}
+/* ───── DOTD SECTION ───── */
+.dotd-header{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:24px;
+}
+.dotd-title{font-size:24px;font-weight:800;letter-spacing:-0.5px;}
+.dotd-sep{width:1px;height:24px;background:#333;}
+.dotd-sub{font-size:14px;color:var(--muted);}
 
-  /* ── CATEGORIES SECTION ── */
-  .categories-section{max-width:1200px;margin:0 auto;padding:48px 24px 32px;}
-  .categories-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:16px;margin-top:20px;
-  }
-  .cat-tile{
-    display:flex;flex-direction:column;align-items:flex-start;
-    background:var(--card);border:1px solid var(--border);
-    border-radius:14px;padding:22px 20px;
-    text-decoration:none;cursor:pointer;
-    transition:border-color .15s,transform .15s,box-shadow .15s;
-  }
-  .cat-tile:hover{
-    border-color:var(--gold);transform:translateY(-2px);
-    box-shadow:0 8px 24px rgba(255,215,0,0.08);
-  }
-  .cat-tile-icon{
-    width:52px;height:52px;border-radius:12px;
-    background:rgba(255,215,0,0.08);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--gold);margin-bottom:14px;
-  }
-  .cat-tile-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
-  .cat-tile-sub{font-size:12px;color:var(--muted);}
+/* ───── NEWSLETTER ───── */
+.newsletter{
+  background:linear-gradient(135deg,#161200,#1a1600);
+  border:1px solid rgba(255,165,0,0.2);
+  border-radius:16px;
+  padding:28px 32px;
+  display:flex;align-items:center;gap:24px;
+  margin:0 24px 48px;
+  max-width:1360px;
+  margin-left:auto;margin-right:auto;
+}
+.nl-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(255,165,0,0.15);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:var(--gold2);
+}
+.nl-text{flex:1;min-width:0;}
+.nl-title{font-size:18px;font-weight:800;color:var(--gold);}
+.nl-desc{font-size:13px;color:var(--muted);margin-top:2px;}
+.nl-form{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nl-input{
+  padding:10px 16px;border-radius:8px;
+  background:#111;border:1px solid #333;
+  color:#fff;font-size:14px;outline:none;
+  width:260px;transition:border-color 0.2s;
+}
+.nl-input:focus{border-color:rgba(255,165,0,0.4);}
+.nl-input::placeholder{color:#555;}
+.nl-btn{
+  padding:10px 20px;border-radius:8px;
+  background:linear-gradient(135deg,#FFA500,#cc8400);
+  color:#000;font-size:14px;font-weight:700;
+  border:none;cursor:pointer;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;
+  transition:opacity 0.2s;
+}
+.nl-btn:hover{opacity:0.9;}
+@media(max-width:900px){
+  .newsletter{flex-direction:column;align-items:flex-start;padding:24px;}
+  .nl-form{width:100%;flex-direction:column;}
+  .nl-input{width:100%;}
+  .nl-btn{width:100%;justify-content:center;}
+}
 
-  /* ── NEWSLETTER BAR ── */
-  .newsletter-bar{
-    background:linear-gradient(135deg,#111 0%,#1a1400 100%);
-    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-    padding:40px 24px;
-  }
-  .newsletter-inner{
-    max-width:1200px;margin:0 auto;
-    display:flex;align-items:center;justify-content:space-between;gap:32px;
-    flex-wrap:wrap;
-  }
-  .newsletter-left{flex:1;min-width:200px;}
-  .newsletter-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
-  .newsletter-sub{font-size:14px;color:var(--muted);}
-  .newsletter-form{display:flex;gap:10px;flex:0 0 auto;}
-  .newsletter-input{
-    padding:12px 16px;background:var(--card);border:1px solid var(--border);
-    border-radius:10px;color:#fff;font-size:14px;width:260px;outline:none;
-  }
-  .newsletter-input:focus{border-color:var(--gold);}
-  .newsletter-btn{
-    padding:12px 24px;background:var(--gold);color:#0a0a0a;
-    font-weight:800;font-size:14px;border:none;border-radius:10px;cursor:pointer;
-    white-space:nowrap;transition:background .15s;
-  }
-  .newsletter-btn:hover{background:var(--gold2);}
+/* ───── FOOTER ───── */
+footer{
+  background:#080808;
+  border-top:1px solid #161616;
+  padding:48px 24px 32px;
+}
+.footer-inner{max-width:1360px;margin:0 auto;}
+.footer-top{
+  display:grid;grid-template-columns:1fr repeat(4,auto);
+  gap:48px;margin-bottom:40px;
+}
+.footer-brand .logo-wrap{margin-bottom:12px;}
+.footer-brand .logo-wrap img{height:36px;width:auto;}
+.footer-brand p{font-size:13px;color:var(--muted);max-width:220px;line-height:1.6;}
+.footer-col h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;letter-spacing:0.5px;}
+.footer-col a{display:block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:10px;transition:color 0.2s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:24px;border-top:1px solid #161616;
+  font-size:12px;color:#444;
+}
+.footer-bottom a{color:#555;text-decoration:none;}
+.footer-bottom a:hover{color:#888;}
+@media(max-width:900px){
+  .footer-top{grid-template-columns:1fr 1fr;gap:32px;}
+  .footer-brand{grid-column:1/-1;}
+}
+@media(max-width:500px){
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center;}
+}
 
-  /* ── FOOTER REDESIGN ── */
-  footer{background:#060606;border-top:1px solid var(--border);padding:0;}
-  .footer-inner{
-    max-width:1200px;margin:0 auto;padding:48px 24px 32px;
-    display:flex;gap:48px;flex-wrap:wrap;
-  }
-  .footer-brand{display:flex;align-items:center;gap:14px;flex:0 0 220px;align-self:flex-start;}
-  .footer-links{flex:1;display:flex;gap:32px;flex-wrap:wrap;}
-  .footer-col{display:flex;flex-direction:column;gap:10px;min-width:120px;}
-  .footer-col-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-  .footer-col a{font-size:13px;color:var(--muted);text-decoration:none;}
-  .footer-col a:hover{color:var(--text);}
-  .footer-bottom{
-    border-top:1px solid var(--border);padding:20px 24px;
-    text-align:center;font-size:12px;color:var(--muted);
-    max-width:100%;
-  }
+/* ───── TOAST ───── */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:#1a1a1a;border:1px solid #333;border-radius:10px;
+  padding:12px 20px;font-size:14px;font-weight:500;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  transform:translateY(80px);opacity:0;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;max-width:320px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-color:rgba(34,197,94,0.3);color:var(--green);}
+.toast.error{border-color:rgba(255,59,59,0.3);color:var(--red);}
 
-  @media(max-width:900px){
-    .hero-right{display:none;}
-    .hero-inner{padding:48px 20px 40px;}
-    .categories-grid{grid-template-columns:repeat(2,1fr);}
-    .footer-brand{flex:0 0 100%;}
-  }
-  @media(max-width:600px){
-    .nav-search{display:none;}
-    .spotlight{flex-direction:column;}
-    .spotlight-img{width:100%;height:180px;}
-    .categories-grid{grid-template-columns:repeat(2,1fr);}
-    .newsletter-form{width:100%;flex-wrap:wrap;}
-    .newsletter-input{width:100%;}
-    .newsletter-btn{width:100%;}
-    .footer-links{gap:20px;}
-  }
+/* ───── MODAL ───── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0.85);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#111;border:1px solid #222;border-radius:16px;
+  padding:32px;max-width:400px;width:100%;
+  position:relative;text-align:center;
+}
+.modal-close{
+  position:absolute;top:12px;right:12px;
+  background:none;border:none;color:#666;cursor:pointer;font-size:20px;
+  transition:color 0.2s;
+}
+.modal-close:hover{color:#fff;}
+.modal-title{font-size:20px;font-weight:800;margin-bottom:8px;}
+.modal-desc{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+.g-btn{
+  width:100%;padding:13px;border-radius:8px;
+  background:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:15px;font-weight:600;color:#333;cursor:pointer;
+  transition:background 0.2s,box-shadow 0.2s;
+  margin-bottom:12px;
+}
+.g-btn:hover{background:#f5f5f5;box-shadow:0 4px 16px rgba(255,255,255,0.1);}
+.modal-or{color:#444;font-size:12px;margin:12px 0;}
+.modal-skip{
+  color:var(--muted);font-size:13px;cursor:pointer;
+  background:none;border:none;text-decoration:underline;
+}
+.modal-skip:hover{color:#fff;}
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
-<!-- TOAST -->
-<div id="toast"></div>
-
-<!-- DEAL ALERT MODAL -->
-<div class="modal-overlay" id="alertModal" onclick="handleModalOverlayClick(event)">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title">Deal Alerts</span>
-      <button class="modal-close" onclick="closeAlertModal()">&#x2715;</button>
-    </div>
-    <p class="modal-sub">Type a keyword and your email. We'll notify you the moment a matching deal goes live.</p>
-    <div class="modal-label">Keyword</div>
-    <input class="modal-input" id="alertKeyword" type="text" placeholder="e.g. laptop, headphones, camera" maxlength="60">
-    <div class="modal-label">Your Email</div>
-    <input class="modal-input" id="alertEmail" type="email" placeholder="you@example.com">
-    <button class="modal-btn" onclick="saveAlert()">Set Alert</button>
-    <hr class="modal-divider">
-    <div class="modal-alerts-title">Your Active Alerts</div>
-    <div class="modal-alerts-list" id="alertsList"></div>
-  </div>
-</div>
-
-<!-- STAR PICKER (global) -->
-<div class="star-picker" id="star-picker">
-  <span onclick="saveRating(1)">★</span>
-  <span onclick="saveRating(2)">★★</span>
-  <span onclick="saveRating(3)">★★★</span>
-  <span onclick="saveRating(4)">★★★★</span>
-  <span onclick="saveRating(5)">★★★★★</span>
-</div>
-
-<!-- NAVBAR -->
+<!-- ══ NAVBAR ══ -->
 <nav>
-  <a class="nav-logo" href="#">
-    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
-    <div class="nav-logo-text">
-      Everyday Black Friday
-      <span>Black Friday prices. All year round.</span>
-    </div>
+  <a class="nav-logo" href="index.html" aria-label="Everyday Black Friday — Home">
+    <img src="assets/logo-ebf.png" alt="Everyday Black Friday">
   </a>
   <div class="nav-links">
-    <a class="nav-link active" href="index.html">Home</a>
-    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link active" href="index.html">All Deals</a>
+    <a class="nav-link" href="categories.html">Categories
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 4l4 4 4-4"/></svg>
+    </a>
     <a class="nav-link" href="search.html">Deals</a>
     <a class="nav-link" href="alerts.html">Alerts</a>
     <a class="nav-link" href="membership.html">Pro</a>
   </div>
   <div class="nav-search">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Search deals…" oninput="filterSearch(this.value)">
+    <span class="search-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </span>
+    <input type="search" id="mainSearch" placeholder="Search deals, categories, and more..." autocomplete="off" aria-label="Search deals">
   </div>
   <div class="nav-right">
-    <div class="nav-countdown">
-      <span class="label">Black Friday</span>
-      <span class="time" id="nav-timer">--d --h</span>
-    </div>
-    <button class="nav-alert-btn" onclick="openAlertModal()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      Deal Alerts
-    </button>
-    <button class="signin-btn" id="signin-btn" onclick="showSignIn()">
-      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    <a class="btn-alerts" href="alerts.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+      Get Alerts
+    </a>
+    <button class="btn-signin" id="btnSignin" onclick="openSignin()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
       Sign In
     </button>
-    <div class="user-pill" id="user-pill" onclick="signOut()">
-      <img class="user-avatar" id="user-avatar" src="" alt="">
-      <span class="user-name" id="user-name"></span>
+    <div class="user-pill" id="userPill" onclick="location.href='profile.html'" style="display:none;">
+      <img id="userAvatar" src="" alt="">
+      <span id="userName"></span>
     </div>
   </div>
 </nav>
 
-<!-- SIGN-IN OVERLAY -->
-<div class="signin-overlay" id="signin-overlay">
-  <div class="signin-box">
-    <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px;">
-    <h2>Welcome to Everyday Black Friday</h2>
-    <p>Sign in to save your wishlist, set deal alerts, and get personalized picks.</p>
-    <button class="signin-google-btn" onclick="triggerGoogleSignIn()">
-      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Continue with Google
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <img class="hero-img" src="assets/hero-ebf.png" alt="Deal products on display pedestals">
+  <div class="hero-content">
+    <h1>Black Friday prices.<br><span>All year round.</span></h1>
+    <p class="hero-sub">Great deals from stores you trust.</p>
+    <a class="btn-primary" href="search.html">
+      Shop All Deals
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<!-- ══ SHOP BY CATEGORY ══ -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Shop by category</h2>
+    <a class="section-link" href="categories.html">
+      Browse all categories
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="cat-grid">
+    <a class="cat-tile" href="search.html?cat=electronics">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=200&h=150&fit=crop&auto=format" alt="Electronics" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Electronics &amp; Tech</div>
+        <div class="cat-subs">Laptops · Phones · Audio · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=home">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=150&fit=crop&auto=format" alt="Home & Living" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Home &amp; Living</div>
+        <div class="cat-subs">Furniture · Décor · Appliances · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=fashion">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=200&h=150&fit=crop&auto=format" alt="Fashion & Care" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Fashion &amp; Care</div>
+        <div class="cat-subs">Clothing · Shoes · Beauty · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=family">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=200&h=150&fit=crop&auto=format" alt="Family & Everyday" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Family &amp; Everyday</div>
+        <div class="cat-subs">Baby &amp; Kids · Pets · Essentials · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=sports">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=200&h=150&fit=crop&auto=format" alt="Sports & Outdoors" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Sports &amp; Outdoors</div>
+        <div class="cat-subs">Fitness · Outdoor Gear · Games · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=auto">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=200&h=150&fit=crop&auto=format" alt="Auto & Tools" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Auto &amp; Tools</div>
+        <div class="cat-subs">Auto Parts · Tools · Garage · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=travel">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=200&h=150&fit=crop&auto=format" alt="Travel" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Travel</div>
+        <div class="cat-subs">Luggage · Accessories · Comfort · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <a class="cat-tile" href="search.html?cat=seasonal">
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=200&h=150&fit=crop&auto=format" alt="Seasonal & Gifts" loading="lazy">
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Seasonal &amp; Gifts</div>
+        <div class="cat-subs">Holidays · Gifts · Décor · More</div>
+      </div>
+      <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ══ DEAL OF THE DAY ══ -->
+<div class="section" style="padding-top:8px;">
+  <div class="dotd-header">
+    <h2 class="dotd-title">Deal of the Day</h2>
+    <div class="dotd-sep"></div>
+    <span class="dotd-sub">A handpicked deal at an exceptional price — today only.</span>
+  </div>
+
+  <div class="deals-grid">
+    <!-- Card 1 -->
+    <div class="deal-card">
+      <div class="deal-img">
+        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&auto=format" alt="Wireless Noise-Canceling Headphones" loading="lazy">
+        <span class="deal-badge">40% OFF</span>
+        <button class="deal-wish" onclick="toggleWish(this,'hdph1')" aria-label="Save to wishlist">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="deal-body">
+        <div class="deal-name">Wireless Noise-Canceling Headphones</div>
+        <div class="deal-stars">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="deal-rating">(2,418)</span>
+        </div>
+        <div class="deal-store">Amazon</div>
+        <div class="deal-price-row">
+          <span class="deal-price">$119.99</span>
+          <span class="deal-orig">$199.99</span>
+        </div>
+        <a class="btn-deal" href="https://www.amazon.com/s?k=wireless+noise+canceling+headphones&tag=blackdailydeals-20" target="_blank" rel="noopener">
+          View Deal
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="deal-card">
+      <div class="deal-img">
+        <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=300&fit=crop&auto=format" alt="Slim 15.6 Laptop" loading="lazy">
+        <span class="deal-badge">35% OFF</span>
+        <button class="deal-wish" onclick="toggleWish(this,'lap1')" aria-label="Save to wishlist">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="deal-body">
+        <div class="deal-name">Slim 15.6" Laptop — 16GB RAM, 512GB SSD</div>
+        <div class="deal-stars">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="deal-rating">(1,937)</span>
+        </div>
+        <div class="deal-store">Amazon</div>
+        <div class="deal-price-row">
+          <span class="deal-price">$649.99</span>
+          <span class="deal-orig">$999.99</span>
+        </div>
+        <a class="btn-deal" href="https://www.amazon.com/s?k=slim+laptop+16gb+ram+512gb+ssd&tag=blackdailydeals-20" target="_blank" rel="noopener">
+          View Deal
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="deal-card">
+      <div class="deal-img">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop&auto=format" alt="Men's Performance Sneakers" loading="lazy">
+        <span class="deal-badge">50% OFF</span>
+        <button class="deal-wish" onclick="toggleWish(this,'shoe1')" aria-label="Save to wishlist">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="deal-body">
+        <div class="deal-name">Men's Performance Running Sneakers</div>
+        <div class="deal-stars">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="deal-rating">(3,726)</span>
+        </div>
+        <div class="deal-store">Amazon</div>
+        <div class="deal-price-row">
+          <span class="deal-price">$49.99</span>
+          <span class="deal-orig">$99.99</span>
+        </div>
+        <a class="btn-deal" href="https://www.amazon.com/s?k=mens+performance+running+sneakers&tag=blackdailydeals-20" target="_blank" rel="noopener">
+          View Deal
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="deal-card">
+      <div class="deal-img">
+        <img src="https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&h=300&fit=crop&auto=format" alt="Stand Mixer" loading="lazy">
+        <span class="deal-badge">30% OFF</span>
+        <button class="deal-wish" onclick="toggleWish(this,'mix1')" aria-label="Save to wishlist">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="deal-body">
+        <div class="deal-name">Professional Stand Mixer 5.5 Qt</div>
+        <div class="deal-stars">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="deal-rating">(1,284)</span>
+        </div>
+        <div class="deal-store">Amazon</div>
+        <div class="deal-price-row">
+          <span class="deal-price">$279.99</span>
+          <span class="deal-orig">$399.99</span>
+        </div>
+        <a class="btn-deal" href="https://www.amazon.com/s?k=professional+stand+mixer+5.5+quart&tag=blackdailydeals-20" target="_blank" rel="noopener">
+          View Deal
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NEWSLETTER ══ -->
+<div class="newsletter">
+  <div class="nl-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+    </svg>
+  </div>
+  <div class="nl-text">
+    <div class="nl-title">Free Daily Newsletter</div>
+    <div class="nl-desc">Get the best new deals, top picks, and exclusive offers from Everyday Black Friday — delivered daily, free.</div>
+  </div>
+  <form class="nl-form" onsubmit="subscribeNewsletter(event)">
+    <input class="nl-input" type="email" id="nlEmail" placeholder="Enter your email address" required autocomplete="email">
+    <button class="nl-btn" type="submit">
+      Subscribe
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </button>
-    <button class="signin-skip" onclick="skipSignIn()">Skip for now</button>
-  </div>
+  </form>
 </div>
 
-<!-- CATEGORY BAR -->
-<div class="cat-bar">
-  <button class="cat-btn active" onclick="filterCat(this,'all')">All Deals</button>
-  <button class="cat-btn" onclick="filterCat(this,'electronics')">Electronics</button>
-  <button class="cat-btn" onclick="filterCat(this,'phones')">Phones &amp; Accessories</button>
-  <button class="cat-btn" onclick="filterCat(this,'audio')">Audio</button>
-  <button class="cat-btn" onclick="filterCat(this,'computers')">Computers &amp; Tablets</button>
-  <button class="cat-btn" onclick="filterCat(this,'gaming')">Gaming</button>
-  <button class="cat-btn" onclick="filterCat(this,'home')">Home &amp; Furniture</button>
-  <button class="cat-btn" onclick="filterCat(this,'kitchen')">Kitchen &amp; Dining</button>
-  <button class="cat-btn" onclick="filterCat(this,'appliances')">Appliances &amp; Floor Care</button>
-  <button class="cat-btn" onclick="filterCat(this,'tools')">Tools &amp; Home Improvement</button>
-  <button class="cat-btn" onclick="filterCat(this,'fashion')">Fashion</button>
-  <button class="cat-btn" onclick="filterCat(this,'shoes')">Shoes &amp; Accessories</button>
-  <button class="cat-btn" onclick="filterCat(this,'beauty')">Beauty &amp; Personal Care</button>
-  <button class="cat-btn" onclick="filterCat(this,'health')">Health &amp; Wellness</button>
-  <button class="cat-btn" onclick="filterCat(this,'sports')">Sports &amp; Fitness</button>
-  <button class="cat-btn" onclick="filterCat(this,'outdoor')">Outdoor &amp; Garden</button>
-  <button class="cat-btn" onclick="filterCat(this,'baby')">Baby &amp; Kids</button>
-  <button class="cat-btn" onclick="filterCat(this,'toys')">Toys, Games &amp; Hobbies</button>
-  <button class="cat-btn" onclick="filterCat(this,'books')">Books &amp; Entertainment</button>
-  <button class="cat-btn" onclick="filterCat(this,'office')">Office &amp; School</button>
-  <button class="cat-btn" onclick="filterCat(this,'grocery')">Grocery &amp; Household</button>
-  <button class="cat-btn" onclick="filterCat(this,'pets')">Pets</button>
-  <button class="cat-btn" onclick="filterCat(this,'automotive')">Automotive</button>
-  <button class="cat-btn" onclick="filterCat(this,'travel')">Travel &amp; Luggage</button>
-  <button class="cat-btn" onclick="filterCat(this,'seasonal')">Seasonal &amp; Gifts</button>
-  <button class="cat-btn" onclick="filterCat(this,'cameras')">Cameras</button>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="hero-badge">Black Friday Countdown Active</div>
-      <h1 class="hero-headline">Black Friday prices.<br><span class="hero-gold">All year round.</span></h1>
-      <p class="hero-sub">Great deals from stores you trust.</p>
-      <a class="hero-cta" href="#main-content">Shop All Deals →</a>
-      <div class="countdown">
-        <span class="countdown-label">Until Black Friday</span>
-        <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-label">Days</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Hrs</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Min</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Sec</div></div>
-      </div>
-    </div>
-    <div class="hero-right">
-      <img src="assets/hero-ebf.png" alt="Everyday Black Friday — 8 categories" class="hero-img">
-    </div>
-  </div>
-</div>
-
-<!-- SHOP BY CATEGORY -->
-<section class="categories-section">
-  <div class="section-header">
-    <div class="section-title"><span class="dot"></span> Shop by Category</div>
-  </div>
-  <div class="categories-grid">
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'electronics\']'),\'electronics\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      </div>
-      <div class="cat-tile-name">Electronics &amp; Tech</div>
-      <div class="cat-tile-sub">TVs, gadgets, cameras</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'home\']'),\'home\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <div class="cat-tile-name">Home &amp; Living</div>
-      <div class="cat-tile-sub">Furniture, décor, bedding</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'fashion\']'),\'fashion\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
-      </div>
-      <div class="cat-tile-name">Fashion &amp; Care</div>
-      <div class="cat-tile-sub">Clothing, shoes, beauty</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'grocery\']'),\'grocery\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      </div>
-      <div class="cat-tile-name">Family &amp; Everyday</div>
-      <div class="cat-tile-sub">Grocery, kids, pets</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'sports\']'),\'sports\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M14.83 9.17a4 4 0 0 1 0 5.66"/><path d="M9.17 14.83a4 4 0 0 1 0-5.66"/></svg>
-      </div>
-      <div class="cat-tile-name">Sports &amp; Outdoors</div>
-      <div class="cat-tile-sub">Fitness, camping, cycling</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'automotive\']'),\'automotive\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      </div>
-      <div class="cat-tile-name">Auto &amp; Tools</div>
-      <div class="cat-tile-sub">Car accessories, tools</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'travel\']'),\'travel\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2"/><path d="m2 2 20 20"/><path d="M16 11 7 7l-5 5"/><path d="M8 20v-4l4-2"/></svg>
-      </div>
-      <div class="cat-tile-name">Travel</div>
-      <div class="cat-tile-sub">Luggage, accessories</div>
-    </a>
-    <a class="cat-tile" href="#main-content" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'seasonal\']'),\'seasonal\');return false;">
-      <div class="cat-tile-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-      </div>
-      <div class="cat-tile-name">Seasonal &amp; Gifts</div>
-      <div class="cat-tile-sub">Holiday, gifts, special events</div>
-    </a>
-  </div>
-</section>
-
-<!-- SPOTLIGHT DEAL -->
-<div class="section" id="main-content">
-  <div class="section-header">
-    <div class="section-title"><span class="dot"></span> Deal of the Day</div>
-  </div>
-  <a class="spotlight" href="https://www.amazon.com/dp/B0BDHWDR12?tag=blackdailydeals-20" target="_blank" rel="noopener">
-    <div class="spotlight-img">
-      <img src="https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0BDHWDR12&Format=_SL250_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=blackdailydeals-20" alt="AirPods Pro">
-    </div>
-    <div class="spotlight-info">
-      <div class="spotlight-label">Today's #1 Deal</div>
-      <div class="spotlight-name">Apple AirPods Pro (2nd Gen)</div>
-      <div class="spotlight-desc">Active Noise Cancellation, Adaptive Transparency, Personalized Spatial Audio. MagSafe Charging Case included.</div>
-      <div>
-        <span class="spotlight-price">$189</span>
-        <span class="spotlight-was">$249</span>
-        <span style="background:#ff3b3b;color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;margin-left:8px;">24% OFF</span>
-      </div>
-      <div class="spotlight-cta">Shop This Deal →</div>
-    </div>
-  </a>
-
-  <!-- DEALS GRID -->
-  <div class="section-header">
-    <div class="section-title"><span class="dot"></span> Hot Deals Right Now</div>
-    <div style="font-size:12px;color:var(--muted);" id="deal-count"></div>
-  </div>
-  <div class="deals-grid" id="deals-grid"></div>
-</div>
-
-<!-- NEWSLETTER BAR -->
-<section class="newsletter-bar">
-  <div class="newsletter-inner">
-    <div class="newsletter-left">
-      <div class="newsletter-title">Free Daily Newsletter</div>
-      <div class="newsletter-sub">The best deals delivered to your inbox every morning.</div>
-    </div>
-    <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
-      <input type="email" class="newsletter-input" placeholder="your@email.com" required>
-      <button type="submit" class="newsletter-btn">Subscribe</button>
-    </form>
-  </div>
-</section>
-
+<!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand">
-      <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:44px;height:44px;object-fit:contain;">
-      <div>
-        <div style="font-weight:800;font-size:14px;color:#fff;">Everyday Black Friday</div>
-        <div style="font-size:11px;color:var(--muted);">Black Friday prices. All year round.</div>
-      </div>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <div class="footer-col-title">Deals</div>
-        <a href="#" onclick="filterCat(document.querySelectorAll('.cat-btn')[0],'all');return false;">All Deals</a>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'electronics\']'),'electronics');return false;">Electronics</a>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'home\']'),'home');return false;">Home &amp; Living</a>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'fashion\']'),'fashion');return false;">Fashion</a>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-wrap">
+          <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="height:36px;width:auto;">
+        </div>
+        <p>Black Friday prices, all year round. Great deals from stores you trust.</p>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">More</div>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'sports\']'),'sports');return false;">Sports</a>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'kitchen\']'),'kitchen');return false;">Kitchen</a>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'travel\']'),'travel');return false;">Travel</a>
-        <a href="#" onclick="filterCat(document.querySelector('.cat-btn[onclick*=\'seasonal\']'),'seasonal');return false;">Seasonal</a>
+        <h4>Deals</h4>
+        <a href="search.html">All Deals</a>
+        <a href="search.html?cat=electronics">Electronics</a>
+        <a href="search.html?cat=home">Home &amp; Living</a>
+        <a href="search.html?cat=fashion">Fashion</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">About</div>
-        <a href="#">About Us</a>
-        <a href="#">How It Works</a>
+        <h4>Categories</h4>
+        <a href="categories.html">Browse All</a>
+        <a href="search.html?cat=sports">Sports &amp; Outdoors</a>
+        <a href="search.html?cat=auto">Auto &amp; Tools</a>
+        <a href="search.html?cat=travel">Travel</a>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <a href="membership.html">Pro Membership</a>
+        <a href="alerts.html">Deal Alerts</a>
+        <a href="profile.html">My Account</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="mailto:support@everydayblackfriday.com">Contact Us</a>
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Use</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Support</div>
-        <a href="#">Contact Us</a>
-        <a href="#" onclick="openAlertModal();return false;">Deal Alerts</a>
-        <a href="#" onclick="showSignIn();return false;">Sign In</a>
+        <a href="#">Affiliate Disclosure</a>
       </div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 Everyday Black Friday · Prices and availability subject to change. We may earn commissions on qualifying purchases.</p>
+    <div class="footer-bottom">
+      <span>&copy; 2024 Everyday Black Friday. As an Amazon Associate we earn from qualifying purchases.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    </div>
   </div>
 </footer>
 
+<!-- ══ SIGN-IN MODAL ══ -->
+<div class="modal-overlay" id="signinModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeSignin()" aria-label="Close">&times;</button>
+    <div style="font-size:32px;margin-bottom:12px;">
+      <img src="assets/logo-ebf-icon.png" alt="EBF" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
+    </div>
+    <div class="modal-title">Sign in to EBF</div>
+    <div class="modal-desc">Save deals, set alerts, and get personalized picks — free, forever.</div>
+    <button class="g-btn" onclick="signInWithGoogle()">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.29-8.16 2.29-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        <path fill="none" d="M0 0h48v48H0z"/>
+      </svg>
+      Continue with Google
+    </button>
+    <div class="modal-or">— or —</div>
+    <button class="modal-skip" onclick="skipSignin()">Continue browsing without an account</button>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
 <script>
-// ── DEALS DATA ──
-const DEALS = [
-  {id:1,cat:'audio',name:'Beats Studio Pro Wireless Headphones',price:179,was:349,pct:49,asin:'B0C8PVLT71',desc:'Personalized Spatial Audio, lossless audio with Apple devices, 40-hr battery',hot:true},
-  {id:2,cat:'electronics',name:'Apple iPhone 15 (128GB) – Black',price:699,was:799,pct:13,asin:'B0CHX2DSTG',desc:'Dynamic Island, 48MP camera, USB-C, Ceramic Shield front'},
-  {id:3,cat:'audio',name:'JBL Flip 6 Portable Bluetooth Speaker',price:79,was:129,pct:39,asin:'JBLFLIP6BLKAM',desc:'Waterproof, 12-hour playtime, PartyBoost compatible',hot:true},
-  {id:4,cat:'computers',name:'Apple MacBook Air M2 – 13-inch',price:899,was:1099,pct:18,asin:'B0B3C2R8MP',desc:'Apple M2 chip, 8GB RAM, 256GB SSD, 18-hr battery life'},
-  {id:5,cat:'gaming',name:'Sony PlayStation 5 Slim Console',price:449,was:499,pct:10,asin:'B0CL5KNB9M',desc:'Digital Edition, 1TB SSD, up to 120fps, ray tracing',hot:true},
-  {id:6,cat:'electronics',name:'Samsung 65" QLED 4K Smart TV',price:697,was:1199,pct:42,asin:'B09ZHWQD6F',desc:'Quantum Dot display, Alexa built-in, 4K Upscaling, Motion Xcelerator'},
-  {id:7,cat:'cameras',name:'GoPro HERO12 Black Action Camera',price:299,was:399,pct:25,asin:'B0C6PVNLYK',desc:'5.3K60 video, HyperSmooth 6.0, water resistant to 33ft',hot:true},
-  {id:8,cat:'computers',name:'Samsung Galaxy Tab S9 FE (256GB)',price:349,was:499,pct:30,asin:'B0CMDLPVXM',desc:'10.9" display, 8000mAh battery, S Pen included, IP68 water resistant'},
-  {id:9,cat:'home',name:'Dyson V15 Detect Cordless Vacuum',price:549,was:749,pct:27,asin:'B09R2JXKPQ',desc:'Laser Slim Fluffy head, HEPA filtration, 60 min run time'},
-  {id:10,cat:'kitchen',name:'Ninja Creami Ice Cream Maker',price:159,was:229,pct:31,asin:'B08PPFFF3P',desc:'7 programs: ice cream, sorbet, gelato, milkshake & more',hot:true},
-  {id:11,cat:'gaming',name:'Razer BlackShark V2 Pro Headset',price:129,was:179,pct:28,asin:'B09BN7QFM7',desc:'Wireless, THX Spatial Audio, 70-hour battery, detachable mic'},
-  {id:12,cat:'fashion',name:'Nike Air Max 270 Sneakers',price:89,was:150,pct:41,asin:'B07CLPW2F3',desc:"Air Max cushioning, breathable mesh upper, Nike's largest Air unit ever"},
-  {id:13,cat:'electronics',name:'Apple Watch Series 9 (45mm)',price:329,was:429,pct:23,asin:'B0CSVDL3GH',desc:'Always-On Retina display, crash detection, blood oxygen, ECG app'},
-  {id:14,cat:'home',name:'Instant Pot Duo 7-in-1 (8 Qt)',price:69,was:119,pct:42,asin:'B00FLYWNYQ',desc:'Pressure cooker, slow cooker, rice cooker, steamer, sauté, yogurt maker'},
-  {id:15,cat:'computers',name:'Logitech MX Master 3S Mouse',price:79,was:99,pct:20,asin:'B09HMKFDXC',desc:'8K DPI, MagSpeed scroll, Quiet clicks, works on any surface',hot:true},
-  {id:16,cat:'audio',name:'Sony WH-1000XM5 Noise Canceling',price:279,was:399,pct:30,asin:'B09XS7JWHH',desc:'Industry-leading ANC, 30-hr battery, multipoint Bluetooth'},
-  {id:17,cat:'cameras',name:'Canon EOS R50 Mirrorless Camera',price:599,was:799,pct:25,asin:'B0BT2MLGNL',desc:'24.2MP CMOS, 4K video, Dual Pixel CMOS AF, Wi-Fi + Bluetooth'},
-  {id:18,cat:'gaming',name:'Nintendo Switch OLED Model',price:299,was:349,pct:14,asin:'B09BVQK8KM',desc:'7-inch OLED screen, enhanced audio, wide adjustable stand'},
-  {id:19,cat:'kitchen',name:'Keurig K-Elite Coffee Maker',price:99,was:189,pct:48,asin:'B078NN8234',desc:'Strong brew, iced coffee mode, 75oz removable reservoir'},
-  {id:20,cat:'fashion',name:'Ray-Ban Aviator Classic Sunglasses',price:89,was:154,pct:42,asin:'B002YHHCZQ',desc:'Gold metal frame, G-15 glass lens, UV protection, unisex'},
-  {id:21,cat:'home',name:'iRobot Roomba j7+ Self-Emptying',price:399,was:649,pct:39,asin:'B09413CXVK',desc:'Avoids obstacles & cords, Clean Base auto-empty, PrecisionVision Nav',hot:true},
-  {id:22,cat:'electronics',name:'Kindle Paperwhite (16GB)',price:99,was:139,pct:29,asin:'B09TMF6742',desc:'6.8" glare-free display, waterproof, weeks of battery, adjustable warm light'},
-  {id:23,cat:'computers',name:'Dell XPS 13 Plus Laptop (i7, 16GB)',price:1199,was:1699,pct:29,asin:'B09NHLVW7M',desc:'13.4" OLED touchscreen, 512GB SSD, 12th Gen Intel Core i7'},
-  {id:24,cat:'audio',name:'Amazon Echo Dot (5th Gen)',price:22,was:49,pct:55,asin:'B09B8V1LZ3',desc:'Improved bass, motion detection, Alexa, smart home hub',hot:true},
-];
+// ── Google OAuth ──
+const CLIENT_ID = '875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com';
 
-// ── AFFILIATE IMAGE CDN ──
-function getImg(asin){
-  return `https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=${asin}&Format=_SL250_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=blackdailydeals-20`;
+function openSignin(){
+  document.getElementById('signinModal').classList.add('open');
+}
+function closeSignin(){
+  document.getElementById('signinModal').classList.remove('open');
+}
+function skipSignin(){
+  localStorage.setItem('skipped_signin','1');
+  closeSignin();
 }
 
-// SVG icons
-const SVG_SHARE = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>`;
-const SVG_HEART_EMPTY = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-const SVG_HEART_FULL = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-
-// ── WISHLIST ──
-let wishlist = [];
-try{ wishlist = JSON.parse(localStorage.getItem('bdd_wishlist')||'[]'); }catch(e){}
-
-function isWished(id){ return wishlist.includes(id); }
-
-function toggleWish(e, id){
-  e.preventDefault(); e.stopPropagation();
-  const idx = wishlist.indexOf(id);
-  if(idx>=0) wishlist.splice(idx,1);
-  else wishlist.push(id);
-  try{ localStorage.setItem('bdd_wishlist', JSON.stringify(wishlist)); }catch(e){}
-  renderDeals();
-  showToast(wishlist.includes(id) ? 'Added to wishlist' : 'Removed from wishlist');
-}
-
-// ── RATINGS ──
-let ratings = {};
-try{ ratings = JSON.parse(localStorage.getItem('bdd_ratings')||'{}'); }catch(e){}
-
-let ratingTarget = null;
-
-function defaultRating(pct){ return pct>=40?5:pct>=30?4.5:pct>=20?4:3.5; }
-
-function getStarsHTML(id, pct){
-  const r = ratings[id] || defaultRating(pct);
-  const full = Math.floor(r);
-  const half = r % 1 >= 0.5 ? 1 : 0;
-  let stars = '★'.repeat(full) + (half?'½':'') + '☆'.repeat(5-full-half);
-  return `<span class="stars-row" style="color:#FFD700;">${stars}</span><span class="stars-count">(${r})</span>`;
-}
-
-function openRating(e, id){
-  e.preventDefault(); e.stopPropagation();
-  ratingTarget = id;
-  const picker = document.getElementById('star-picker');
-  picker.style.left = (e.clientX - 60) + 'px';
-  picker.style.top = (e.clientY - 50) + 'px';
-  picker.classList.add('show');
-}
-
-function saveRating(stars){
-  if(ratingTarget===null) return;
-  ratings[ratingTarget] = stars;
-  try{ localStorage.setItem('bdd_ratings', JSON.stringify(ratings)); }catch(e){}
-  document.getElementById('star-picker').classList.remove('show');
-  renderDeals();
-  showToast(`Rated ${stars} star${stars!==1?'s':''}!`);
-  ratingTarget = null;
-}
-
-document.addEventListener('click', function(e){
-  const picker = document.getElementById('star-picker');
-  if(!picker.contains(e.target)) picker.classList.remove('show');
-});
-
-// ── SHARE ──
-function shareDeal(e, id, name, price, asin){
-  e.preventDefault(); e.stopPropagation();
-  const url = `https://www.amazon.com/dp/${asin}?tag=blackdailydeals-20`;
-  const text = `${name} – only $${price}! Check this Black Friday deal:`;
-  if(navigator.share){
-    navigator.share({title: name, text, url}).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(url).then(()=>showToast('Link copied!')).catch(()=>{
-      prompt('Copy this link:', url);
-    });
+function signInWithGoogle(){
+  if(typeof google === 'undefined'){
+    showToast('Google Sign-In is loading — try again in a moment.','error');return;
   }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: 'openid email profile',
+    callback:(resp)=>{
+      if(resp.error){showToast('Sign-in failed: '+resp.error,'error');return;}
+      fetchUserInfo(resp.access_token);
+    }
+  });
+  client.requestAccessToken();
 }
 
-// ── TOAST ──
+async function fetchUserInfo(token){
+  try{
+    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{
+      headers:{Authorization:'Bearer '+token}
+    });
+    const u = await r.json();
+    const user={name:u.name||u.email,email:u.email,avatar:u.picture||'',id:u.sub};
+    localStorage.setItem('bdd_user',JSON.stringify(user));
+    updateAuthUI(user);
+    closeSignin();
+    showToast('Welcome, '+user.name.split(' ')[0]+'!','success');
+  }catch(e){showToast('Could not load your profile.','error');}
+}
+
+function updateAuthUI(user){
+  if(!user)return;
+  document.getElementById('btnSignin').style.display='none';
+  const pill=document.getElementById('userPill');
+  pill.style.display='flex';
+  if(user.avatar){document.getElementById('userAvatar').src=user.avatar;}
+  document.getElementById('userName').textContent=user.name.split(' ')[0];
+}
+
+// ── Wishlist ──
+function toggleWish(btn,id){
+  const list=JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
+  const idx=list.indexOf(id);
+  if(idx===-1){list.push(id);btn.classList.add('active');showToast('Saved to wishlist','success');}
+  else{list.splice(idx,1);btn.classList.remove('active');showToast('Removed from wishlist','');}
+  localStorage.setItem('bdd_wishlist',JSON.stringify(list));
+  btn.querySelector('svg').setAttribute('fill',btn.classList.contains('active')?'currentColor':'none');
+}
+
+// ── Newsletter ──
+function subscribeNewsletter(e){
+  e.preventDefault();
+  const email=document.getElementById('nlEmail').value.trim();
+  if(!email)return;
+  const subs=JSON.parse(localStorage.getItem('ebf_subscribers')||'[]');
+  if(!subs.includes(email)){subs.push(email);localStorage.setItem('ebf_subscribers',JSON.stringify(subs));}
+  showToast('Subscribed! Check your inbox soon.','success');
+  document.getElementById('nlEmail').value='';
+}
+
+// ── Toast ──
 let toastTimer;
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(type?' '+type:'');
+  void t.offsetWidth;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2500);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-let currentCat = 'all';
-let currentSearch = '';
-
-// ── NEWSLETTER SUBSCRIBE ──
-function handleNewsletterSubmit(e){
-  e.preventDefault();
-  const input = e.target.querySelector('.newsletter-input');
-  const btn = e.target.querySelector('.newsletter-btn');
-  const email = input.value.trim();
-  if(!email) return;
-  btn.textContent = 'Subscribing…';
-  btn.disabled = true;
-  // Store locally + show confirmation (Sender.net/EmailJS wired separately)
-  const subs = JSON.parse(localStorage.getItem('ebf_subscribers') || '[]');
-  if(!subs.includes(email)) subs.push(email);
-  localStorage.setItem('ebf_subscribers', JSON.stringify(subs));
-  setTimeout(()=>{
-    input.value = '';
-    btn.textContent = 'Subscribed ✓';
-    btn.style.background = 'var(--green)';
-    setTimeout(()=>{ btn.textContent = 'Subscribe'; btn.disabled = false; btn.style.background = ''; }, 3000);
-    showToast('You\'re subscribed to daily deals!');
-  }, 600);
-}
-
-/* ═══════════════════════════════════════════
-   DEAL ALERTS — EmailJS-powered watchlist
-   ═══════════════════════════════════════════ */
-
-// ── EmailJS credentials (fill these in after creating your free EmailJS account) ──
-const EMAILJS_PUBLIC_KEY    = 'YOUR_PUBLIC_KEY';   // from emailjs.com → Account → API Keys
-const EMAILJS_SERVICE_ID    = 'YOUR_SERVICE_ID';   // from emailjs.com → Email Services
-const EMAILJS_TEMPLATE_ID   = 'YOUR_TEMPLATE_ID';  // from emailjs.com → Email Templates
-
-function initEmailJS(){
-  if(typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'){
-    emailjs.init(EMAILJS_PUBLIC_KEY);
+// ── Search ──
+document.getElementById('mainSearch').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.value.trim()){
+    location.href='search.html?q='+encodeURIComponent(e.target.value.trim());
   }
-}
+});
 
-function getWatchlist(){
-  try{ return JSON.parse(localStorage.getItem('bdd_watchlist') || '[]'); }
-  catch(e){ return []; }
-}
-function saveWatchlist(list){
-  localStorage.setItem('bdd_watchlist', JSON.stringify(list));
-}
+// ── Init ──
+(function init(){
+  const user=JSON.parse(localStorage.getItem('bdd_user')||'null');
+  if(user) updateAuthUI(user);
 
-function openAlertModal(){
-  document.getElementById('alertModal').classList.add('open');
-  renderAlertsList();
-  document.getElementById('alertKeyword').focus();
-}
-function closeAlertModal(){
-  document.getElementById('alertModal').classList.remove('open');
-}
-function handleModalOverlayClick(e){
-  if(e.target === document.getElementById('alertModal')) closeAlertModal();
-}
-
-function renderAlertsList(){
-  const list = getWatchlist();
-  const el = document.getElementById('alertsList');
-  if(!list.length){
-    el.innerHTML = '<div class="modal-empty">No alerts set yet.</div>';
-    return;
-  }
-  el.innerHTML = list.map((a,i)=>`
-    <div class="alert-item">
-      <div class="alert-info">
-        <div class="alert-keyword">${escHTML(a.keyword)}</div>
-        <div class="alert-email">${escHTML(a.email)}</div>
-      </div>
-      <button class="alert-remove" onclick="removeAlert(${i})" title="Remove alert">&#x2715;</button>
-    </div>
-  `).join('');
-}
-
-function escHTML(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function removeAlert(index){
-  const list = getWatchlist();
-  list.splice(index, 1);
-  saveWatchlist(list);
-  renderAlertsList();
-  showToast('Alert removed');
-}
-
-function saveAlert(){
-  const kw  = document.getElementById('alertKeyword').value.trim().toLowerCase();
-  const em  = document.getElementById('alertEmail').value.trim().toLowerCase();
-  if(!kw){ showToast('Please enter a keyword'); return; }
-  if(!em || !em.includes('@')){ showToast('Please enter a valid email'); return; }
-  const list = getWatchlist();
-  const dup  = list.find(a => a.keyword === kw && a.email === em);
-  if(dup){ showToast('Alert already set!'); return; }
-  list.push({ keyword: kw, email: em, notifiedIds: [] });
-  saveWatchlist(list);
-  document.getElementById('alertKeyword').value = '';
-  document.getElementById('alertEmail').value   = '';
-  renderAlertsList();
-  showToast('Alert saved!');
-}
-
-function checkWatchlist(){
-  const list = getWatchlist();
-  if(!list.length) return;
-  let changed = false;
-  list.forEach(alert => {
-    DEALS.forEach(deal => {
-      if(alert.notifiedIds.includes(deal.id)) return;
-      const haystack = (deal.name + ' ' + (deal.desc||'') + ' ' + deal.cat).toLowerCase();
-      if(haystack.includes(alert.keyword)){
-        alert.notifiedIds.push(deal.id);
-        changed = true;
-        sendAlertEmail(alert, deal);
-      }
-    });
+  // restore wishlist state
+  const list=JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
+  document.querySelectorAll('.deal-wish').forEach(btn=>{
+    const click=btn.getAttribute('onclick')||'';
+    const m=click.match(/'([^']+)'\)/);
+    if(m&&list.includes(m[1])){
+      btn.classList.add('active');
+      btn.querySelector('svg').setAttribute('fill','currentColor');
+    }
   });
-  if(changed) saveWatchlist(list);
-}
 
-function sendAlertEmail(alert, deal){
-  if(typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY'){
-    // EmailJS not configured yet — log to console for debugging
-    console.log('[Deal Alert] Match found but EmailJS not configured:', alert.keyword, '→', deal.name);
-    return;
-  }
-  const params = {
-    to_email:   alert.email,
-    keyword:    alert.keyword,
-    deal_name:  deal.name,
-    deal_price: '$' + deal.price,
-    deal_was:   '$' + deal.was,
-    deal_pct:   deal.pct + '% off',
-    deal_url:   'https://www.amazon.com/dp/' + deal.asin + '?tag=blackdailydeals-20',
-    site_url:   'https://moishyjalas-lang.github.io/black-daily-deals/'
-  };
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
-    .then(()  => console.log('[Deal Alert] Email sent for:', deal.name))
-    .catch(err => console.warn('[Deal Alert] Email failed:', err));
-}
-
-function renderDeals(){
-  const grid = document.getElementById('deals-grid');
-  let filtered = DEALS.filter(d=>{
-    const catMatch = currentCat==='all' || d.cat===currentCat;
-    const q = currentSearch.toLowerCase();
-    const searchMatch = !q || d.name.toLowerCase().includes(q) || d.cat.includes(q) || d.desc.toLowerCase().includes(q);
-    return catMatch && searchMatch;
+  // close modal on overlay click
+  document.getElementById('signinModal').addEventListener('click',e=>{
+    if(e.target.id==='signinModal') closeSignin();
   });
-  document.getElementById('deal-count').textContent = filtered.length + ' deals';
-  grid.innerHTML = filtered.map(d=>`
-    <a class="deal-card" href="https://www.amazon.com/dp/${d.asin}?tag=blackdailydeals-20" target="_blank" rel="noopener">
-      <div class="card-img">
-        <img src="${getImg(d.asin)}" alt="${d.name}" loading="lazy">
-        <div class="badge-pct">-${d.pct}%</div>
-        ${d.hot?'<div class="badge-hot">HOT</div>':''}
-      </div>
-      <div class="card-body">
-        <div class="card-category">${d.cat}</div>
-        <div class="card-name">${d.name}</div>
-        <div class="card-prices">
-          <span class="price-now">$${d.price}</span>
-          <span class="price-was">$${d.was}</span>
-        </div>
-        <div class="card-stars" onclick="openRating(event,${d.id})" title="Click to rate">
-          ${getStarsHTML(d.id, d.pct)}
-        </div>
-        <div class="card-actions">
-          <button class="card-share" onclick="shareDeal(event,${d.id},'${d.name.replace(/'/g,"\\'")}',${d.price},'${d.asin}')">${SVG_SHARE} Share</button>
-          <button class="card-wish${isWished(d.id)?' wished':''}" onclick="toggleWish(event,${d.id})">${isWished(d.id)?SVG_HEART_FULL:SVG_HEART_EMPTY} ${isWished(d.id)?'Saved':'Save'}</button>
-        </div>
-        <div class="card-cta">View Deal →</div>
-      </div>
-    </a>
-  `).join('');
-}
-
-function filterCat(btn, cat){
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  currentCat = cat;
-  renderDeals();
-}
-
-function filterSearch(q){
-  currentSearch = q;
-  renderDeals();
-}
-
-// ── COUNTDOWN ──
-function updateCountdown(){
-  const target = new Date('2026-11-27T00:00:00');
-  const now = new Date();
-  const diff = target - now;
-  if(diff<=0){
-    document.getElementById('cd-d').textContent='0';
-    document.getElementById('cd-h').textContent='00';
-    document.getElementById('cd-m').textContent='00';
-    document.getElementById('cd-s').textContent='00';
-    document.getElementById('nav-timer').textContent='NOW!';
-    return;
-  }
-  const d = Math.floor(diff/86400000);
-  const h = Math.floor((diff%86400000)/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  document.getElementById('cd-d').textContent=d;
-  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
-  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
-  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
-  document.getElementById('nav-timer').textContent=d+'d '+String(h).padStart(2,'0')+'h';
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
-initEmailJS();
-checkWatchlist();
-renderDeals();
-
-/* ── GOOGLE SIGN-IN ── */
-const BDD_CLIENT_ID = '875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com';
-
-function initGoogleSignIn(){
-  if(typeof google === 'undefined' || !google.accounts) return;
-  google.accounts.id.initialize({
-    client_id: BDD_CLIENT_ID,
-    callback: handleCredential,
-    auto_select: false
-  });
-}
-
-function triggerGoogleSignIn(){
-  if(typeof google === 'undefined' || !google.accounts){
-    showToast('Google sign-in not loaded yet. Please try again.');
-    return;
-  }
-  google.accounts.id.initialize({
-    client_id: BDD_CLIENT_ID,
-    callback: handleCredential
-  });
-  google.accounts.id.prompt();
-}
-
-function handleCredential(response){
-  try{
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    setUser(payload.name, payload.picture, payload.email);
-    document.getElementById('signin-overlay').classList.remove('show');
-    localStorage.setItem('bdd_user', JSON.stringify({name:payload.name,picture:payload.picture,email:payload.email}));
-    showToast('Welcome, ' + payload.name.split(' ')[0] + '!');
-  }catch(e){console.error('Google sign-in error:',e);}
-}
-
-function setUser(name, picture, email){
-  document.getElementById('signin-btn').style.display='none';
-  const pill = document.getElementById('user-pill');
-  pill.style.display='flex';
-  if(picture){ document.getElementById('user-avatar').src=picture; }
-  document.getElementById('user-name').textContent=name.split(' ')[0];
-}
-
-function showSignIn(){
-  document.getElementById('signin-overlay').classList.add('show');
-}
-
-function skipSignIn(){
-  localStorage.setItem('skipped_signin','1');
-  document.getElementById('signin-overlay').classList.remove('show');
-}
-
-function signOut(){
-  localStorage.removeItem('bdd_user');
-  document.getElementById('signin-btn').style.display='flex';
-  document.getElementById('user-pill').style.display='none';
-  showToast('Signed out.');
-}
-
-// Restore session on load
-(function(){
-  const saved = localStorage.getItem('bdd_user');
-  if(saved){
-    try{
-      const u = JSON.parse(saved);
-      setUser(u.name, u.picture, u.email);
-    }catch(e){}
-  }
-  // Init GIS library once it loads
-  if(typeof google !== 'undefined' && google.accounts){ initGoogleSignIn(); }
-  else { document.addEventListener('DOMContentLoaded', ()=>{ if(typeof google!=='undefined') initGoogleSignIn(); }); }
 })();
 </script>
 </body>
