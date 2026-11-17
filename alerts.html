@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Alerts — Everyday Black Friday</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px;gap:20px;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-logo-img{width:36px;height:36px;object-fit:contain;}
+.nav-logo-text{font-size:14px;font-weight:800;color:#fff;white-space:nowrap;line-height:1.2;}
+.nav-logo-text span{display:block;font-size:9px;color:var(--gold);font-weight:500;letter-spacing:.4px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{text-decoration:none;color:var(--muted);font-size:13px;font-weight:500;padding:6px 12px;border-radius:6px;transition:.2s;}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.06);}
+.nav-link.active{color:var(--gold);background:rgba(255,215,0,.08);}
+.nav-search{flex:1;max-width:360px;position:relative;}
+.nav-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:#fff;font-size:13px;outline:none;transition:.2s;}
+.nav-search input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,0,.12);}
+.nav-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.4;}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.nav-timer{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+#nav-signin-btn{background:var(--gold);color:#000;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+#nav-signin-btn:hover{background:var(--gold2);}
+.nav-user-pill{display:none;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;text-decoration:none;}
+.nav-user-pill img{width:26px;height:26px;border-radius:50%;object-fit:cover;}
+.nav-user-pill span{font-size:12px;font-weight:600;color:#fff;}
+@media(max-width:600px){.nav-search{display:none;}}
+
+/* SIGN-IN OVERLAY */
+.signin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;}
+.signin-overlay.active{display:flex;}
+.signin-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;}
+.signin-logo{width:56px;height:56px;object-fit:contain;margin-bottom:16px;}
+.signin-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
+.signin-box p{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.5;}
+.g-signin-wrap{display:flex;justify-content:center;margin-bottom:16px;}
+.signin-skip{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 24px;font-size:13px;cursor:pointer;width:100%;}
+.signin-skip:hover{color:#fff;border-color:rgba(255,255,255,.2);}
+
+/* PAGE */
+.page-wrap{max-width:900px;margin:0 auto;padding:40px 24px 80px;}
+.page-header{margin-bottom:32px;}
+.page-title{font-size:28px;font-weight:900;margin-bottom:6px;}
+.page-subtitle{color:var(--muted);font-size:14px;}
+
+/* AUTH GATE */
+.auth-gate{text-align:center;padding:80px 24px;}
+.auth-gate-icon{width:72px;height:72px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.auth-gate h2{font-size:26px;font-weight:800;margin-bottom:10px;}
+.auth-gate p{color:var(--muted);font-size:15px;margin-bottom:32px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.btn-gold:hover{opacity:.9;}
+
+/* ADD ALERT FORM */
+.add-alert-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;}
+.add-alert-card h2{font-size:17px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px;text-transform:uppercase;}
+.form-input,.form-select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;transition:.2s;width:100%;}
+.form-input:focus,.form-select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,0,.1);}
+.form-select option{background:var(--card);}
+.form-row{display:flex;gap:12px;align-items:flex-end;}
+.price-prefix{position:relative;}
+.price-prefix::before{content:'$';position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
+.price-prefix input{padding-left:24px;}
+.btn-add{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:9px;padding:11px 24px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.btn-add:hover{opacity:.9;}
+.form-hint{font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* ALERT LIST */
+.alerts-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;}
+.alerts-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.alerts-section-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.alert-count-badge{background:rgba(255,215,0,.12);color:var(--gold);border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;}
+.btn-clear-all{background:none;border:1px solid rgba(255,59,59,.3);color:var(--red);border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.btn-clear-all:hover{background:rgba(255,59,59,.08);}
+
+.alert-list{display:grid;gap:12px;}
+.alert-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;transition:.2s;}
+.alert-item:hover{border-color:rgba(255,215,0,.2);}
+.alert-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,215,0,.08);color:var(--gold);}
+.alert-info{flex:1;min-width:0;}
+.alert-keyword{font-size:14px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.alert-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.alert-tag{font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;padding:2px 7px;}
+.alert-tag.price{color:var(--green);}
+.alert-actions{display:flex;gap:8px;flex-shrink:0;}
+.alert-toggle{background:none;border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);}
+.alert-toggle.active{color:var(--green);border-color:rgba(34,197,94,.3);}
+.alert-toggle:hover{border-color:rgba(255,255,255,.2);color:#fff;}
+.alert-delete{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px;}
+.alert-delete:hover{color:var(--red);background:rgba(255,59,59,.08);}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;}
+.empty-icon{width:64px;height:64px;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--gold);opacity:.5;}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:8px;}
+.empty-desc{color:var(--muted);font-size:14px;}
+
+/* HOW IT WORKS */
+.how-it-works{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:20px;}
+.how-it-works h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.step{text-align:center;}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.2);color:var(--gold);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+.step-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.4;}
+
+/* PRO UPSELL */
+.pro-banner{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,165,0,.04));border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:20px 24px;margin-top:20px;display:flex;align-items:center;gap:16px;}
+.pro-banner-icon{font-size:28px;flex-shrink:0;}
+.pro-banner-text{flex:1;}
+.pro-banner-text strong{display:block;font-size:14px;font-weight:800;margin-bottom:3px;}
+.pro-banner-text span{font-size:13px;color:var(--muted);}
+.btn-pro{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;text-decoration:none;}
+.btn-pro:hover{opacity:.9;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#222;border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr;}
+  .steps{grid-template-columns:1fr;}
+  .pro-banner{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
+    <div class="nav-logo-text">Everyday Black Friday<span>Black Friday prices. All year round.</span></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="search.html">Deals</a>
+    <a class="nav-link active" href="alerts.html">Alerts</a>
+    <a class="nav-link" href="membership.html">Pro</a>
+  </div>
+  <div class="nav-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search deals…" id="nav-search-input">
+  </div>
+  <div class="nav-right">
+    <div class="nav-timer" id="nav-timer">⚡ LIVE DEALS</div>
+    <button id="nav-signin-btn" onclick="openSignin()">Sign In</button>
+    <a class="nav-user-pill" id="nav-user-pill" href="profile.html">
+      <img id="nav-avatar" src="" alt="">
+      <span id="nav-name"></span>
+    </a>
+  </div>
+</nav>
+
+<!-- SIGN-IN OVERLAY -->
+<div class="signin-overlay" id="signin-overlay">
+  <div class="signin-box">
+    <img class="signin-logo" src="assets/logo-ebf.png" alt="EBF">
+    <h2>Sign in to set alerts</h2>
+    <p>Create deal alerts and get notified when prices drop on the products you want.</p>
+    <div class="g-signin-wrap">
+      <div id="g_id_onload"
+        data-client_id="875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com"
+        data-callback="handleGoogleSignIn"
+        data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left">
+      </div>
+    </div>
+    <button class="signin-skip" onclick="closeSignin()">Maybe later</button>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page-wrap">
+  <div class="page-header">
+    <h1 class="page-title">🔔 Deal Alerts</h1>
+    <p class="page-subtitle">Set keywords and target prices — we'll notify you when deals match.</p>
+  </div>
+
+  <!-- SIGNED-OUT GATE -->
+  <div class="auth-gate" id="auth-gate" style="display:none;">
+    <div class="auth-gate-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </div>
+    <h2>Sign In to Set Alerts</h2>
+    <p>Create up to 5 free keyword alerts and get notified when prices drop.</p>
+    <button class="btn-gold" onclick="openSignin()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Sign In with Google
+    </button>
+  </div>
+
+  <!-- ALERTS CONTENT -->
+  <div id="alerts-content" style="display:none;">
+
+    <!-- Add Alert Form -->
+    <div class="add-alert-card">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Create New Alert
+      </h2>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Keyword or Product Name</label>
+          <input class="form-input" type="text" id="alert-keyword" placeholder="e.g. Sony headphones, iPad Pro, Instant Pot…" maxlength="80">
+          <div class="form-hint">Be specific for better matches — "Sony WH-1000XM5" beats just "headphones"</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="alert-category">
+            <option value="all">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="home">Home & Kitchen</option>
+            <option value="fashion">Fashion</option>
+            <option value="family">Toys & Family</option>
+            <option value="sports">Sports & Outdoors</option>
+            <option value="auto">Automotive & Tools</option>
+            <option value="travel">Travel & Luggage</option>
+            <option value="seasonal">Seasonal & Holiday</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Price (optional)</label>
+          <div class="price-prefix">
+            <input class="form-input" type="number" id="alert-price" placeholder="150" min="1" max="99999" step="0.01">
+          </div>
+          <div class="form-hint">Alert fires when price drops to or below this</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Min. Discount</label>
+          <select class="form-select" id="alert-discount">
+            <option value="0">Any discount</option>
+            <option value="10">10% or more</option>
+            <option value="20">20% or more</option>
+            <option value="30" selected>30% or more</option>
+            <option value="40">40% or more</option>
+            <option value="50">50% or more</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email for Alerts</label>
+          <input class="form-input" type="email" id="alert-email" placeholder="your@email.com">
+          <div class="form-hint">Leave blank to use your account email</div>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;">
+          <button class="btn-add" onclick="addAlert()" style="width:100%;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Alert
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Alerts -->
+    <div class="alerts-section">
+      <div class="alerts-section-header">
+        <div class="alerts-section-title">
+          Active Alerts
+          <span class="alert-count-badge" id="alert-count-badge">0</span>
+        </div>
+        <button class="btn-clear-all" id="clear-all-btn" onclick="clearAllAlerts()" style="display:none;">Clear All</button>
+      </div>
+      <div id="alert-list"></div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="how-it-works">
+      <h3>How Deal Alerts Work</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Set a keyword</div>
+          <div class="step-desc">Type any product name or keyword you're watching</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">We scan deals</div>
+          <div class="step-desc">Our system checks prices across top retailers daily</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Get notified</div>
+          <div class="step-desc">Email alert the moment a matching deal goes live</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro Upsell -->
+    <div class="pro-banner">
+      <div class="pro-banner-icon">⚡</div>
+      <div class="pro-banner-text">
+        <strong>Go Pro — Unlimited Alerts + Instant Notifications</strong>
+        <span>Free plan: 5 alerts, daily checks. Pro: unlimited alerts, real-time price tracking, SMS alerts.</span>
+      </div>
+      <a href="membership.html" class="btn-pro">Upgrade to Pro</a>
+    </div>
+
+  </div><!-- /alerts-content -->
+</div>
+
+<!-- FOOTER -->
+<footer style="background:var(--surface);border-top:1px solid var(--border);padding:48px 24px 24px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+      <img src="assets/logo-ebf.png" alt="EBF" style="width:44px;height:44px;object-fit:contain;">
+      <div>
+        <div style="font-weight:800;font-size:14px;color:#fff;">Everyday Black Friday</div>
+        <div style="font-size:11px;color:var(--muted);">Black Friday prices. All year round.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:40px;flex-wrap:wrap;margin-bottom:32px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Shop</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="categories.html" style="color:var(--muted);text-decoration:none;font-size:13px;">All Categories</a>
+          <a href="search.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Today's Deals</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Account</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="profile.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Profile</a>
+          <a href="alerts.html" style="color:var(--gold);text-decoration:none;font-size:13px;">Alerts</a>
+          <a href="membership.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Go Pro</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:20px;text-align:center;font-size:11px;color:var(--muted);">
+      © 2026 Everyday Black Friday · Prices and availability subject to change. We may earn commissions on qualifying purchases.
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FREE_LIMIT = 5;
+
+// ---- AUTH ----
+function handleGoogleSignIn(response) {
+  const data = parseJwt(response.credential);
+  const existing = getUser();
+  const user = { name: data.name, email: data.email, picture: data.picture, joined: (existing && existing.joined) || Date.now() };
+  localStorage.setItem('bdd_user', JSON.stringify(user));
+  localStorage.removeItem('skipped_signin');
+  closeSignin();
+  updateAuthUI();
+  renderAlertsContent();
+  showToast('Signed in as ' + data.given_name, 'success');
+}
+function parseJwt(token) {
+  const b64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+  return JSON.parse(decodeURIComponent(atob(b64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+}
+function getUser() { try { return JSON.parse(localStorage.getItem('bdd_user')); } catch { return null; } }
+function openSignin() { document.getElementById('signin-overlay').classList.add('active'); }
+function closeSignin() { document.getElementById('signin-overlay').classList.remove('active'); }
+document.getElementById('signin-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeSignin(); });
+
+function updateAuthUI() {
+  const user = getUser();
+  const signinBtn = document.getElementById('nav-signin-btn');
+  const userPill = document.getElementById('nav-user-pill');
+  if (user) {
+    signinBtn.style.display = 'none';
+    userPill.style.display = 'flex';
+    document.getElementById('nav-avatar').src = user.picture || '';
+    document.getElementById('nav-name').textContent = user.name.split(' ')[0];
+    // Pre-fill email field
+    const emailField = document.getElementById('alert-email');
+    if (emailField && !emailField.value) emailField.placeholder = user.email;
+  } else {
+    signinBtn.style.display = '';
+    userPill.style.display = 'none';
+  }
+}
+
+// ---- WATCHLIST (alerts) STORAGE ----
+function getAlerts() { try { return JSON.parse(localStorage.getItem('bdd_watchlist')) || []; } catch { return []; } }
+function saveAlerts(list) { localStorage.setItem('bdd_watchlist', JSON.stringify(list)); }
+
+// ---- ADD ALERT ----
+function addAlert() {
+  const user = getUser();
+  if (!user) { openSignin(); return; }
+
+  const keyword = document.getElementById('alert-keyword').value.trim();
+  if (!keyword) { showToast('Please enter a keyword or product name', 'error'); return; }
+
+  const alerts = getAlerts();
+  if (alerts.length >= FREE_LIMIT) {
+    showToast('Free limit: ' + FREE_LIMIT + ' alerts. Upgrade to Pro for unlimited!', 'error');
+    return;
+  }
+  if (alerts.some(a => a.keyword.toLowerCase() === keyword.toLowerCase())) {
+    showToast('You already have an alert for "' + keyword + '"', 'error');
+    return;
+  }
+
+  const priceVal = document.getElementById('alert-price').value;
+  const alert = {
+    id: Date.now(),
+    keyword,
+    category: document.getElementById('alert-category').value,
+    targetPrice: priceVal ? parseFloat(priceVal) : null,
+    minDiscount: parseInt(document.getElementById('alert-discount').value),
+    email: document.getElementById('alert-email').value.trim() || user.email,
+    active: true,
+    created: Date.now()
+  };
+  alerts.unshift(alert);
+  saveAlerts(alerts);
+
+  // Clear form
+  document.getElementById('alert-keyword').value = '';
+  document.getElementById('alert-price').value = '';
+  document.getElementById('alert-email').value = '';
+  document.getElementById('alert-category').value = 'all';
+  document.getElementById('alert-discount').value = '30';
+
+  renderAlertList();
+  showToast('Alert created for "' + keyword + '"', 'success');
+
+  // EmailJS placeholder — fires when real keys are configured
+  sendAlertConfirmEmail(alert, user);
+}
+
+function sendAlertConfirmEmail(alert, user) {
+  // EmailJS integration — replace placeholders with real keys
+  const PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+  const SERVICE_ID = 'YOUR_SERVICE_ID';
+  const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+  if (PUBLIC_KEY === 'YOUR_PUBLIC_KEY') return; // Not configured yet
+  if (typeof emailjs === 'undefined') return;
+  emailjs.init(PUBLIC_KEY);
+  emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+    to_name: user.name,
+    to_email: alert.email,
+    keyword: alert.keyword,
+    target_price: alert.targetPrice ? '$' + alert.targetPrice : 'Any price',
+    category: alert.category === 'all' ? 'All Categories' : alert.category,
+    min_discount: alert.minDiscount + '%',
+  }).catch(() => {}); // Silently fail if not configured
+}
+
+// ---- TOGGLE / DELETE ----
+function toggleAlert(id) {
+  const alerts = getAlerts();
+  const a = alerts.find(x => x.id === id);
+  if (a) { a.active = !a.active; saveAlerts(alerts); renderAlertList(); }
+}
+function deleteAlert(id) {
+  const alerts = getAlerts().filter(a => a.id !== id);
+  saveAlerts(alerts);
+  renderAlertList();
+  showToast('Alert removed');
+}
+function clearAllAlerts() {
+  if (!confirm('Remove all alerts?')) return;
+  saveAlerts([]);
+  renderAlertList();
+  showToast('All alerts cleared');
+}
+
+// ---- RENDER LIST ----
+const CAT_LABELS = {all:'All Categories',electronics:'Electronics',home:'Home & Kitchen',fashion:'Fashion',family:'Toys & Family',sports:'Sports',auto:'Automotive',travel:'Travel',seasonal:'Seasonal'};
+
+function renderAlertList() {
+  const alerts = getAlerts();
+  const container = document.getElementById('alert-list');
+  const badge = document.getElementById('alert-count-badge');
+  const clearBtn = document.getElementById('clear-all-btn');
+  badge.textContent = alerts.length;
+  clearBtn.style.display = alerts.length ? '' : 'none';
+
+  if (!alerts.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="empty-title">No alerts yet</div>
+      <div class="empty-desc">Create your first alert above to get notified when deals match.</div>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="alert-list">${alerts.map(a => `
+    <div class="alert-item" id="alert-${a.id}">
+      <div class="alert-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="alert-info">
+        <div class="alert-keyword">${escHtml(a.keyword)}</div>
+        <div class="alert-meta">
+          <span class="alert-tag">${CAT_LABELS[a.category] || a.category}</span>
+          ${a.targetPrice ? `<span class="alert-tag price">Under $${a.targetPrice}</span>` : ''}
+          ${a.minDiscount > 0 ? `<span class="alert-tag">${a.minDiscount}%+ off</span>` : ''}
+          <span class="alert-tag">${a.email}</span>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <button class="alert-toggle ${a.active ? 'active' : ''}" onclick="toggleAlert(${a.id})">
+          ${a.active ? 'Active' : 'Paused'}
+        </button>
+        <button class="alert-delete" onclick="deleteAlert(${a.id})" title="Delete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ---- RENDER PAGE ----
+function renderAlertsContent() {
+  const user = getUser();
+  const gate = document.getElementById('auth-gate');
+  const content = document.getElementById('alerts-content');
+  if (!user) {
+    gate.style.display = '';
+    content.style.display = 'none';
+    return;
+  }
+  gate.style.display = 'none';
+  content.style.display = '';
+  renderAlertList();
+}
+
+// ---- NAV TIMER ----
+function updateNavTimer() {
+  const now = new Date();
+  const end = new Date(now); end.setHours(23,59,59,999);
+  const diff = end - now;
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('nav-timer').textContent = `⚡ ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// NAV SEARCH
+document.getElementById('nav-search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.value.trim()) {
+    window.location.href = 'search.html?q=' + encodeURIComponent(e.target.value.trim());
+  }
+});
+
+// Enter key on keyword field
+document.addEventListener('DOMContentLoaded', () => {
+  const kw = document.getElementById('alert-keyword');
+  if (kw) kw.addEventListener('keydown', e => { if (e.key === 'Enter') addAlert(); });
+});
+
+// TOAST
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+
+// INIT
+updateNavTimer();
+setInterval(updateNavTimer, 1000);
+updateAuthUI();
+renderAlertsContent();
+</script>
+</body>
+</html>
