@@ -47,6 +47,11 @@
   }
   .nav-logo-text{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-0.5px;line-height:1.1;}
   .nav-logo-text span{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .nav-links{display:flex;align-items:center;gap:4px;}
+  .nav-link{padding:6px 12px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:500;color:var(--muted);transition:color 0.2s,background 0.2s;white-space:nowrap;}
+  .nav-link:hover{color:#fff;background:#1a1a1a;}
+  .nav-link.active{color:var(--gold);background:#1a1200;}
+  @media(max-width:800px){.nav-links{display:none;}}
   .nav-search{
     flex:1;min-width:0;max-width:420px;margin:0 auto;
     position:relative;
@@ -600,6 +605,13 @@
       <span>Black Friday prices. All year round.</span>
     </div>
   </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">Home</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="search.html">Deals</a>
+    <a class="nav-link" href="alerts.html">Alerts</a>
+    <a class="nav-link" href="membership.html">Pro</a>
+  </div>
   <div class="nav-search">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="text" placeholder="Search deals…" oninput="filterSearch(this.value)">
