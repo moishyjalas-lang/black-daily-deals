@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deals – Everyday Black Friday</title>
+<link rel="icon" href="assets/logo-ebf-icon.png">
+<style>
+  :root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+
+  /* TOAST */
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(40px);background:#222;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;border:1px solid var(--border);}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* NAVBAR */
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px;gap:16px;}
+  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+  .nav-logo-img{width:36px;height:36px;object-fit:contain;}
+  .nav-logo-text{font-size:14px;font-weight:800;color:#fff;line-height:1.2;}
+  .nav-logo-text span{display:block;font-size:10px;font-weight:400;color:var(--muted);}
+  .nav-links{display:flex;gap:4px;margin-left:12px;}
+  .nav-link{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;transition:color .15s,background .15s;white-space:nowrap;}
+  .nav-link:hover,.nav-link.active{color:#fff;background:rgba(255,255,255,.06);}
+  .nav-search{flex:1;max-width:360px;margin-left:auto;position:relative;display:flex;align-items:center;}
+  .nav-search svg{position:absolute;left:12px;pointer-events:none;}
+  .nav-search input{width:100%;background:#181818;border:1px solid var(--border);color:#fff;padding:8px 12px 8px 36px;border-radius:8px;font-size:13px;outline:none;transition:border-color .15s;}
+  .nav-search input:focus{border-color:var(--gold);}
+  .nav-right{display:flex;align-items:center;gap:10px;margin-left:12px;}
+  .nav-countdown{display:flex;flex-direction:column;align-items:flex-end;font-size:11px;line-height:1.2;}
+  .nav-countdown .label{color:var(--muted);}
+  .nav-countdown .time{color:var(--gold);font-weight:700;}
+  .nav-alert-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:border-color .15s,color .15s;white-space:nowrap;}
+  .nav-alert-btn:hover{border-color:var(--gold);color:var(--gold);}
+  .signin-btn{background:var(--gold);color:#0a0a0a;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px;transition:background .15s;white-space:nowrap;}
+  .signin-btn:hover{background:var(--gold2);}
+  .user-pill{display:none;align-items:center;gap:8px;cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 4px;}
+  .user-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;}
+  .user-name{font-size:12px;font-weight:600;}
+
+  /* SIGN-IN OVERLAY */
+  .signin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;}
+  .signin-overlay.open{display:flex;}
+  .signin-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px 32px;max-width:380px;width:100%;text-align:center;}
+  .signin-box h2{font-size:22px;font-weight:900;margin-bottom:10px;}
+  .signin-box p{font-size:14px;color:var(--muted);margin-bottom:28px;}
+  .signin-google-btn{width:100%;background:#fff;color:#333;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;margin-bottom:12px;}
+  .signin-google-btn:hover{background:#f5f5f5;}
+  .signin-skip{background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:10px;font-size:13px;cursor:pointer;width:100%;}
+  .signin-skip:hover{border-color:#555;color:#fff;}
+
+  /* PAGE LAYOUT */
+  .search-page{max-width:1200px;margin:0 auto;padding:32px 24px;display:flex;gap:28px;align-items:flex-start;}
+
+  /* SIDEBAR */
+  .sidebar{width:240px;flex-shrink:0;position:sticky;top:88px;}
+  .sidebar-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+  .sidebar-title{font-size:12px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+  .sidebar-title button{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;text-transform:none;letter-spacing:0;font-weight:400;}
+  .sidebar-title button:hover{color:var(--gold);}
+  .filter-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .filter-chip{font-size:12px;padding:5px 11px;border-radius:20px;border:1px solid var(--border);color:var(--muted);cursor:pointer;background:transparent;transition:all .15s;white-space:nowrap;}
+  .filter-chip:hover{border-color:var(--gold);color:var(--gold);}
+  .filter-chip.active{background:rgba(255,215,0,.1);border-color:var(--gold);color:var(--gold);}
+  .price-row{display:flex;gap:8px;margin-top:4px;}
+  .price-input{flex:1;background:#1a1a1a;border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:7px;font-size:13px;outline:none;}
+  .price-input:focus{border-color:var(--gold);}
+  .price-btn{background:var(--gold);color:#0a0a0a;border:none;padding:7px 12px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;}
+  .price-btn:hover{background:var(--gold2);}
+  .store-list{display:flex;flex-direction:column;gap:7px;}
+  .store-item{display:flex;align-items:center;gap:9px;cursor:pointer;padding:4px 0;}
+  .store-cb{width:15px;height:15px;border-radius:3px;border:1px solid var(--border);background:transparent;accent-color:var(--gold);cursor:pointer;}
+  .store-label{font-size:13px;color:var(--muted);}
+  .store-item:hover .store-label{color:#fff;}
+  .discount-slider-wrap{margin-top:4px;}
+  .discount-slider{width:100%;accent-color:var(--gold);cursor:pointer;}
+  .discount-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
+  .discount-current{font-size:14px;font-weight:800;color:var(--gold);margin-bottom:6px;}
+  .clear-filters-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;font-size:13px;cursor:pointer;margin-top:4px;}
+  .clear-filters-btn:hover{border-color:var(--red);color:var(--red);}
+
+  /* MAIN RESULTS */
+  .results-main{flex:1;min-width:0;}
+  .results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+  .results-title{font-size:22px;font-weight:900;}
+  .results-title span{color:var(--gold);}
+  .results-meta{font-size:13px;color:var(--muted);}
+  .sort-row{display:flex;align-items:center;gap:10px;}
+  .sort-select{background:#181818;border:1px solid var(--border);color:#fff;padding:7px 12px;border-radius:8px;font-size:13px;outline:none;cursor:pointer;}
+  .sort-select:focus{border-color:var(--gold);}
+  .view-toggle{display:flex;gap:4px;}
+  .view-btn{background:transparent;border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .view-btn.active,.view-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* DEALS GRID */
+  .deals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .deals-grid.list-view{grid-template-columns:1fr;}
+
+  /* DEAL CARD */
+  .deal-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:border-color .2s,transform .2s;cursor:pointer;}
+  .deal-card:hover{border-color:rgba(255,215,0,.35);transform:translateY(-2px);}
+  .deal-card-img-wrap{aspect-ratio:16/10;background:#111;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .deal-card-img{width:100%;height:100%;object-fit:cover;}
+  .deal-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--border);}
+  .deal-badge{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:5px;}
+  .deal-badge.lightning{background:var(--gold);color:#0a0a0a;}
+  .deal-wishlist-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .15s;}
+  .deal-wishlist-btn:hover,.deal-wishlist-btn.saved{background:var(--gold);color:#0a0a0a;}
+  .deal-card-body{padding:14px;}
+  .deal-store{font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+  .deal-title{font-size:14px;font-weight:600;color:#fff;line-height:1.35;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .deal-pricing{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .deal-price{font-size:20px;font-weight:900;color:var(--gold);}
+  .deal-orig{font-size:13px;color:var(--muted);text-decoration:line-through;}
+  .deal-off{font-size:12px;font-weight:700;color:var(--green);background:rgba(34,197,94,.1);padding:2px 7px;border-radius:4px;}
+  .deal-cta{width:100%;background:var(--gold);color:#0a0a0a;border:none;padding:9px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .deal-cta:hover{background:var(--gold2);}
+  .deal-rating{display:flex;align-items:center;gap:5px;margin-bottom:8px;}
+  .stars{color:var(--gold);font-size:12px;}
+  .rating-count{font-size:11px;color:var(--muted);}
+
+  /* LIST VIEW CARD */
+  .deals-grid.list-view .deal-card{display:flex;flex-direction:row;}
+  .deals-grid.list-view .deal-card-img-wrap{width:180px;flex-shrink:0;aspect-ratio:unset;height:140px;}
+  .deals-grid.list-view .deal-card-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+  .deals-grid.list-view .deal-title{-webkit-line-clamp:1;}
+
+  /* PAGINATION */
+  .pagination{display:flex;justify-content:center;gap:8px;margin-top:36px;flex-wrap:wrap;}
+  .pg-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+  .pg-btn:hover,.pg-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,.06);}
+  .pg-btn:disabled{opacity:.3;cursor:default;}
+
+  /* NO RESULTS */
+  .no-results{text-align:center;padding:64px 24px;}
+  .no-results svg{color:var(--border);margin-bottom:16px;}
+  .no-results h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+  .no-results p{font-size:14px;color:var(--muted);}
+
+  @media(max-width:1000px){.deals-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:768px){.sidebar{display:none;}.search-page{padding:24px 16px;}}
+  @media(max-width:500px){.deals-grid{grid-template-columns:1fr;}.nav-links{display:none;}.nav-search{display:none;}}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- SIGN-IN OVERLAY -->
+<div class="signin-overlay" id="signin-overlay">
+  <div class="signin-box">
+    <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px;">
+    <h2>Welcome to Everyday Black Friday</h2>
+    <p>Sign in to save your wishlist, set deal alerts, and get personalized picks.</p>
+    <button class="signin-google-btn" onclick="triggerGoogleSignIn()">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <button class="signin-skip" onclick="skipSignIn()">Skip for now</button>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
+    <div class="nav-logo-text">Everyday Black Friday<span>Black Friday prices. All year round.</span></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link active" href="search.html">Deals</a>
+    <a class="nav-link" href="alerts.html">Alerts</a>
+    <a class="nav-link" href="membership.html">Pro</a>
+  </div>
+  <div class="nav-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="main-search" placeholder="Search deals…" oninput="handleSearchInput(this.value)" onkeydown="if(event.key==='Enter')applySearch()">
+  </div>
+  <div class="nav-right">
+    <div class="nav-countdown">
+      <span class="label">Black Friday</span>
+      <span class="time" id="nav-timer">--d --h</span>
+    </div>
+    <button class="nav-alert-btn" onclick="window.location='alerts.html'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Deal Alerts
+    </button>
+    <button class="signin-btn" id="signin-btn" onclick="showSignIn()">
+      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign In
+    </button>
+    <div class="user-pill" id="user-pill" onclick="window.location='profile.html'">
+      <img class="user-avatar" id="user-avatar" src="" alt="">
+      <span class="user-name" id="user-name"></span>
+    </div>
+  </div>
+</nav>
+
+<div class="search-page">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Category <button onclick="clearCategoryFilter()">Clear</button></div>
+      <div class="filter-chips" id="cat-chips">
+        <button class="filter-chip" data-cat="all" onclick="setCat(this,'all')">All Deals</button>
+        <button class="filter-chip" data-cat="electronics" onclick="setCat(this,'electronics')">Electronics</button>
+        <button class="filter-chip" data-cat="home" onclick="setCat(this,'home')">Home</button>
+        <button class="filter-chip" data-cat="fashion" onclick="setCat(this,'fashion')">Fashion</button>
+        <button class="filter-chip" data-cat="family" onclick="setCat(this,'family')">Family</button>
+        <button class="filter-chip" data-cat="sports" onclick="setCat(this,'sports')">Sports</button>
+        <button class="filter-chip" data-cat="auto" onclick="setCat(this,'auto')">Auto</button>
+        <button class="filter-chip" data-cat="travel" onclick="setCat(this,'travel')">Travel</button>
+        <button class="filter-chip" data-cat="seasonal" onclick="setCat(this,'seasonal')">Seasonal</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Price Range <button onclick="clearPrice()">Clear</button></div>
+      <div class="price-row">
+        <input class="price-input" type="number" id="price-min" placeholder="Min $" min="0">
+        <input class="price-input" type="number" id="price-max" placeholder="Max $" min="0">
+        <button class="price-btn" onclick="applyPrice()">Go</button>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="filter-chips">
+          <button class="filter-chip" onclick="setPricePreset(0,25)">Under $25</button>
+          <button class="filter-chip" onclick="setPricePreset(25,50)">$25-$50</button>
+          <button class="filter-chip" onclick="setPricePreset(50,100)">$50-$100</button>
+          <button class="filter-chip" onclick="setPricePreset(100,999999)">$100+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Min Discount</div>
+      <div class="discount-current" id="discount-label">Any discount</div>
+      <div class="discount-slider-wrap">
+        <input type="range" class="discount-slider" id="discount-slider" min="0" max="90" step="10" value="0" oninput="updateDiscountLabel(this.value)">
+        <div class="discount-labels"><span>0%</span><span>90%</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Store</div>
+      <div class="store-list">
+        <label class="store-item"><input type="checkbox" class="store-cb" value="amazon" onchange="renderDeals()"> <span class="store-label">Amazon</span></label>
+        <label class="store-item"><input type="checkbox" class="store-cb" value="walmart" onchange="renderDeals()"> <span class="store-label">Walmart</span></label>
+        <label class="store-item"><input type="checkbox" class="store-cb" value="target" onchange="renderDeals()"> <span class="store-label">Target</span></label>
+        <label class="store-item"><input type="checkbox" class="store-cb" value="bestbuy" onchange="renderDeals()"> <span class="store-label">Best Buy</span></label>
+        <label class="store-item"><input type="checkbox" class="store-cb" value="costco" onchange="renderDeals()"> <span class="store-label">Costco</span></label>
+      </div>
+    </div>
+
+    <button class="clear-filters-btn" onclick="clearAllFilters()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.86"/></svg>
+      Reset All Filters
+    </button>
+  </aside>
+
+  <!-- RESULTS -->
+  <div class="results-main">
+    <div class="results-header">
+      <div>
+        <h1 class="results-title" id="results-title">All <span>Deals</span></h1>
+        <div class="results-meta" id="results-meta">Loading deals…</div>
+      </div>
+      <div class="sort-row">
+        <select class="sort-select" id="sort-select" onchange="renderDeals()">
+          <option value="discount">Best Discount</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="popular">Most Popular</option>
+          <option value="newest">Newest</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="grid-btn" onclick="setView('grid')" title="Grid">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </button>
+          <button class="view-btn" id="list-btn" onclick="setView('list')" title="List">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="deals-grid" id="deals-grid"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<script>
+// ── SAMPLE DEALS DATA ──
+const ALL_DEALS = [
+  {id:1,title:'Sony WH-1000XM5 Wireless Noise-Canceling Headphones',store:'Amazon',price:279,orig:399,off:30,cat:'electronics',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=sony+wh1000xm5&tag=blackdailydeals-20',rating:4.8,reviews:12400},
+  {id:2,title:'Apple AirPods Pro 2nd Gen with MagSafe Case',store:'Best Buy',price:189,orig:249,off:24,cat:'electronics',badge:'',img:null,aff:'https://www.amazon.com/s?k=airpods+pro+2nd+gen&tag=blackdailydeals-20',rating:4.9,reviews:8300},
+  {id:3,title:'Samsung 65" 4K QLED Smart TV with HDR',store:'Walmart',price:649,orig:999,off:35,cat:'electronics',badge:'Lightning',img:null,aff:'https://www.amazon.com/s?k=samsung+65+4k+qled&tag=blackdailydeals-20',rating:4.6,reviews:3200},
+  {id:4,title:'Instant Pot Duo 7-in-1 Electric Pressure Cooker 6Qt',store:'Amazon',price:49,orig:99,off:50,cat:'home',badge:'50% Off',img:null,aff:'https://www.amazon.com/s?k=instant+pot+duo+6qt&tag=blackdailydeals-20',rating:4.7,reviews:22000},
+  {id:5,title:'Dyson V15 Detect Cordless Vacuum Cleaner',store:'Target',price:449,orig:699,off:36,cat:'home',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=dyson+v15+detect&tag=blackdailydeals-20',rating:4.8,reviews:4100},
+  {id:6,title:'Levi\'s Men\'s 511 Slim Fit Jeans',store:'Amazon',price:34,orig:69,off:51,cat:'fashion',badge:'',img:null,aff:'https://www.amazon.com/s?k=levis+511+slim+fit+jeans&tag=blackdailydeals-20',rating:4.5,reviews:9800},
+  {id:7,title:'Nike Air Max 270 Women\'s Running Shoes',store:'Walmart',price:79,orig:149,off:47,cat:'fashion',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=nike+air+max+270+womens&tag=blackdailydeals-20',rating:4.6,reviews:5600},
+  {id:8,title:'LEGO Creator Expert Eiffel Tower 10307',store:'Amazon',price:159,orig:209,off:24,cat:'family',badge:'',img:null,aff:'https://www.amazon.com/s?k=lego+eiffel+tower+10307&tag=blackdailydeals-20',rating:4.9,reviews:1800},
+  {id:9,title:'Fitbit Charge 6 Advanced Fitness Tracker',store:'Best Buy',price:109,orig:159,off:31,cat:'sports',badge:'',img:null,aff:'https://www.amazon.com/s?k=fitbit+charge+6&tag=blackdailydeals-20',rating:4.4,reviews:7200},
+  {id:10,title:'Bowflex SelectTech 552 Adjustable Dumbbell Pair',store:'Amazon',price:299,orig:499,off:40,cat:'sports',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=bowflex+selecttech+552&tag=blackdailydeals-20',rating:4.8,reviews:11000},
+  {id:11,title:'Stanley Quencher 40oz Tumbler with Handle',store:'Target',price:35,orig:45,off:22,cat:'family',badge:'',img:null,aff:'https://www.amazon.com/s?k=stanley+quencher+40oz&tag=blackdailydeals-20',rating:4.8,reviews:33000},
+  {id:12,title:'Amazon Echo Show 8 (3rd Gen) Smart Display',store:'Amazon',price:89,orig:149,off:40,cat:'electronics',badge:'40% Off',img:null,aff:'https://www.amazon.com/s?k=echo+show+8+3rd+gen&tag=blackdailydeals-20',rating:4.6,reviews:6700},
+  {id:13,title:'Samsonite Omni PC Hardside Luggage Spinner 28"',store:'Amazon',price:109,orig:219,off:50,cat:'travel',badge:'50% Off',img:null,aff:'https://www.amazon.com/s?k=samsonite+omni+pc+28+inch&tag=blackdailydeals-20',rating:4.7,reviews:8900},
+  {id:14,title:'Ninja Foodi 9-in-1 Pressure Cooker & Air Fryer',store:'Walmart',price:149,orig:249,off:40,cat:'home',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=ninja+foodi+9+in+1&tag=blackdailydeals-20',rating:4.6,reviews:5100},
+  {id:15,title:'DeWalt 20V MAX Cordless Drill Driver Kit',store:'Amazon',price:99,orig:179,off:45,cat:'auto',badge:'',img:null,aff:'https://www.amazon.com/s?k=dewalt+20v+max+drill+kit&tag=blackdailydeals-20',rating:4.8,reviews:14000},
+  {id:16,title:'Yankee Candle Holiday Gift Set Large Jar',store:'Target',price:28,orig:49,off:43,cat:'seasonal',badge:'Trending',img:null,aff:'https://www.amazon.com/s?k=yankee+candle+holiday+gift+set&tag=blackdailydeals-20',rating:4.6,reviews:2200},
+  {id:17,title:'Apple Watch Series 9 GPS 41mm Aluminum',store:'Best Buy',price:299,orig:399,off:25,cat:'electronics',badge:'',img:null,aff:'https://www.amazon.com/s?k=apple+watch+series+9+41mm&tag=blackdailydeals-20',rating:4.8,reviews:9100},
+  {id:18,title:'Roomba 694 Robot Vacuum Self-Charging',store:'Amazon',price:179,orig:299,off:40,cat:'home',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=roomba+694+robot+vacuum&tag=blackdailydeals-20',rating:4.4,reviews:18000},
+];
+
+// ── STATE ──
+let activeCategory = 'all';
+let priceMin = 0, priceMax = 999999;
+let minDiscount = 0;
+let searchQuery = '';
+let currentSort = 'discount';
+let currentView = 'grid';
+let currentPage = 1;
+const PER_PAGE = 12;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const catParam = params.get('cat');
+  const qParam = params.get('q');
+  if(catParam && catParam !== 'all') {
+    activeCategory = catParam;
+    document.querySelectorAll('.filter-chip[data-cat]').forEach(c => {
+      c.classList.toggle('active', c.dataset.cat === catParam);
+    });
+  } else {
+    document.querySelector('.filter-chip[data-cat="all"]').classList.add('active');
+  }
+  if(qParam) {
+    searchQuery = qParam;
+    document.getElementById('main-search').value = qParam;
+  }
+  updateNavTimer();
+  setInterval(updateNavTimer, 60000);
+  updateAuthUI();
+  renderDeals();
+});
+
+// ── FILTERS ──
+function setCat(el, cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.filter-chip[data-cat]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentPage = 1;
+  renderDeals();
+}
+function clearCategoryFilter() {
+  activeCategory = 'all';
+  document.querySelectorAll('.filter-chip[data-cat]').forEach(c => c.classList.toggle('active', c.dataset.cat === 'all'));
+  renderDeals();
+}
+function setPricePreset(mn, mx) {
+  priceMin = mn; priceMax = mx;
+  document.getElementById('price-min').value = mn === 0 ? '' : mn;
+  document.getElementById('price-max').value = mx >= 999999 ? '' : mx;
+  renderDeals();
+}
+function applyPrice() {
+  const mn = parseFloat(document.getElementById('price-min').value) || 0;
+  const mx = parseFloat(document.getElementById('price-max').value) || 999999;
+  priceMin = mn; priceMax = mx;
+  renderDeals();
+}
+function clearPrice() {
+  priceMin = 0; priceMax = 999999;
+  document.getElementById('price-min').value = '';
+  document.getElementById('price-max').value = '';
+  renderDeals();
+}
+function updateDiscountLabel(val) {
+  minDiscount = parseInt(val);
+  document.getElementById('discount-label').textContent = val === '0' ? 'Any discount' : val + '%+ off';
+  renderDeals();
+}
+function handleSearchInput(val) {
+  searchQuery = val;
+  currentPage = 1;
+}
+function applySearch() {
+  currentPage = 1;
+  renderDeals();
+}
+function clearAllFilters() {
+  activeCategory = 'all';
+  priceMin = 0; priceMax = 999999;
+  minDiscount = 0;
+  searchQuery = '';
+  document.getElementById('price-min').value = '';
+  document.getElementById('price-max').value = '';
+  document.getElementById('discount-slider').value = 0;
+  document.getElementById('discount-label').textContent = 'Any discount';
+  document.getElementById('main-search').value = '';
+  document.querySelectorAll('.filter-chip[data-cat]').forEach(c => c.classList.toggle('active', c.dataset.cat === 'all'));
+  document.querySelectorAll('.store-cb').forEach(c => c.checked = false);
+  renderDeals();
+}
+function setView(v) {
+  currentView = v;
+  document.getElementById('deals-grid').className = 'deals-grid' + (v === 'list' ? ' list-view' : '');
+  document.getElementById('grid-btn').classList.toggle('active', v === 'grid');
+  document.getElementById('list-btn').classList.toggle('active', v === 'list');
+}
+
+// ── RENDER ──
+function getFilteredDeals() {
+  let deals = [...ALL_DEALS];
+  if(activeCategory !== 'all') deals = deals.filter(d => d.cat === activeCategory);
+  deals = deals.filter(d => d.price >= priceMin && d.price <= priceMax);
+  deals = deals.filter(d => d.off >= minDiscount);
+  const checked = [...document.querySelectorAll('.store-cb:checked')].map(c => c.value);
+  if(checked.length) deals = deals.filter(d => checked.includes(d.store.toLowerCase().replace(' ','').replace(' ','').replace(' ','')));
+  if(searchQuery.trim()) {
+    const q = searchQuery.toLowerCase();
+    deals = deals.filter(d => d.title.toLowerCase().includes(q) || d.store.toLowerCase().includes(q));
+  }
+  const sort = document.getElementById('sort-select').value;
+  if(sort === 'discount') deals.sort((a,b) => b.off - a.off);
+  else if(sort === 'price_asc') deals.sort((a,b) => a.price - b.price);
+  else if(sort === 'price_desc') deals.sort((a,b) => b.price - a.price);
+  else if(sort === 'popular') deals.sort((a,b) => b.reviews - a.reviews);
+  return deals;
+}
+
+function renderDeals() {
+  const deals = getFilteredDeals();
+  const grid = document.getElementById('deals-grid');
+  const title = document.getElementById('results-title');
+  const meta = document.getElementById('results-meta');
+  const catLabels = {all:'All',electronics:'Electronics',home:'Home & Living',fashion:'Fashion & Care',family:'Family & Everyday',sports:'Sports & Outdoors',auto:'Auto & Tools',travel:'Travel',seasonal:'Seasonal & Gifts'};
+  title.innerHTML = (catLabels[activeCategory]||'All') + ' <span>Deals</span>';
+  const start = (currentPage-1)*PER_PAGE;
+  const page = deals.slice(start, start+PER_PAGE);
+  meta.textContent = `${deals.length} deal${deals.length !== 1 ? 's' : ''} found`;
+  if(!deals.length) {
+    grid.innerHTML = `<div class="no-results" style="grid-column:1/-1"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><h3>No deals match your filters</h3><p>Try adjusting your filters or search term.</p></div>`;
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+  const wishlist = JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
+  grid.innerHTML = page.map(d => {
+    const saved = wishlist.includes(d.id);
+    const stars = '★'.repeat(Math.round(d.rating)) + '☆'.repeat(5-Math.round(d.rating));
+    const badgeHtml = d.badge ? `<div class="deal-badge${d.badge==='Lightning'?' lightning':''}">${d.badge}</div>` : '';
+    return `<div class="deal-card" onclick="goToDeal(event,${JSON.stringify(d.aff)})">
+      <div class="deal-card-img-wrap">
+        <div class="deal-card-img-placeholder">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        ${badgeHtml}
+        <button class="deal-wishlist-btn${saved?' saved':''}" onclick="toggleWishlist(event,${d.id})" title="${saved?'Remove from wishlist':'Save to wishlist'}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="${saved?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="deal-card-body">
+        <div class="deal-store">${d.store}</div>
+        <div class="deal-title">${d.title}</div>
+        <div class="deal-rating"><span class="stars">${stars}</span><span class="rating-count">(${d.reviews.toLocaleString()})</span></div>
+        <div class="deal-pricing">
+          <span class="deal-price">$${d.price}</span>
+          <span class="deal-orig">$${d.orig}</span>
+          <span class="deal-off">-${d.off}%</span>
+        </div>
+        <button class="deal-cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View Deal
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+  renderPagination(deals.length);
+}
+
+function goToDeal(e, url) {
+  if(e.target.closest('.deal-wishlist-btn')) return;
+  window.open(url, '_blank', 'noopener');
+}
+
+function toggleWishlist(e, id) {
+  e.stopPropagation();
+  let wl = JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
+  if(wl.includes(id)) {
+    wl = wl.filter(x => x !== id);
+    showToast('Removed from wishlist');
+  } else {
+    wl.push(id);
+    showToast('Saved to wishlist!');
+  }
+  localStorage.setItem('bdd_wishlist', JSON.stringify(wl));
+  renderDeals();
+}
+
+function renderPagination(total) {
+  const pages = Math.ceil(total / PER_PAGE);
+  const pg = document.getElementById('pagination');
+  if(pages <= 1) { pg.innerHTML=''; return; }
+  let html = `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++) html += `<button class="pg-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  html += `<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
+}
+function goPage(p) {
+  if(p < 1 || p > Math.ceil(getFilteredDeals().length/PER_PAGE)) return;
+  currentPage = p;
+  window.scrollTo({top:0,behavior:'smooth'});
+  renderDeals();
+}
+
+// ── NAV ──
+function updateNavTimer() {
+  const now = new Date();
+  const bf = new Date(now.getFullYear(),10,28);
+  if(now > bf) bf.setFullYear(bf.getFullYear()+1);
+  const diff = bf - now;
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  document.getElementById('nav-timer').textContent = d+'d '+h+'h';
+}
+
+// ── AUTH ──
+let currentUser = null;
+try { currentUser = JSON.parse(localStorage.getItem('bdd_user')||'null'); } catch(e){}
+function updateAuthUI() {
+  const sb = document.getElementById('signin-btn');
+  const up = document.getElementById('user-pill');
+  const ua = document.getElementById('user-avatar');
+  const un = document.getElementById('user-name');
+  if(currentUser) {
+    sb.style.display = 'none'; up.style.display = 'flex';
+    if(ua) ua.src = currentUser.avatar||'';
+    if(un) un.textContent = currentUser.name.split(' ')[0];
+  } else {
+    sb.style.display = 'flex'; up.style.display = 'none';
+  }
+}
+function showSignIn() { document.getElementById('signin-overlay').classList.add('open'); }
+function skipSignIn() { localStorage.setItem('skipped_signin','1'); document.getElementById('signin-overlay').classList.remove('open'); }
+function triggerGoogleSignIn() {
+  google.accounts.id.initialize({client_id:'875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com',callback:handleCredentialResponse});
+  google.accounts.id.prompt();
+}
+function handleCredentialResponse(response) {
+  try {
+    const p = JSON.parse(atob(response.credential.split('.')[1]));
+    currentUser = {name:p.name,email:p.email,avatar:p.picture,sub:p.sub};
+    localStorage.setItem('bdd_user',JSON.stringify(currentUser));
+    document.getElementById('signin-overlay').classList.remove('open');
+    updateAuthUI();
+    showToast('Welcome, '+p.name.split(' ')[0]+'!');
+  } catch(e){}
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
