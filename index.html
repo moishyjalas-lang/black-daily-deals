@@ -754,11 +754,26 @@ function closeOverlay(){
   localStorage.setItem('skipped_signin','1');
 }
 function triggerGoogleSignIn(){
-  google.accounts.id.initialize({
-    client_id:'426235659035-nktej4ugb450g4f67ocbce07c5c8j5lj.apps.googleusercontent.com',
-    callback:handleCredential
-  });
-  google.accounts.id.prompt();
+  // Use OAuth2 popup flow — works reliably across all browsers
+  const clientId = '426235659035-nktej4ugb450g4f67ocbce07c5c8j5lj.apps.googleusercontent.com';
+  const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+  const scope = encodeURIComponent('openid email profile');
+  const nonce = Math.random().toString(36).slice(2);
+  sessionStorage.setItem('oauth_nonce', nonce);
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=id_token&scope=${scope}&nonce=${nonce}&prompt=select_account`;
+  const popup = window.open(url,'googleSignIn','width=500,height=600,left=200,top=100');
+  const timer = setInterval(()=>{
+    try{
+      if(popup.closed){ clearInterval(timer); return; }
+      const hash = popup.location.hash;
+      if(hash && hash.includes('id_token')){
+        clearInterval(timer);
+        popup.close();
+        const params = new URLSearchParams(hash.slice(1));
+        handleCredential({credential: params.get('id_token')});
+      }
+    }catch(e){}
+  }, 300);
 }
 function handleCredential(response){
   try{
@@ -782,6 +797,18 @@ function setUser(name, picture, email){
     if(u) setUser(u.name,u.picture,u.email);
     else if(!localStorage.getItem('skipped_signin')) setTimeout(showOverlay,1500);
   }catch(e){}
+})();
+
+// Also handle redirect back from Google popup (id_token in hash)
+(function(){
+  if(window.location.hash && window.location.hash.includes('id_token')){
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    const token = params.get('id_token');
+    if(token){
+      history.replaceState(null,'',window.location.pathname);
+      handleCredential({credential:token});
+    }
+  }
 })();
 
 // ── SUBSCRIBE (Sender.net) ──
