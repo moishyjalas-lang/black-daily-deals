@@ -2,407 +2,474 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>All Categories – Everyday Black Friday</title>
-<link rel="icon" href="assets/logo-ebf-icon.png">
-<style>
-  :root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
-
-  /* TOAST */
-  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(40px);background:#222;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;border:1px solid var(--border);}
-  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-  /* NAVBAR */
-  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px;gap:16px;}
-  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-  .nav-logo-img{width:36px;height:36px;object-fit:contain;flex-shrink:0;}
-  .nav-logo-text{font-size:14px;font-weight:800;color:#fff;line-height:1.2;}
-  .nav-logo-text span{display:block;font-size:10px;font-weight:400;color:var(--muted);}
-  .nav-links{display:flex;gap:4px;margin-left:12px;}
-  .nav-link{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;transition:color .15s,background .15s;white-space:nowrap;}
-  .nav-link:hover,.nav-link.active{color:#fff;background:rgba(255,255,255,.06);}
-  .nav-search{flex:1;max-width:360px;margin-left:auto;position:relative;display:flex;align-items:center;}
-  .nav-search svg{position:absolute;left:12px;pointer-events:none;}
-  .nav-search input{width:100%;background:#181818;border:1px solid var(--border);color:#fff;padding:8px 12px 8px 36px;border-radius:8px;font-size:13px;outline:none;transition:border-color .15s;}
-  .nav-search input:focus{border-color:var(--gold);}
-  .nav-right{display:flex;align-items:center;gap:10px;margin-left:12px;}
-  .nav-countdown{display:flex;flex-direction:column;align-items:flex-end;font-size:11px;line-height:1.2;}
-  .nav-countdown .label{color:var(--muted);}
-  .nav-countdown .time{color:var(--gold);font-weight:700;}
-  .nav-alert-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:border-color .15s,color .15s;white-space:nowrap;}
-  .nav-alert-btn:hover{border-color:var(--gold);color:var(--gold);}
-  .signin-btn{background:var(--gold);color:#0a0a0a;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px;transition:background .15s;white-space:nowrap;}
-  .signin-btn:hover{background:var(--gold2);}
-  .user-pill{display:none;align-items:center;gap:8px;cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 4px;}
-  .user-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;}
-  .user-name{font-size:12px;font-weight:600;}
-
-  /* PAGE HERO */
-  .page-hero{background:linear-gradient(135deg,#111 0%,#1a1400 100%);border-bottom:1px solid var(--border);padding:48px 24px 36px;}
-  .page-hero-inner{max-width:1200px;margin:0 auto;}
-  .page-hero h1{font-size:clamp(28px,3.5vw,46px);font-weight:900;letter-spacing:-1px;margin-bottom:10px;}
-  .page-hero h1 span{color:var(--gold);}
-  .page-hero p{font-size:16px;color:var(--muted);}
-
-  /* CATEGORY GRID */
-  .cat-page{max-width:1200px;margin:0 auto;padding:48px 24px;}
-  .cat-page-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
-
-  .cat-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px 24px;text-decoration:none;transition:border-color .2s,transform .2s,box-shadow .2s;cursor:pointer;position:relative;overflow:hidden;}
-  .cat-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,215,0,.08);}
-  .cat-card-glow{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .2s;}
-  .cat-card:hover .cat-card-glow{opacity:1;}
-  .cat-card-icon{width:60px;height:60px;border-radius:14px;background:rgba(255,215,0,.08);display:flex;align-items:center;justify-content:center;color:var(--gold);margin-bottom:18px;}
-  .cat-card-name{font-size:17px;font-weight:800;color:#fff;margin-bottom:6px;}
-  .cat-card-sub{font-size:13px;color:var(--muted);line-height:1.4;margin-bottom:16px;flex:1;}
-  .cat-card-cta{font-size:12px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:4px;}
-  .cat-card-badge{position:absolute;top:16px;right:16px;background:rgba(255,215,0,.12);color:var(--gold);font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;border:1px solid rgba(255,215,0,.2);}
-
-  /* SECTION HEADER */
-  .section-label{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px;margin-bottom:20px;}
-  .section-label::before{content:'';width:3px;height:14px;background:var(--gold);border-radius:2px;display:inline-block;}
-
-  /* NEWSLETTER */
-  .newsletter-bar{background:linear-gradient(135deg,#111 0%,#1a1400 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px;}
-  .newsletter-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:32px;flex-wrap:wrap;}
-  .newsletter-left{flex:1;min-width:200px;}
-  .newsletter-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:4px;}
-  .newsletter-sub{font-size:14px;color:var(--muted);}
-  .newsletter-form{display:flex;gap:8px;flex:1;min-width:260px;max-width:420px;}
-  .newsletter-input{flex:1;background:#1a1a1a;border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:8px;font-size:14px;outline:none;transition:border-color .15s;}
-  .newsletter-input:focus{border-color:var(--gold);}
-  .newsletter-btn{background:var(--gold);color:#0a0a0a;border:none;padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;transition:background .15s;}
-  .newsletter-btn:hover{background:var(--gold2);}
-
-  /* FOOTER */
-  footer{background:#060606;border-top:1px solid var(--border);padding:0;}
-  .footer-inner{max-width:1200px;margin:0 auto;padding:48px 24px 32px;display:flex;gap:48px;flex-wrap:wrap;}
-  .footer-brand{display:flex;align-items:center;gap:14px;flex:0 0 220px;align-self:flex-start;}
-  .footer-links{flex:1;display:flex;gap:32px;flex-wrap:wrap;}
-  .footer-col{display:flex;flex-direction:column;gap:10px;min-width:120px;}
-  .footer-col-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-  .footer-col a{font-size:13px;color:var(--muted);text-decoration:none;}
-  .footer-col a:hover{color:var(--text);}
-  .footer-bottom{border-top:1px solid var(--border);padding:20px 24px;text-align:center;font-size:12px;color:var(--muted);}
-
-  /* SIGN-IN OVERLAY */
-  .signin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;}
-  .signin-overlay.open{display:flex;}
-  .signin-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px 32px;max-width:380px;width:100%;text-align:center;}
-  .signin-box h2{font-size:22px;font-weight:900;margin-bottom:10px;}
-  .signin-box p{font-size:14px;color:var(--muted);margin-bottom:28px;}
-  .signin-google-btn{width:100%;background:#fff;color:#333;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;margin-bottom:12px;}
-  .signin-google-btn:hover{background:#f5f5f5;}
-  .signin-skip{background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:10px;font-size:13px;cursor:pointer;width:100%;transition:border-color .15s;}
-  .signin-skip:hover{border-color:#555;color:#fff;}
-
-  @media(max-width:1000px){.cat-page-grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:600px){.cat-page-grid{grid-template-columns:1fr 1fr;gap:12px;}.nav-search{display:none;}.nav-links{display:none;}}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deals by Category — Everyday Black Friday</title>
+<meta name="description" content="Browse deals by category — Electronics, Home & Living, Kitchen, Fashion, Health & Wellness and more. Black Friday prices all year round.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav-top{background:#0d0d0d;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo img{height:36px;width:auto;}
+.nav-logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-search{flex:1;max-width:480px;margin:0 24px;position:relative;}
+.nav-search input{width:100%;background:#1a1a1a;border:1px solid var(--border);border-radius:50px;padding:9px 16px 9px 42px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+.nav-search input:focus{border-color:var(--gold);}
+.nav-search input::placeholder{color:var(--muted);}
+.nav-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);}
+.nav-search-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--gold);border:none;border-radius:50px;padding:4px 12px;font-size:12px;font-weight:700;color:#000;cursor:pointer;}
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.btn-signin{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:8px 20px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:background .2s,color .2s;font-family:'Inter',sans-serif;}
+.btn-signin:hover,.btn-signin.signed-in:hover{background:var(--gold);color:#000;}
+.btn-signin.signed-in{background:rgba(255,215,0,.1);}
+
+.nav-bottom{background:#111;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:0;overflow-x:auto;height:46px;}
+.nav-bottom::-webkit-scrollbar{display:none;}
+.nav-tab{background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;padding:0 16px;height:46px;cursor:pointer;white-space:nowrap;position:relative;transition:color .2s;font-family:'Inter',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--gold);font-weight:700;}
+.nav-tab.active::after{content:'';position:absolute;bottom:0;left:16px;right:16px;height:2px;background:var(--gold);border-radius:2px 2px 0 0;}
+
+/* BREADCRUMB */
+.breadcrumb{padding:14px 24px;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);}
+.breadcrumb a{color:var(--muted);transition:color .2s;}
+.breadcrumb a:hover{color:var(--gold);}
+.breadcrumb span{color:var(--gold);}
+.breadcrumb svg{opacity:.5;}
+
+/* CATEGORY HEADER */
+.cat-header{padding:0 24px 20px;display:flex;align-items:center;justify-content:space-between;}
+.cat-title{font-size:28px;font-weight:800;}
+.btn-alert{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:9px 20px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .2s,color .2s;font-family:'Inter',sans-serif;}
+.btn-alert:hover{background:var(--gold);color:#000;}
+
+/* SUBCATEGORY PILLS */
+.subcats{padding:0 24px 20px;display:flex;align-items:center;gap:8px;overflow-x:auto;}
+.subcats::-webkit-scrollbar{display:none;}
+.subcat-pill{background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Inter',sans-serif;}
+.subcat-pill:hover{border-color:var(--gold);color:var(--gold);}
+.subcat-pill.active{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700;}
+
+/* FILTER BAR */
+.filter-bar{padding:0 24px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.filter-btn{background:#1a1a1a;border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:border-color .2s;font-family:'Inter',sans-serif;}
+.filter-btn:hover{border-color:var(--gold);}
+.filter-sep{color:var(--border);font-size:18px;line-height:1;}
+.sort-btn{background:#1a1a1a;border:1px solid var(--gold);color:var(--gold);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto;font-family:'Inter',sans-serif;}
+.results-count{color:var(--muted);font-size:13px;padding-left:4px;}
+
+/* DEALS GRID */
+.deals-section{padding:0 24px 48px;}
+.deals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:900px){.deals-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.deals-grid{grid-template-columns:1fr;}.nav-search{display:none;}}
+
+/* DEAL CARD */
+.deal-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s,box-shadow .3s;position:relative;}
+.deal-card:hover{border-color:var(--gold);box-shadow:0 0 24px rgba(255,215,0,.12);}
+.card-img-wrap{display:block;position:relative;aspect-ratio:4/3;overflow:hidden;background:#0f0f0f;}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.deal-card:hover .card-img-wrap img{transform:scale(1.04);}
+.badge-off{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:4px 8px;border-radius:50px;}
+.wish-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;transition:background .2s;}
+.wish-btn:hover,.wish-btn.active{background:rgba(255,59,59,.2);}
+.card-body{padding:14px 16px 16px;}
+.card-title{font-size:14px;font-weight:600;margin-bottom:7px;line-height:1.4;}
+.card-title a{color:var(--text);transition:color .2s;}
+.card-title a:hover{color:var(--gold);}
+.card-rating{display:flex;align-items:center;gap:4px;margin-bottom:5px;}
+.star.full{color:var(--gold);}
+.star.half{color:var(--gold);opacity:.6;}
+.star.empty{color:var(--border);}
+.rating-num{font-size:12px;font-weight:600;color:var(--gold);}
+.rating-count{font-size:11px;color:var(--muted);}
+.card-store{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.card-price{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.price-now{font-size:18px;font-weight:800;color:var(--gold);}
+.price-was{font-size:13px;color:var(--muted);text-decoration:line-through;}
+.btn-view{display:block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;text-align:center;padding:9px;border-radius:8px;font-size:13px;font-weight:700;transition:opacity .2s;}
+.btn-view:hover{opacity:.85;color:#000;}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;padding:24px;}
+.page-btn{background:#1a1a1a;border:1px solid var(--border);color:var(--text);width:38px;height:38px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);}
+.page-btn.active{background:rgba(255,215,0,.1);}
+
+/* FOOTER */
+footer{background:#0d0d0d;border-top:1px solid var(--border);padding:48px 24px 32px;}
+.footer-inner{max-width:1100px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr 1fr;}}
+.footer-brand .logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.footer-brand .logo img{height:32px;}
+.footer-brand p{font-size:13px;color:var(--muted);line-height:1.6;max-width:260px;}
+.footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:14px;}
+.footer-col a{display:block;font-size:13px;color:var(--muted);margin-bottom:9px;transition:color .2s;}
+.footer-col a:hover{color:var(--gold);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-bottom p{font-size:12px;color:var(--muted);}
+
+/* SIGN IN MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#181818;border:1px solid #333;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;position:relative;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:#888;font-size:20px;cursor:pointer;}
+.modal-icon{font-size:36px;margin-bottom:16px;}
+.modal-box h2{font-size:22px;margin-bottom:8px;}
+.modal-box p{color:var(--muted);font-size:14px;margin-bottom:24px;}
+.btn-google{background:var(--gold);color:#000;border:none;padding:14px 32px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Inter',sans-serif;}
+.modal-fine{color:#555;font-size:12px;margin-top:16px;}
+
+/* LOADING */
+.loading-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.skel{background:linear-gradient(90deg,#1a1a1a 25%,#222 50%,#1a1a1a 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:14px;height:320px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
 </head>
 <body>
 
-<div id="toast"></div>
-
-<!-- SIGN-IN OVERLAY -->
-<div class="signin-overlay" id="signin-overlay">
-  <div class="signin-box">
-    <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px;">
-    <h2>Welcome to Everyday Black Friday</h2>
-    <p>Sign in to save your wishlist, set deal alerts, and get personalized picks.</p>
-    <button class="signin-google-btn" onclick="triggerGoogleSignIn()">
-      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Continue with Google
-    </button>
-    <button class="signin-skip" onclick="skipSignIn()">Skip for now</button>
-  </div>
-</div>
-
-<!-- NAVBAR -->
-<nav>
-  <a class="nav-logo" href="index.html">
-    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
-    <div class="nav-logo-text">
-      Everyday Black Friday
-      <span>Black Friday prices. All year round.</span>
-    </div>
-  </a>
-  <div class="nav-links">
-    <a class="nav-link" href="index.html">Home</a>
-    <a class="nav-link active" href="categories.html">Categories</a>
-    <a class="nav-link" href="search.html">Deals</a>
-    <a class="nav-link" href="alerts.html">Alerts</a>
-    <a class="nav-link" href="membership.html">Pro</a>
+<!-- NAV TOP -->
+<nav class="nav-top">
+  <div class="nav-logo">
+    <a href="index.html"><img src="assets/logo-ebf.png" alt="Everyday Black Friday" onerror="this.style.display='none';document.querySelector('.nav-logo-text').style.webkitTextFillColor='unset'"></a>
+    <a href="index.html" class="nav-logo-text">EBF</a>
   </div>
   <div class="nav-search">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Search deals…" oninput="searchNav(this.value)" onkeydown="if(event.key==='Enter')window.location='search.html?q='+encodeURIComponent(this.value)">
+    <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search deals, products, brands..." autocomplete="off">
+    <button class="nav-search-btn" onclick="doSearch()">Go</button>
   </div>
-  <div class="nav-right">
-    <div class="nav-countdown">
-      <span class="label">Black Friday</span>
-      <span class="time" id="nav-timer">--d --h</span>
-    </div>
-    <button class="nav-alert-btn" onclick="window.location='alerts.html'">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      Deal Alerts
-    </button>
-    <button class="signin-btn" id="signin-btn" onclick="showSignIn()">
-      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+  <div class="nav-actions">
+    <button class="btn-signin" data-auth-btn onclick="EBF.openSignInModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Sign In
     </button>
-    <div class="user-pill" id="user-pill" onclick="window.location='profile.html'">
-      <img class="user-avatar" id="user-avatar" src="" alt="">
-      <span class="user-name" id="user-name"></span>
-    </div>
   </div>
 </nav>
 
-<!-- PAGE HERO -->
-<div class="page-hero">
-  <div class="page-hero-inner">
-    <h1>Shop <span>All Categories</span></h1>
-    <p>Browse deals across every department — updated daily with the best prices.</p>
-  </div>
+<!-- NAV BOTTOM (category tabs) -->
+<nav class="nav-bottom" id="navBottom">
+  <button class="nav-tab active" data-cat="all" onclick="filterByTab(this,'all')">All Deals</button>
+  <button class="nav-tab" data-cat="electronics" onclick="filterByTab(this,'electronics')">Electronics</button>
+  <button class="nav-tab" data-cat="home-living" onclick="filterByTab(this,'home-living')">Home &amp; Living</button>
+  <button class="nav-tab" data-cat="kitchen" onclick="filterByTab(this,'kitchen')">Kitchen</button>
+  <button class="nav-tab" data-cat="fashion" onclick="filterByTab(this,'fashion')">Fashion</button>
+  <button class="nav-tab" data-cat="health-wellness" onclick="filterByTab(this,'health-wellness')">Health &amp; Wellness</button>
+  <button class="nav-tab" data-cat="sports" onclick="filterByTab(this,'sports')">Sports</button>
+  <button class="nav-tab" data-cat="travel" onclick="filterByTab(this,'travel')">Travel</button>
+  <button class="nav-tab" style="color:var(--muted);">More ▾</button>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="index.html">Home</a>
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  <a href="categories.html">Deals</a>
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  <span id="breadcrumbCat">All Deals</span>
 </div>
 
-<!-- CATEGORIES -->
-<div class="cat-page">
-  <div class="section-label">All Departments</div>
-  <div class="cat-page-grid">
-
-    <a class="cat-card" href="search.html?cat=electronics">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-badge">Most Popular</div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      </div>
-      <div class="cat-card-name">Electronics &amp; Tech</div>
-      <div class="cat-card-sub">TVs, cameras, gaming gear, smart home devices and more.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=home">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <div class="cat-card-name">Home &amp; Living</div>
-      <div class="cat-card-sub">Furniture, décor, bedding, vacuums, and home essentials.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=fashion">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
-      </div>
-      <div class="cat-card-name">Fashion &amp; Care</div>
-      <div class="cat-card-sub">Clothing, shoes, beauty products, and personal care.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=family">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      </div>
-      <div class="cat-card-name">Family &amp; Everyday</div>
-      <div class="cat-card-sub">Grocery, kids' products, baby gear, and household staples.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=sports">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M14.83 9.17a4 4 0 0 1 0 5.66"/><path d="M9.17 14.83a4 4 0 0 1 0-5.66"/></svg>
-      </div>
-      <div class="cat-card-name">Sports &amp; Outdoors</div>
-      <div class="cat-card-sub">Fitness equipment, camping gear, bikes, and outdoor essentials.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=auto">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      </div>
-      <div class="cat-card-name">Auto &amp; Tools</div>
-      <div class="cat-card-sub">Car accessories, power tools, garage gear, and DIY supplies.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=travel">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2"/><path d="m2 2 20 20"/><path d="M16 11 7 7l-5 5"/><path d="M8 20v-4l4-2"/></svg>
-      </div>
-      <div class="cat-card-name">Travel</div>
-      <div class="cat-card-sub">Luggage, travel accessories, neck pillows, and carry-ons.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="cat-card" href="search.html?cat=seasonal">
-      <div class="cat-card-glow"></div>
-      <div class="cat-card-badge">Trending</div>
-      <div class="cat-card-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-      </div>
-      <div class="cat-card-name">Seasonal &amp; Gifts</div>
-      <div class="cat-card-sub">Holiday deals, gift sets, special events, and seasonal specials.</div>
-      <div class="cat-card-cta">Browse deals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </a>
-
-  </div>
+<!-- CATEGORY HEADER -->
+<div class="cat-header">
+  <h1 class="cat-title" id="catTitle">All Deals</h1>
+  <button class="btn-alert" onclick="openCreateAlert()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    Create Alert
+  </button>
 </div>
 
-<!-- NEWSLETTER BAR -->
-<section class="newsletter-bar">
-  <div class="newsletter-inner">
-    <div class="newsletter-left">
-      <div class="newsletter-title">Free Daily Newsletter</div>
-      <div class="newsletter-sub">The best deals delivered to your inbox every morning.</div>
-    </div>
-    <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
-      <input type="email" class="newsletter-input" placeholder="your@email.com" required>
-      <button type="submit" class="newsletter-btn">Subscribe</button>
-    </form>
+<!-- SUBCATEGORY PILLS -->
+<div class="subcats" id="subcatPills">
+  <!-- filled by JS -->
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn">Filter <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+  <button class="filter-btn">Deal Type <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+  <button class="filter-btn">Discount <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+  <button class="filter-btn">Retailer <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+  <span class="results-count" id="resultsCount">Loading deals…</span>
+  <button class="sort-btn" id="sortBtn">Sort by: Best Match <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+</div>
+
+<!-- DEALS GRID -->
+<section class="deals-section">
+  <div class="deals-grid" id="dealsGrid">
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
   </div>
 </section>
 
+<!-- PAGINATION -->
+<div class="pagination">
+  <button class="page-btn active">1</button>
+  <button class="page-btn">2</button>
+  <button class="page-btn">3</button>
+  <button class="page-btn">›</button>
+</div>
+
+<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand">
-      <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:44px;height:44px;object-fit:contain;">
-      <div>
-        <div style="font-weight:800;font-size:14px;color:#fff;">Everyday Black Friday</div>
-        <div style="font-size:11px;color:var(--muted);">Black Friday prices. All year round.</div>
-      </div>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <div class="footer-col-title">Deals</div>
-        <a href="search.html">All Deals</a>
-        <a href="search.html?cat=electronics">Electronics</a>
-        <a href="search.html?cat=home">Home &amp; Living</a>
-        <a href="search.html?cat=fashion">Fashion</a>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <img src="assets/logo-ebf.png" alt="EBF" onerror="this.style.display='none'">
+          <span style="font-size:16px;font-weight:800;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Everyday Black Friday</span>
+        </div>
+        <p>Black Friday prices. All year round. Handpicked deals updated daily.</p>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">More</div>
-        <a href="search.html?cat=sports">Sports</a>
-        <a href="search.html?cat=family">Family</a>
-        <a href="search.html?cat=travel">Travel</a>
-        <a href="search.html?cat=seasonal">Seasonal</a>
+        <h4>Deals</h4>
+        <a href="categories.html">All Deals</a>
+        <a href="categories.html?cat=electronics">Electronics</a>
+        <a href="categories.html?cat=home-living">Home &amp; Living</a>
+        <a href="categories.html?cat=kitchen">Kitchen</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">Account</div>
-        <a href="profile.html">My Profile</a>
-        <a href="alerts.html">Deal Alerts</a>
-        <a href="membership.html">Go Pro</a>
+        <h4>Categories</h4>
+        <a href="categories.html?cat=fashion">Fashion</a>
+        <a href="categories.html?cat=health-wellness">Health</a>
+        <a href="categories.html?cat=sports">Sports</a>
+        <a href="categories.html?cat=travel">Travel</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">About</div>
-        <a href="#">About Us</a>
+        <h4>About</h4>
+        <a href="#">How It Works</a>
+        <a href="#">Affiliate Disclosure</a>
         <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="alerts.html">My Alerts</a>
+        <a href="profile.html">My Profile</a>
+        <a href="membership.html">Go Pro</a>
+        <a href="#">Contact</a>
       </div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 Everyday Black Friday · Prices and availability subject to change. We may earn commissions on qualifying purchases.</p>
+    <div class="footer-bottom">
+      <p>© 2024 Everyday Black Friday. We may earn a commission from qualifying purchases.</p>
+      <p>Built with ♥ for deal hunters</p>
+    </div>
   </div>
 </footer>
 
+<!-- SIGN IN MODAL -->
+<div class="modal-overlay" id="signInModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('signInModal').classList.remove('open')">✕</button>
+    <div class="modal-icon">🛍️</div>
+    <h2>Sign in to EBF</h2>
+    <p>Save deals, set alerts, and get notified when prices drop</p>
+    <button class="btn-google" onclick="EBF.signIn()">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <p class="modal-fine">No account needed — just your Google account</p>
+  </div>
+</div>
+
+<!-- ALERT MODAL -->
+<div class="modal-overlay" id="alertModal">
+  <div class="modal-box" style="max-width:460px;text-align:left;">
+    <button class="modal-close" onclick="document.getElementById('alertModal').classList.remove('open')">✕</button>
+    <h2 style="margin-bottom:6px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="vertical-align:-3px;margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Create Deal Alert
+    </h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">We'll email you when new deals match your criteria.</p>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">CATEGORY</label>
+        <select id="alertCat" style="width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;">
+          <option value="">All Categories</option>
+          <option value="electronics">Electronics</option>
+          <option value="home-living">Home &amp; Living</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="fashion">Fashion</option>
+          <option value="health-wellness">Health &amp; Wellness</option>
+          <option value="sports">Sports</option>
+          <option value="travel">Travel</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">KEYWORD (optional)</label>
+        <input id="alertKeyword" type="text" placeholder="e.g. AirPods, standing desk, coffee maker" style="width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;outline:none;">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">MAX PRICE (optional)</label>
+        <input id="alertPrice" type="number" placeholder="e.g. 50" style="width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;outline:none;">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">MIN DISCOUNT %</label>
+        <input id="alertDiscount" type="number" placeholder="e.g. 30" min="0" max="100" style="width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;outline:none;">
+      </div>
+    </div>
+    <div id="alertProNote" style="display:none;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:12px;margin-top:14px;font-size:13px;color:var(--gold);">
+      <strong>⭐ Free Plan:</strong> 1 alert included. <a href="membership.html" style="color:var(--gold);text-decoration:underline;">Upgrade to Pro</a> for unlimited alerts ($8/month).
+    </div>
+    <button onclick="submitAlert()" style="margin-top:20px;width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+      Create Alert →
+    </button>
+  </div>
+</div>
+
+<script src="js/shared.js"></script>
 <script>
-// ── TOAST ──
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+// ---- DATA ----
+const CAT_META = {
+  all:         { name: 'All Deals',          subcats: ['Trending','New Arrivals','Under $25','Under $50','Under $100','Clearance'] },
+  electronics: { name: 'Electronics',        subcats: ['All Electronics','Headphones','Laptops','TVs','Phones','Cameras','Smart Home'] },
+  'home-living':{ name: 'Home & Living',     subcats: ['All Home','Furniture','Bedding','Decor','Lighting','Storage','Rugs'] },
+  kitchen:     { name: 'Kitchen',            subcats: ['All Kitchen','Appliances','Cookware','Coffee','Storage','Gadgets'] },
+  fashion:     { name: 'Fashion',            subcats: ['All Fashion','Men','Women','Shoes','Accessories','Bags'] },
+  'health-wellness':{ name: 'Health & Wellness', subcats: ['All Health','Supplements','Fitness','Personal Care','Yoga','Sleep'] },
+  sports:      { name: 'Sports & Outdoors',  subcats: ['All Sports','Cycling','Running','Camping','Water Sports','Team Sports'] },
+  travel:      { name: 'Travel',             subcats: ['All Travel','Luggage','Accessories','Gadgets','Neck Pillows','Adapters'] },
+};
+
+let currentCat = 'all';
+let allDeals = [];
+let activeSub = 0;
+
+// ---- INIT ----
+window.addEventListener('DOMContentLoaded', async () => {
+  // read URL param
+  const params = new URLSearchParams(location.search);
+  const catParam = params.get('cat');
+  if (catParam && CAT_META[catParam]) {
+    currentCat = catParam;
+    // mark tab active
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.cat === currentCat);
+    });
+  }
+  updateCatUI(currentCat);
+  await loadDeals();
+  renderDeals();
+});
+
+function updateCatUI(cat) {
+  const meta = CAT_META[cat] || CAT_META.all;
+  document.getElementById('catTitle').textContent = meta.name;
+  document.getElementById('breadcrumbCat').textContent = meta.name;
+  document.title = meta.name + ' — Everyday Black Friday';
+
+  // subcategory pills
+  const pillsEl = document.getElementById('subcatPills');
+  pillsEl.innerHTML = meta.subcats.map((s, i) =>
+    `<button class="subcat-pill${i===0?' active':''}" onclick="selectSubcat(this,${i})">${s}</button>`
+  ).join('');
+  activeSub = 0;
 }
 
-// ── NAV TIMER ──
-function updateTimer(){
-  const now=new Date();
-  const bf=new Date(now.getFullYear(),10,28);
-  if(now>bf)bf.setFullYear(bf.getFullYear()+1);
-  const diff=bf-now;
-  const d=Math.floor(diff/86400000);
-  const h=Math.floor((diff%86400000)/3600000);
-  document.getElementById('nav-timer').textContent=d+'d '+h+'h';
-}
-updateTimer();setInterval(updateTimer,60000);
-
-// ── SEARCH NAV ──
-function searchNav(v){
-  if(event&&event.key==='Enter') window.location='search.html?q='+encodeURIComponent(v);
+function selectSubcat(btn, idx) {
+  document.querySelectorAll('.subcat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  activeSub = idx;
+  renderDeals();
 }
 
-// ── AUTH ──
-let currentUser=null;
-try{currentUser=JSON.parse(localStorage.getItem('bdd_user')||'null');}catch(e){}
+function filterByTab(btn, cat) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = cat;
+  updateCatUI(cat);
+  history.replaceState(null,'', cat === 'all' ? 'categories.html' : `categories.html?cat=${cat}`);
+  renderDeals();
+}
 
-function updateAuthUI(){
-  const sb=document.getElementById('signin-btn');
-  const up=document.getElementById('user-pill');
-  const ua=document.getElementById('user-avatar');
-  const un=document.getElementById('user-name');
-  if(currentUser){
-    sb.style.display='none';
-    up.style.display='flex';
-    if(ua){ua.src=currentUser.avatar||'';}
-    if(un){un.textContent=currentUser.name.split(' ')[0];}
-  } else {
-    sb.style.display='flex';
-    up.style.display='none';
+async function loadDeals() {
+  try {
+    const r = await fetch('/black-daily-deals/data/deals.json?t=' + Date.now());
+    const data = await r.json();
+    allDeals = data.deals || [];
+  } catch(e) {
+    allDeals = [];
   }
 }
 
-function showSignIn(){document.getElementById('signin-overlay').classList.add('open');}
-function skipSignIn(){
-  localStorage.setItem('skipped_signin','1');
-  document.getElementById('signin-overlay').classList.remove('open');
-}
-function triggerGoogleSignIn(){
-  google.accounts.id.initialize({
-    client_id:'875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com',
-    callback:handleCredentialResponse
-  });
-  google.accounts.id.prompt();
-}
-function handleCredentialResponse(response){
-  try{
-    const payload=JSON.parse(atob(response.credential.split('.')[1]));
-    currentUser={name:payload.name,email:payload.email,avatar:payload.picture,sub:payload.sub};
-    localStorage.setItem('bdd_user',JSON.stringify(currentUser));
-    document.getElementById('signin-overlay').classList.remove('open');
-    updateAuthUI();
-    showToast('Welcome, '+payload.name.split(' ')[0]+'!');
-  }catch(e){}
+function getFilteredDeals() {
+  if (currentCat === 'all' || activeSub === 0) {
+    return currentCat === 'all' ? allDeals : allDeals.filter(d => d.category === currentCat);
+  }
+  return allDeals.filter(d => d.category === currentCat);
 }
 
-function handleNewsletterSubmit(e){
-  e.preventDefault();
-  const input=e.target.querySelector('.newsletter-input');
-  const btn=e.target.querySelector('.newsletter-btn');
-  const email=input.value.trim();
-  if(!email)return;
-  btn.textContent='Subscribing…';btn.disabled=true;
-  const subs=JSON.parse(localStorage.getItem('ebf_subscribers')||'[]');
-  if(!subs.includes(email))subs.push(email);
-  localStorage.setItem('ebf_subscribers',JSON.stringify(subs));
-  setTimeout(()=>{
-    input.value='';btn.textContent='Subscribed ✓';btn.style.background='var(--green)';
-    setTimeout(()=>{btn.textContent='Subscribe';btn.disabled=false;btn.style.background='';},3000);
-    showToast('You\'re subscribed to daily deals!');
-  },600);
+function renderDeals() {
+  const deals = getFilteredDeals();
+  const grid = document.getElementById('dealsGrid');
+  document.getElementById('resultsCount').textContent = `${deals.length} deal${deals.length!==1?'s':''} found`;
+
+  if (!deals.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;display:block;margin:0 auto 16px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>No deals found in this category yet.</p>
+      <p style="margin-top:8px;font-size:13px;">Check back soon — we update deals daily.</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = deals.map(d => EBF.dealCard(d)).join('');
 }
 
-updateAuthUI();
+// ---- SEARCH ----
+function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement.id === 'searchInput') doSearch();
+});
+
+// ---- ALERT MODAL ----
+function openCreateAlert() {
+  const user = EBF.getUser();
+  if (!user) { EBF.openSignInModal(); return; }
+
+  // show free limit note if on free plan
+  const hasRoom = EBF.canCreateAlert();
+  document.getElementById('alertProNote').style.display = (!EBF.isPro() && EBF.getAlerts().length === 0) ? 'block' : 'none';
+
+  // pre-fill category
+  const sel = document.getElementById('alertCat');
+  if (currentCat !== 'all') sel.value = currentCat;
+
+  document.getElementById('alertModal').classList.add('open');
+}
+
+function submitAlert() {
+  const cat = document.getElementById('alertCat').value;
+  const kw  = document.getElementById('alertKeyword').value.trim();
+  const price = parseFloat(document.getElementById('alertPrice').value) || null;
+  const disc  = parseInt(document.getElementById('alertDiscount').value) || 0;
+
+  const result = EBF.createAlert({ category: cat, keyword: kw, max_price: price, min_discount: disc });
+  if (result) {
+    document.getElementById('alertModal').classList.remove('open');
+    // clear fields
+    document.getElementById('alertKeyword').value = '';
+    document.getElementById('alertPrice').value = '';
+    document.getElementById('alertDiscount').value = '';
+  }
+}
+
+// close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// override EBF openSignInModal to use our modal
+EBF.openSignInModal = () => document.getElementById('signInModal').classList.add('open');
 </script>
 </body>
 </html>

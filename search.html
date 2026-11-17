@@ -142,6 +142,7 @@
   @media(max-width:768px){.sidebar{display:none;}.search-page{padding:24px 16px;}}
   @media(max-width:500px){.deals-grid{grid-template-columns:1fr;}.nav-links{display:none;}.nav-search{display:none;}}
 </style>
+<script src="js/shared.js" defer></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -149,16 +150,16 @@
 <div id="toast"></div>
 
 <!-- SIGN-IN OVERLAY -->
-<div class="signin-overlay" id="signin-overlay">
+<div class="signin-overlay" id="signInModal">
   <div class="signin-box">
     <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px;">
     <h2>Welcome to Everyday Black Friday</h2>
     <p>Sign in to save your wishlist, set deal alerts, and get personalized picks.</p>
-    <button class="signin-google-btn" onclick="triggerGoogleSignIn()">
+    <button class="signin-google-btn" onclick="EBF.signIn()">
       <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
     </button>
-    <button class="signin-skip" onclick="skipSignIn()">Skip for now</button>
+    <button class="signin-skip" onclick="localStorage.setItem('skipped_signin','1');document.getElementById('signInModal').classList.remove('open')">Skip for now</button>
   </div>
 </div>
 
@@ -188,14 +189,10 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       Deal Alerts
     </button>
-    <button class="signin-btn" id="signin-btn" onclick="showSignIn()">
+    <button class="signin-btn" id="signin-btn" data-auth-btn onclick="EBF.openSignInModal()">
       <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Sign In
     </button>
-    <div class="user-pill" id="user-pill" onclick="window.location='profile.html'">
-      <img class="user-avatar" id="user-avatar" src="" alt="">
-      <span class="user-name" id="user-name"></span>
-    </div>
   </div>
 </nav>
 
@@ -292,27 +289,20 @@
 </div>
 
 <script>
-// ── SAMPLE DEALS DATA ──
-const ALL_DEALS = [
-  {id:1,title:'Sony WH-1000XM5 Wireless Noise-Canceling Headphones',store:'Amazon',price:279,orig:399,off:30,cat:'electronics',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=sony+wh1000xm5&tag=blackdailydeals-20',rating:4.8,reviews:12400},
-  {id:2,title:'Apple AirPods Pro 2nd Gen with MagSafe Case',store:'Best Buy',price:189,orig:249,off:24,cat:'electronics',badge:'',img:null,aff:'https://www.amazon.com/s?k=airpods+pro+2nd+gen&tag=blackdailydeals-20',rating:4.9,reviews:8300},
-  {id:3,title:'Samsung 65" 4K QLED Smart TV with HDR',store:'Walmart',price:649,orig:999,off:35,cat:'electronics',badge:'Lightning',img:null,aff:'https://www.amazon.com/s?k=samsung+65+4k+qled&tag=blackdailydeals-20',rating:4.6,reviews:3200},
-  {id:4,title:'Instant Pot Duo 7-in-1 Electric Pressure Cooker 6Qt',store:'Amazon',price:49,orig:99,off:50,cat:'home',badge:'50% Off',img:null,aff:'https://www.amazon.com/s?k=instant+pot+duo+6qt&tag=blackdailydeals-20',rating:4.7,reviews:22000},
-  {id:5,title:'Dyson V15 Detect Cordless Vacuum Cleaner',store:'Target',price:449,orig:699,off:36,cat:'home',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=dyson+v15+detect&tag=blackdailydeals-20',rating:4.8,reviews:4100},
-  {id:6,title:'Levi\'s Men\'s 511 Slim Fit Jeans',store:'Amazon',price:34,orig:69,off:51,cat:'fashion',badge:'',img:null,aff:'https://www.amazon.com/s?k=levis+511+slim+fit+jeans&tag=blackdailydeals-20',rating:4.5,reviews:9800},
-  {id:7,title:'Nike Air Max 270 Women\'s Running Shoes',store:'Walmart',price:79,orig:149,off:47,cat:'fashion',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=nike+air+max+270+womens&tag=blackdailydeals-20',rating:4.6,reviews:5600},
-  {id:8,title:'LEGO Creator Expert Eiffel Tower 10307',store:'Amazon',price:159,orig:209,off:24,cat:'family',badge:'',img:null,aff:'https://www.amazon.com/s?k=lego+eiffel+tower+10307&tag=blackdailydeals-20',rating:4.9,reviews:1800},
-  {id:9,title:'Fitbit Charge 6 Advanced Fitness Tracker',store:'Best Buy',price:109,orig:159,off:31,cat:'sports',badge:'',img:null,aff:'https://www.amazon.com/s?k=fitbit+charge+6&tag=blackdailydeals-20',rating:4.4,reviews:7200},
-  {id:10,title:'Bowflex SelectTech 552 Adjustable Dumbbell Pair',store:'Amazon',price:299,orig:499,off:40,cat:'sports',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=bowflex+selecttech+552&tag=blackdailydeals-20',rating:4.8,reviews:11000},
-  {id:11,title:'Stanley Quencher 40oz Tumbler with Handle',store:'Target',price:35,orig:45,off:22,cat:'family',badge:'',img:null,aff:'https://www.amazon.com/s?k=stanley+quencher+40oz&tag=blackdailydeals-20',rating:4.8,reviews:33000},
-  {id:12,title:'Amazon Echo Show 8 (3rd Gen) Smart Display',store:'Amazon',price:89,orig:149,off:40,cat:'electronics',badge:'40% Off',img:null,aff:'https://www.amazon.com/s?k=echo+show+8+3rd+gen&tag=blackdailydeals-20',rating:4.6,reviews:6700},
-  {id:13,title:'Samsonite Omni PC Hardside Luggage Spinner 28"',store:'Amazon',price:109,orig:219,off:50,cat:'travel',badge:'50% Off',img:null,aff:'https://www.amazon.com/s?k=samsonite+omni+pc+28+inch&tag=blackdailydeals-20',rating:4.7,reviews:8900},
-  {id:14,title:'Ninja Foodi 9-in-1 Pressure Cooker & Air Fryer',store:'Walmart',price:149,orig:249,off:40,cat:'home',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=ninja+foodi+9+in+1&tag=blackdailydeals-20',rating:4.6,reviews:5100},
-  {id:15,title:'DeWalt 20V MAX Cordless Drill Driver Kit',store:'Amazon',price:99,orig:179,off:45,cat:'auto',badge:'',img:null,aff:'https://www.amazon.com/s?k=dewalt+20v+max+drill+kit&tag=blackdailydeals-20',rating:4.8,reviews:14000},
-  {id:16,title:'Yankee Candle Holiday Gift Set Large Jar',store:'Target',price:28,orig:49,off:43,cat:'seasonal',badge:'Trending',img:null,aff:'https://www.amazon.com/s?k=yankee+candle+holiday+gift+set&tag=blackdailydeals-20',rating:4.6,reviews:2200},
-  {id:17,title:'Apple Watch Series 9 GPS 41mm Aluminum',store:'Best Buy',price:299,orig:399,off:25,cat:'electronics',badge:'',img:null,aff:'https://www.amazon.com/s?k=apple+watch+series+9+41mm&tag=blackdailydeals-20',rating:4.8,reviews:9100},
-  {id:18,title:'Roomba 694 Robot Vacuum Self-Charging',store:'Amazon',price:179,orig:299,off:40,cat:'home',badge:'Hot',img:null,aff:'https://www.amazon.com/s?k=roomba+694+robot+vacuum&tag=blackdailydeals-20',rating:4.4,reviews:18000},
-];
+/* ===== State ===== */
+let ALL_DEALS = [];
+
+/* ===== Load deals from JSON ===== */
+fetch('data/deals.json')
+  .then(r => r.json())
+  .then(data => {
+    ALL_DEALS = data;
+    renderDeals();
+  })
+  .catch(() => {
+    const meta = document.getElementById('results-meta');
+    if (meta) meta.textContent = 'Failed to load deals.';
+  });
 
 // ── STATE ──
 let activeCategory = 'all';
@@ -343,7 +333,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   updateNavTimer();
   setInterval(updateNavTimer, 60000);
-  updateAuthUI();
+  EBF.init();
   renderDeals();
 });
 
@@ -415,17 +405,17 @@ function setView(v) {
 // ── RENDER ──
 function getFilteredDeals() {
   let deals = [...ALL_DEALS];
-  if(activeCategory !== 'all') deals = deals.filter(d => d.cat === activeCategory);
+  if(activeCategory !== 'all') deals = deals.filter(d => d.category === activeCategory);
   deals = deals.filter(d => d.price >= priceMin && d.price <= priceMax);
-  deals = deals.filter(d => d.off >= minDiscount);
+  deals = deals.filter(d => (d.discount || 0) >= minDiscount);
   const checked = [...document.querySelectorAll('.store-cb:checked')].map(c => c.value);
-  if(checked.length) deals = deals.filter(d => checked.includes(d.store.toLowerCase().replace(' ','').replace(' ','').replace(' ','')));
+  if(checked.length) deals = deals.filter(d => checked.includes(d.store.toLowerCase()));
   if(searchQuery.trim()) {
     const q = searchQuery.toLowerCase();
     deals = deals.filter(d => d.title.toLowerCase().includes(q) || d.store.toLowerCase().includes(q));
   }
   const sort = document.getElementById('sort-select').value;
-  if(sort === 'discount') deals.sort((a,b) => b.off - a.off);
+  if(sort === 'discount') deals.sort((a,b) => (b.discount||0) - (a.discount||0));
   else if(sort === 'price_asc') deals.sort((a,b) => a.price - b.price);
   else if(sort === 'price_desc') deals.sort((a,b) => b.price - a.price);
   else if(sort === 'popular') deals.sort((a,b) => b.reviews - a.reviews);
@@ -447,57 +437,13 @@ function renderDeals() {
     document.getElementById('pagination').innerHTML = '';
     return;
   }
-  const wishlist = JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
-  grid.innerHTML = page.map(d => {
-    const saved = wishlist.includes(d.id);
-    const stars = '★'.repeat(Math.round(d.rating)) + '☆'.repeat(5-Math.round(d.rating));
-    const badgeHtml = d.badge ? `<div class="deal-badge${d.badge==='Lightning'?' lightning':''}">${d.badge}</div>` : '';
-    return `<div class="deal-card" onclick="goToDeal(event,${JSON.stringify(d.aff)})">
-      <div class="deal-card-img-wrap">
-        <div class="deal-card-img-placeholder">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        </div>
-        ${badgeHtml}
-        <button class="deal-wishlist-btn${saved?' saved':''}" onclick="toggleWishlist(event,${d.id})" title="${saved?'Remove from wishlist':'Save to wishlist'}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="${saved?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </button>
-      </div>
-      <div class="deal-card-body">
-        <div class="deal-store">${d.store}</div>
-        <div class="deal-title">${d.title}</div>
-        <div class="deal-rating"><span class="stars">${stars}</span><span class="rating-count">(${d.reviews.toLocaleString()})</span></div>
-        <div class="deal-pricing">
-          <span class="deal-price">$${d.price}</span>
-          <span class="deal-orig">$${d.orig}</span>
-          <span class="deal-off">-${d.off}%</span>
-        </div>
-        <button class="deal-cta">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          View Deal
-        </button>
-      </div>
-    </div>`;
-  }).join('');
+  grid.innerHTML = page.map(d => EBF.dealCard(d)).join('');
   renderPagination(deals.length);
 }
 
 function goToDeal(e, url) {
   if(e.target.closest('.deal-wishlist-btn')) return;
   window.open(url, '_blank', 'noopener');
-}
-
-function toggleWishlist(e, id) {
-  e.stopPropagation();
-  let wl = JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
-  if(wl.includes(id)) {
-    wl = wl.filter(x => x !== id);
-    showToast('Removed from wishlist');
-  } else {
-    wl.push(id);
-    showToast('Saved to wishlist!');
-  }
-  localStorage.setItem('bdd_wishlist', JSON.stringify(wl));
-  renderDeals();
 }
 
 function renderPagination(total) {
@@ -527,45 +473,7 @@ function updateNavTimer() {
   document.getElementById('nav-timer').textContent = d+'d '+h+'h';
 }
 
-// ── AUTH ──
-let currentUser = null;
-try { currentUser = JSON.parse(localStorage.getItem('bdd_user')||'null'); } catch(e){}
-function updateAuthUI() {
-  const sb = document.getElementById('signin-btn');
-  const up = document.getElementById('user-pill');
-  const ua = document.getElementById('user-avatar');
-  const un = document.getElementById('user-name');
-  if(currentUser) {
-    sb.style.display = 'none'; up.style.display = 'flex';
-    if(ua) ua.src = currentUser.avatar||'';
-    if(un) un.textContent = currentUser.name.split(' ')[0];
-  } else {
-    sb.style.display = 'flex'; up.style.display = 'none';
-  }
-}
-function showSignIn() { document.getElementById('signin-overlay').classList.add('open'); }
-function skipSignIn() { localStorage.setItem('skipped_signin','1'); document.getElementById('signin-overlay').classList.remove('open'); }
-function triggerGoogleSignIn() {
-  google.accounts.id.initialize({client_id:'875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com',callback:handleCredentialResponse});
-  google.accounts.id.prompt();
-}
-function handleCredentialResponse(response) {
-  try {
-    const p = JSON.parse(atob(response.credential.split('.')[1]));
-    currentUser = {name:p.name,email:p.email,avatar:p.picture,sub:p.sub};
-    localStorage.setItem('bdd_user',JSON.stringify(currentUser));
-    document.getElementById('signin-overlay').classList.remove('open');
-    updateAuthUI();
-    showToast('Welcome, '+p.name.split(' ')[0]+'!');
-  } catch(e){}
-}
-
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
-}
+// Auth and toast handled by EBF (shared.js)
 </script>
 </body>
 </html>

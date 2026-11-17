@@ -139,6 +139,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
 <body>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="js/shared.js" defer></script>
 
 <!-- NAV -->
 <nav>
@@ -205,8 +206,8 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </div>
     <h2>Sign In to Set Alerts</h2>
-    <p>Create up to 5 free keyword alerts and get notified when prices drop.</p>
-    <button class="btn-gold" onclick="openSignin()">
+    <p>Create 1 free keyword alert and get notified when prices drop. Go Pro for unlimited.</p>
+    <button class="btn-gold" onclick="EBF.openSignInModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
       Sign In with Google
     </button>
@@ -282,6 +283,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
         </div>
         <button class="btn-clear-all" id="clear-all-btn" onclick="clearAllAlerts()" style="display:none;">Clear All</button>
       </div>
+      <div id="alert-status-bar" style="padding:8px 0 12px;"></div>
       <div id="alert-list"></div>
     </div>
 
@@ -356,71 +358,31 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
 <div class="toast" id="toast"></div>
 
 <script>
-const FREE_LIMIT = 5;
-
-// ---- AUTH ----
-function handleGoogleSignIn(response) {
-  const data = parseJwt(response.credential);
-  const existing = getUser();
-  const user = { name: data.name, email: data.email, picture: data.picture, joined: (existing && existing.joined) || Date.now() };
-  localStorage.setItem('bdd_user', JSON.stringify(user));
-  localStorage.removeItem('skipped_signin');
-  closeSignin();
-  updateAuthUI();
-  renderAlertsContent();
-  showToast('Signed in as ' + data.given_name, 'success');
-}
-function parseJwt(token) {
-  const b64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-  return JSON.parse(decodeURIComponent(atob(b64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-}
-function getUser() { try { return JSON.parse(localStorage.getItem('bdd_user')); } catch { return null; } }
-function openSignin() { document.getElementById('signin-overlay').classList.add('active'); }
-function closeSignin() { document.getElementById('signin-overlay').classList.remove('active'); }
-document.getElementById('signin-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeSignin(); });
-
-function updateAuthUI() {
-  const user = getUser();
-  const signinBtn = document.getElementById('nav-signin-btn');
-  const userPill = document.getElementById('nav-user-pill');
-  if (user) {
-    signinBtn.style.display = 'none';
-    userPill.style.display = 'flex';
-    document.getElementById('nav-avatar').src = user.picture || '';
-    document.getElementById('nav-name').textContent = user.name.split(' ')[0];
-    // Pre-fill email field
-    const emailField = document.getElementById('alert-email');
-    if (emailField && !emailField.value) emailField.placeholder = user.email;
-  } else {
-    signinBtn.style.display = '';
-    userPill.style.display = 'none';
-  }
-}
-
-// ---- WATCHLIST (alerts) STORAGE ----
-function getAlerts() { try { return JSON.parse(localStorage.getItem('bdd_watchlist')) || []; } catch { return []; } }
-function saveAlerts(list) { localStorage.setItem('bdd_watchlist', JSON.stringify(list)); }
+// ---- USES EBF from js/shared.js ----
 
 // ---- ADD ALERT ----
 function addAlert() {
-  const user = getUser();
-  if (!user) { openSignin(); return; }
+  const user = EBF.getUser();
+  if (!user) { EBF.openSignInModal(); return; }
 
   const keyword = document.getElementById('alert-keyword').value.trim();
-  if (!keyword) { showToast('Please enter a keyword or product name', 'error'); return; }
+  if (!keyword) { EBF.showToast('Please enter a keyword or product name', 'error'); return; }
 
-  const alerts = getAlerts();
-  if (alerts.length >= FREE_LIMIT) {
-    showToast('Free limit: ' + FREE_LIMIT + ' alerts. Upgrade to Pro for unlimited!', 'error');
+  if (!EBF.canCreateAlert()) {
+    if (!EBF.isPro()) {
+      EBF.showToast('Free plan: 1 alert max. Upgrade to Pro for unlimited!', 'error');
+      setTimeout(() => { window.location.href = 'membership.html'; }, 1500);
+    }
     return;
   }
+
+  const alerts = EBF.getAlerts();
   if (alerts.some(a => a.keyword.toLowerCase() === keyword.toLowerCase())) {
-    showToast('You already have an alert for "' + keyword + '"', 'error');
-    return;
+    EBF.showToast('You already have an alert for "' + keyword + '"', 'error'); return;
   }
 
   const priceVal = document.getElementById('alert-price').value;
-  const alert = {
+  const alertObj = {
     id: Date.now(),
     keyword,
     category: document.getElementById('alert-category').value,
@@ -430,8 +392,8 @@ function addAlert() {
     active: true,
     created: Date.now()
   };
-  alerts.unshift(alert);
-  saveAlerts(alerts);
+
+  EBF.createAlert(alertObj);
 
   // Clear form
   document.getElementById('alert-keyword').value = '';
@@ -441,59 +403,46 @@ function addAlert() {
   document.getElementById('alert-discount').value = '30';
 
   renderAlertList();
-  showToast('Alert created for "' + keyword + '"', 'success');
-
-  // EmailJS placeholder — fires when real keys are configured
-  sendAlertConfirmEmail(alert, user);
-}
-
-function sendAlertConfirmEmail(alert, user) {
-  // EmailJS integration — replace placeholders with real keys
-  const PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-  const SERVICE_ID = 'YOUR_SERVICE_ID';
-  const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-  if (PUBLIC_KEY === 'YOUR_PUBLIC_KEY') return; // Not configured yet
-  if (typeof emailjs === 'undefined') return;
-  emailjs.init(PUBLIC_KEY);
-  emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-    to_name: user.name,
-    to_email: alert.email,
-    keyword: alert.keyword,
-    target_price: alert.targetPrice ? '$' + alert.targetPrice : 'Any price',
-    category: alert.category === 'all' ? 'All Categories' : alert.category,
-    min_discount: alert.minDiscount + '%',
-  }).catch(() => {}); // Silently fail if not configured
+  EBF.showToast('Alert created for "' + keyword + '"', 'success');
 }
 
 // ---- TOGGLE / DELETE ----
 function toggleAlert(id) {
-  const alerts = getAlerts();
+  const alerts = EBF.getAlerts();
   const a = alerts.find(x => x.id === id);
-  if (a) { a.active = !a.active; saveAlerts(alerts); renderAlertList(); }
+  if (a) { a.active = !a.active; localStorage.setItem('bdd_alerts', JSON.stringify(alerts)); renderAlertList(); }
 }
 function deleteAlert(id) {
-  const alerts = getAlerts().filter(a => a.id !== id);
-  saveAlerts(alerts);
+  const alerts = EBF.getAlerts().filter(a => a.id !== id);
+  localStorage.setItem('bdd_alerts', JSON.stringify(alerts));
   renderAlertList();
-  showToast('Alert removed');
+  EBF.showToast('Alert removed');
 }
 function clearAllAlerts() {
   if (!confirm('Remove all alerts?')) return;
-  saveAlerts([]);
+  localStorage.setItem('bdd_alerts', JSON.stringify([]));
   renderAlertList();
-  showToast('All alerts cleared');
+  EBF.showToast('All alerts cleared');
 }
 
 // ---- RENDER LIST ----
 const CAT_LABELS = {all:'All Categories',electronics:'Electronics',home:'Home & Kitchen',fashion:'Fashion',family:'Toys & Family',sports:'Sports',auto:'Automotive',travel:'Travel',seasonal:'Seasonal'};
 
 function renderAlertList() {
-  const alerts = getAlerts();
+  const alerts = EBF.getAlerts();
   const container = document.getElementById('alert-list');
   const badge = document.getElementById('alert-count-badge');
   const clearBtn = document.getElementById('clear-all-btn');
   badge.textContent = alerts.length;
   clearBtn.style.display = alerts.length ? '' : 'none';
+
+  // Show pro/free status bar
+  const isPro = EBF.isPro();
+  const limitLabel = isPro
+    ? `<span style="color:var(--gold);font-size:12px;font-weight:600;">PRO — Unlimited alerts</span>`
+    : `<span style="color:var(--muted);font-size:12px;">${alerts.length} / ${EBF.FREE_ALERT_LIMIT} free alert used${alerts.length !== 1 ? 's' : ''} — <a href="membership.html" style="color:var(--gold);text-decoration:none;">Upgrade for unlimited</a></span>`;
+  const statusEl = document.getElementById('alert-status-bar');
+  if (statusEl) statusEl.innerHTML = limitLabel;
 
   if (!alerts.length) {
     container.innerHTML = `<div class="empty-state">
@@ -506,6 +455,7 @@ function renderAlertList() {
     return;
   }
 
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   container.innerHTML = `<div class="alert-list">${alerts.map(a => `
     <div class="alert-item" id="alert-${a.id}">
       <div class="alert-icon">
@@ -517,7 +467,7 @@ function renderAlertList() {
           <span class="alert-tag">${CAT_LABELS[a.category] || a.category}</span>
           ${a.targetPrice ? `<span class="alert-tag price">Under $${a.targetPrice}</span>` : ''}
           ${a.minDiscount > 0 ? `<span class="alert-tag">${a.minDiscount}%+ off</span>` : ''}
-          <span class="alert-tag">${a.email}</span>
+          <span class="alert-tag">${escHtml(a.email)}</span>
         </div>
       </div>
       <div class="alert-actions">
@@ -532,11 +482,9 @@ function renderAlertList() {
   `).join('')}</div>`;
 }
 
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 // ---- RENDER PAGE ----
 function renderAlertsContent() {
-  const user = getUser();
+  const user = EBF.getUser();
   const gate = document.getElementById('auth-gate');
   const content = document.getElementById('alerts-content');
   if (!user) {
@@ -546,18 +494,10 @@ function renderAlertsContent() {
   }
   gate.style.display = 'none';
   content.style.display = '';
+  // Pre-fill email from user
+  const emailField = document.getElementById('alert-email');
+  if (emailField && !emailField.value) emailField.placeholder = user.email;
   renderAlertList();
-}
-
-// ---- NAV TIMER ----
-function updateNavTimer() {
-  const now = new Date();
-  const end = new Date(now); end.setHours(23,59,59,999);
-  const diff = end - now;
-  const h = Math.floor(diff/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  document.getElementById('nav-timer').textContent = `⚡ ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
 // NAV SEARCH
@@ -573,19 +513,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (kw) kw.addEventListener('keydown', e => { if (e.key === 'Enter') addAlert(); });
 });
 
-// TOAST
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type ? ' ' + type : '');
-  setTimeout(() => { t.className = 'toast'; }, 3000);
-}
-
-// INIT
-updateNavTimer();
-setInterval(updateNavTimer, 1000);
-updateAuthUI();
-renderAlertsContent();
+// INIT — EBF.init() handles auth UI + announcements; we hook into auth changes
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof EBF !== 'undefined') {
+    EBF.init();
+    // Re-render after sign-in
+    const origUpdate = EBF.updateAuthUI.bind(EBF);
+    EBF.updateAuthUI = function() { origUpdate(); renderAlertsContent(); };
+    renderAlertsContent();
+  }
+});
 </script>
 </body>
 </html>

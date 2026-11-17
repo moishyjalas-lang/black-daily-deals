@@ -1,0 +1,19 @@
+{
+  "site": {
+    "name": "Everyday Black Friday",
+    "tagline": "Black Friday prices. All year round.",
+    "affiliate_tag": "blackdailydeals-20"
+  },
+  "membership": {
+    "price_monthly": 8,
+    "stripe_payment_link": "https://buy.stripe.com/PLACEHOLDER",
+    "free_alert_limit": 1,
+    "pro_alert_limit": 999
+  },
+  "senderkit": {
+    "from_email": "deals@blackdailydeals.com",
+    "from_name": "Everyday Black Friday",
+    "welcome_template": "ebf-welcome",
+    "alert_template": "ebf-alert"
+  }
+}
