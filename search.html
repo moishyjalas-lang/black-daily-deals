@@ -402,6 +402,8 @@ function loadDeals(){
 }
 
 /* build category checkbox tree */
+/* Escape text before it goes into HTML, so a search word or link can never add code to the page */
+function esc(v){ return String(v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function buildCats(){
   const el = document.getElementById('cat-list');
   el.innerHTML = CATS.map(([slug,label])=>`<label class="crow"><input type="checkbox" class="cb cat-cb" value="${slug}" onchange="toggleCat(this)"><span>${label}</span></label>`).join('');
@@ -418,7 +420,7 @@ function buildRatings(){
 function buildRetailers(){
   const sel = document.getElementById('retailer-select');
   const stores = [...new Set(ALL_DEALS.map(d=>d.store))].sort();
-  sel.innerHTML = '<option value="">All retailers</option>' + stores.map(s=>`<option value="${s}">${s}</option>`).join('');
+  sel.innerHTML = '<option value="">All retailers</option>' + stores.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
 }
 
 /* ===== Controls ===== */
@@ -507,11 +509,11 @@ function renderChips(){
   const row=document.getElementById('chip-row');
   const chips=[];
   const catLabel=Object.fromEntries(CATS);
-  activeCats.forEach(c=>chips.push(`<span class="fchip">${catLabel[c]||c}<button onclick="removeChip('cat','${c}')" aria-label="Remove">✕</button></span>`));
+  activeCats.forEach(c=>{ if(!catLabel[c]) return; chips.push(`<span class="fchip">${esc(catLabel[c])}<button onclick="removeChip('cat','${esc(c)}')" aria-label="Remove">✕</button></span>`); });
   if(minDiscount>0) chips.push(`<span class="fchip">${minDiscount}% off or more<button onclick="removeChip('disc')">✕</button></span>`);
   if(minRating>0) chips.push(`<span class="fchip">${minRating}★ & up<button onclick="removeChip('rate')">✕</button></span>`);
   if(priceMin>0||priceMax<999999){ const lbl=(priceMax>=999999)?`$${priceMin}+`:(priceMin===0?`Under $${priceMax}`:`$${priceMin} – $${priceMax}`); chips.push(`<span class="fchip">${lbl}<button onclick="removeChip('price')">✕</button></span>`); }
-  if(searchQuery.trim()) chips.push(`<span class="fchip">“${searchQuery}”<button onclick="removeChip('search')">✕</button></span>`);
+  if(searchQuery.trim()) chips.push(`<span class="fchip">“${esc(searchQuery)}”<button onclick="removeChip('search')">✕</button></span>`);
   row.innerHTML = chips.join('') + (chips.length?`<button class="clear-all" onclick="clearAll()">Clear all</button>`:'');
 }
 
@@ -523,8 +525,8 @@ function renderDeals(){
   const title=document.getElementById('results-title');
   const crumb=document.getElementById('results-crumb');
   const catLabel=Object.fromEntries(CATS);
-  if(searchQuery.trim()){ title.textContent='Search results'; crumb.innerHTML=`for <b>“${searchQuery}”</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
-  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent='Deals'; crumb.innerHTML=`Category: <b>${catLabel[c]}</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
+  if(searchQuery.trim()){ title.textContent='Search results'; crumb.innerHTML=`for <b>“${esc(searchQuery)}”</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
+  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent='Deals'; crumb.innerHTML=`Category: <b>${esc(catLabel[c]||c)}</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
   else { title.textContent='All deals'; crumb.innerHTML=`${deals.length} deal${deals.length!==1?'s':''} available`; }
   renderChips();
 
@@ -563,7 +565,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   buildCats(); buildRatings();
   const params=new URLSearchParams(window.location.search);
   const cat=params.get('cat'); const q=params.get('q');
-  if(cat && cat!=='all'){ activeCats.add(cat); const cb=document.querySelector(`.cat-cb[value="${cat}"]`); if(cb) cb.checked=true; }
+  if(cat && cat!=='all' && CATS.some(([slug])=>slug===cat)){ activeCats.add(cat); const cb=document.querySelector(`.cat-cb[value="${cat}"]`); if(cb) cb.checked=true; }
   if(q){ searchQuery=q; document.getElementById('main-search').value=q; }
   if(typeof EBF!=='undefined') EBF.init();
   loadDeals();
