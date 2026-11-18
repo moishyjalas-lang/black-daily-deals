@@ -548,6 +548,25 @@ footer{
   background:linear-gradient(110deg,#c78b36,#f7d891 48%,#d39a42);transition:filter .18s;}
 .bf-card:hover .bf-btn{filter:brightness(1.08);}
 .bf-updated{margin-top:18px;text-align:center;font-size:12px;color:#8a8070;}
+
+/* ───── HERO flashing text — staged entrance + rotating line ───── */
+.hero-content h1 .hl{display:block;color:var(--ivory);}
+.hero-content h1 .hl-gold{color:var(--gold2);filter:drop-shadow(0 0 13px rgba(232,171,73,0.42));}
+.hero-rotator{
+  font-size:19px;color:#e7ddce;margin:18px 0 32px;font-weight:500;
+  min-height:1.6em;line-height:1.6;text-shadow:0 1px 10px rgba(0,0,0,0.6);
+}
+.rot-word{display:inline-block;transition:opacity .25s ease;}
+.reveal{opacity:0;transform:translateY(22px);animation:hero-rise .9s cubic-bezier(.2,.7,.2,1) forwards;}
+.reveal.r1{animation-delay:.15s;}
+.reveal.r2{animation-delay:.5s;}
+.reveal.r3{animation-delay:.95s;}
+.reveal.r4{animation-delay:1.5s;}
+.reveal.r5{animation-delay:1.9s;}
+@keyframes hero-rise{to{opacity:1;transform:none;}}
+@media(prefers-reduced-motion: reduce){
+  .reveal{opacity:1 !important;transform:none !important;animation:none !important;}
+}
 </style>
 <link rel="stylesheet" href="css/stage.css">
 </head>
@@ -592,30 +611,40 @@ footer{
   </div>
 </nav>
 
-<!-- ══ HERO — full-width video banner (video drops in here) ══ -->
+<!-- ══ HERO — welcome video (logo → categories) + flashing text ══ -->
 <section class="hero">
-  <!-- VIDEO SLOT: when the hero video is ready, add a <source> line below.
-       e.g. <source src="assets/hero.mp4" type="video/mp4">
-       Until then the poster image shows. -->
-  <video class="hero-vid" id="heroVideo" autoplay muted loop playsinline
-         poster="assets/hero-ebf.png" aria-label="Everyday Black Friday hero">
+  <video class="hero-vid" id="heroVideo" autoplay muted loop playsinline preload="auto"
+         poster="assets/hero-bg-poster.jpg" aria-label="Everyday Black Friday welcome">
+    <source src="assets/hero-bg.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">Everyday Black Friday</div>
-    <h1>Black Friday prices.<br><span>All year round.</span></h1>
-    <p class="hero-sub">Great deals from stores you trust.</p>
-    <a class="btn-primary" href="search.html">
+    <div class="hero-eyebrow reveal r1">Everyday Black Friday</div>
+    <h1>
+      <span class="hl reveal r2">Black Friday prices.</span>
+      <span class="hl hl-gold reveal r3">All year round.</span>
+    </h1>
+    <p class="hero-rotator reveal r4"><span id="heroRotate" class="rot-word">Watching every deal for you.</span></p>
+    <a class="btn-primary reveal r5" href="search.html">
       Shop All Deals
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
       </svg>
     </a>
   </div>
-  <div class="hero-slot-tag">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    Hero video goes here
-  </div>
+  <script>
+  (function(){
+    var el=document.getElementById('heroRotate');
+    if(!el) return;
+    var lines=["Watching every deal for you.","One site — not a hundred.","New deals, every single day."];
+    var i=0;
+    setInterval(function(){
+      i=(i+1)%lines.length;
+      el.style.opacity=0;
+      setTimeout(function(){ el.textContent=lines[i]; el.style.opacity=1; },260);
+    },3000);
+  })();
+  </script>
 </section>
 
 <!-- ══ STATEMENT BAND — sits in the showroom, pushes in as you scroll ══ -->
