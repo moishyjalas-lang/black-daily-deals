@@ -91,13 +91,32 @@ traces back to building from my own guesses instead of his actual assets.
 6. Save every asset he provides right away.
 7. Each project gets its own credentials.
 
-## Current state (Stage 1 — foundation ready)
+## Current state (Stage 1 — COMPLETE ✓, signed off 2026-11-18)
 All pages reskinned to the design system and verified live in Chrome:
 Home, Categories (big-image), Deals/Search (filters), Alerts, Profile,
 Membership. Real deals in `data/deals.json`. Direct-bridge data files and
 announcement system in `data/`.
 
-## Still to connect (Stage 2)
+Immersive layer added and signed off this session:
+- **Showroom backdrop** — Moishy's gold "EBF" showroom image (labeled
+  category pedestals) sits behind every page via `css/stage.css`. Replaced
+  the earlier (rejected) tunnel image.
+- **Walk-into-the-shop depth** — native CSS scroll-driven push-in on the
+  room (`@supports (animation-timeline: scroll())`), GPU-smooth, with a
+  `prefers-reduced-motion` static fallback. Not scratchy, works on mobile.
+- **Statement band** — "You don't need a hundred websites. Just this one —
+  watching every deal for you." as crisp HTML text over the room (NOT baked
+  into the image, so it stays editable).
+- **Free room crops** — per-page category close-ups cropped from the one
+  showroom image, saved in `assets/rooms/` (aisle-left, aisle-right,
+  corner-electronics, corner-travel). Route for per-page images: crop first,
+  generate only new angles (Google AI mode / Picsart).
+
+## Still to do (Stage 2)
+- **Per-page rooms rollout** — make every page a different corner of the
+  same shop (same lighting/arches/floor) with the same walk-in depth. Crop
+  from the showroom where possible; generate the few new angles. Approved
+  direction, not yet built across category pages.
 - Hero welcome-page video (Moishy is making it) → replaces `hero-ebf.png`.
 - Stripe ($8/mo) checkout, server-side subscription enforcement.
 - Sender.net email (subscribe + watcher alerts) — token + group ID needed.
