@@ -229,6 +229,14 @@ Object.assign(window.EBF, {
     document.body.insertAdjacentHTML('beforeend', html);
   },
 
+  toggleNavMenu(btn) {
+    const d = document.getElementById('navDrawer');
+    if (!d) return;
+    const open = d.hasAttribute('hidden');
+    if (open) { d.removeAttribute('hidden'); } else { d.setAttribute('hidden', ''); }
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  },
+
   /* ---- Alert creation with gating ---- */
   createAlert(opts) {
     const user = this.getUser();

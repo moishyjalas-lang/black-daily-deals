@@ -207,3 +207,39 @@ Screens needing NEW tables (degrade to "not set up yet" until MJ runs schema):
 
 node --check passed after every batch. Existing screens (shell/gate/router/Dashboard/Deal Library/Add-Edit) untouched.
 NEEDS MJ: (1) Supabase login to finish Google auth; (2) run updated supabase/schema.sql; (3) set profiles.is_admin=true for his account; (4) deploy to PREVIEW; (5) live-test gate + each screen's reads/writes. Nothing deployed or claimed working.
+
+## 2026-11-18 (~3:10pm ET) — Auth configured + preview deployed
+DONE by Claude (owner present, Supabase logged in):
+- Supabase Auth > Google: ENABLED with the everyday-black-friday Client ID + secret; callback matched.
+- Supabase Auth > URL config: Site URL = https://black-daily-deals.pages.dev; redirect allow-list = https://black-daily-deals.pages.dev/** and https://*.black-daily-deals.pages.dev/**
+- Code committed to preview branch owner-hq-auth and pushed (Cloudflare preview building at https://owner-hq-auth.black-daily-deals.pages.dev). LIVE main untouched.
+REMAINING (do WITH MJ when back, all quick):
+1. Run the updated supabase/schema.sql in the SQL editor (adds HQ tables; additive/idempotent) — HOLD until MJ present.
+2. MJ signs in on the preview with Google (creates his profiles row).
+3. Run: update public.profiles set is_admin=true where email=(MJ email);
+4. MJ opens /hq.html on the preview -> HQ opens. Test each screen. Then merge owner-hq-auth -> main to go live.
+
+## 2026-11-18 — HQ verified working + next-phase direction
+
+### HQ status (DONE, on preview branch owner-hq-auth — NOT merged to live)
+- Google sign-in → owner gate (is_admin) → HQ opens. Verified live.
+- Session persists across reload (refresh_token auto-refresh works). Earlier logout was just an hours-old session fully expiring.
+- Dashboard, Deal Library (real deals), Category Tree all load.
+- FULL HQ schema run on the DB (plain-SQL injection via Monaco, not base64). All 13 HQ tables confirmed via information_schema. Owner flag + role='owner' set.
+- OAuth app still in "Testing" mode → only moishyjalas@gmail.com can sign in; public sign-in needs publishing later.
+
+### MJ's PUBLIC-SITE visual vision — BUILD THIS LATER (after domain/email/suppliers)
+Immersive "walking through a shop" category experience:
+- Background images that come CLOSER as you scroll down (depth / dolly-in feel).
+- Each category has its OWN picture (use real category images in assets/categories/*.jpg + rooms/*).
+- A side visual showing which category/aisle you're currently in.
+- Page-to-page transition feels like "turning" a corner in the shop, then walking straight again.
+- "The top looks disgusting" — rework the top/header/hero of the public site.
+- Make it "stronger." Light coming closer. Use his REAL images, never drawn.
+
+### MJ's stated priority order (his words, 2026-11-18)
+1. Hosting + domain + business Gmail (in progress; Gmail waits for mom's iPhone tomorrow for QR)
+2. Connect everything together
+3. Start emailing suppliers
+4. Start advertising
+5. THEN build the shop-walkthrough visual experience above
