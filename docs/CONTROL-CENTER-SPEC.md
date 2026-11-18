@@ -42,6 +42,27 @@ Supabase tables.
     editable without code.
 11. **Infrastructure** — status + one-click links to Cloudflare / Supabase /
     Stripe / domain. Shown, not rebuilt (master keys never go in the app).
+12. **Legal & Privacy** — edit (without code): the cookie-consent banner text +
+    on/off, Privacy Policy, Affiliate Disclosure, Terms of Use. See the section
+    below.
+
+## Legal & Privacy (required for an affiliate site — don't skip)
+- **Affiliate disclosure (FTC)** — legally REQUIRED in the US: a clear "we earn
+  commissions" statement near affiliate links and a full Affiliate Disclosure
+  page. Footer line already exists ("As an Amazon Associate…"); add per-card
+  clarity + the page.
+- **Cookie-consent banner** — branded banner (Moishy's gold design): "We value
+  your privacy… cookies for experience, traffic, affiliate partnerships" with
+  **Essential Only / Accept All** + a Privacy Policy link. Must GENUINELY respect
+  the choice (not a fake banner) — "Essential Only" loads no non-essential
+  cookies. Our analytics (Cloudflare Web Analytics) is cookie-free, which makes
+  "Essential Only" clean to honor; affiliate cookies are set by the retailer on
+  click-out, which the banner discloses.
+- **Privacy Policy + Terms of Use** — real pages the banner links to. Claude can
+  draft solid standard versions; not legal advice — Moishy should review.
+- **Controls** — all of the above editable from the Legal & Privacy panel;
+  banner text + which categories it gates are settings, the consent logic is
+  code (behind the preview→approve flow).
 
 ## The Email Engine (Sender.net) — the automatic system
 Sender.net (already our email tool, free up to 15,000 emails/mo) does BOTH jobs
