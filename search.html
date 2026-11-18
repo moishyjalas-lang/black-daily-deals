@@ -76,6 +76,8 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .results-hero h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,4vw,44px);font-weight:600;color:var(--ivory);text-shadow:0 0 20px rgba(217,169,79,.2);}
 .results-hero .crumb{font-size:15px;color:var(--muted);margin-top:4px;}
 .results-hero .crumb b{color:var(--gold2);font-weight:600;}
+.results-hero .crumb a{color:var(--muted);text-decoration:underline;text-decoration-color:rgba(184,175,161,.4);}
+.results-hero .crumb a:hover{color:var(--gold2);}
 
 /* FILTER TOOLBAR */
 .toolbar{max-width:1400px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
@@ -175,6 +177,31 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .price-was{font-size:14px;color:#8a8070;text-decoration:line-through;}
 .btn-view{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:999px;background:linear-gradient(110deg,#c78b36,#f7d891 48%,#d39a42);color:var(--ink);font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 3px 14px rgba(186,118,40,.25),inset 0 1px rgba(255,255,255,.5);transition:filter .15s,box-shadow .15s;}
 .btn-view:hover{filter:brightness(1.07);box-shadow:0 5px 20px rgba(229,166,69,.45);}
+
+/* DEAL LEVELS (Doorbuster / Hot Deal / Price Drop / Everyday Price) */
+.deal-card.lvl-bf{border-color:#c99a4c;background:radial-gradient(ellipse at 0% 0%,rgba(244,209,139,.16),transparent 55%),linear-gradient(140deg,#2c2115,#171412 62%,#141210);box-shadow:inset 0 1px rgba(255,255,255,.08),0 12px 30px rgba(0,0,0,.45),0 0 26px rgba(213,160,71,.22);}
+.badge-door{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:7px 12px 7px;border-radius:12px;font-size:17px;letter-spacing:.01em;background:linear-gradient(135deg,#c78b36,#f4d18b 55%,#d5a047);}
+.badge-door b{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;}
+.lvl-bf .price-now{font-size:27px;}
+.lvl-bf .price-was{font-size:16px;color:#c9b8a0;text-decoration-color:var(--red);text-decoration-thickness:2px;}
+.price-save{font-size:12px;font-weight:700;color:var(--green);margin-left:auto;}
+.price-now small{font-size:13px;font-weight:600;color:var(--muted);}
+.lvl-tag{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;border:1px solid var(--gold-deep);color:var(--gold2);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.lvl-tag.soft{border-color:var(--border);color:var(--muted);}
+.lvl-light .badge-off{background:#2a2217;color:var(--gold2);border:1px solid var(--border);box-shadow:none;}
+.lvl-regular .btn-view{background:transparent;color:var(--gold2);border:1px solid var(--gold-deep);box-shadow:none;}
+.lvl-head{grid-column:1/-1;display:flex;align-items:baseline;gap:12px;margin:14px 0 2px;padding-bottom:10px;border-bottom:1px solid rgba(139,99,47,.35);}
+.lvl-head:first-child{margin-top:0;}
+.lvl-head h2{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:600;color:var(--ivory);}
+.lvl-head.bf h2{font-size:30px;color:var(--gold2);text-shadow:0 0 18px rgba(217,169,79,.3);}
+.lvl-head span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.sub-nav,.lvl-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.sub-nav:empty,.lvl-tabs:empty{display:none;}
+.snav{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:#15110b;color:#d8cdbb;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.snav .n{color:var(--muted);font-size:11.5px;margin-left:5px;}
+.snav:hover,.snav.active{border-color:var(--gold2);color:var(--gold2);background:rgba(244,209,139,.08);}
+.lvl-tabs .snav.active{background:linear-gradient(110deg,#c78b36,#f7d891 48%,#d39a42);color:var(--ink);border-color:transparent;}
+.lvl-tabs .snav.active .n{color:var(--ink);}
 
 /* SKELETON */
 .skel-card{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:linear-gradient(140deg,#201913,#161412);}
@@ -363,11 +390,14 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 
   <!-- RESULTS -->
   <div class="results-main">
+    <div class="sub-nav" id="sub-nav"></div>
+    <div class="lvl-tabs" id="lvl-tabs"></div>
     <div class="deals-grid" id="deals-grid"></div>
     <div class="pagination" id="pagination"></div>
   </div>
 </div>
 
+<script src="js/catalog.js"></script>
 <script>
 /* ===== State ===== */
 let ALL_DEALS = [];
@@ -378,13 +408,12 @@ let minDiscount = 0;
 let minRating = 0;
 let searchQuery = '';
 let currentPage = 1;
-const PER_PAGE = 12;
-
-const CATS = [
-  ['electronics','Electronics & Tech'],['home','Home & Living'],['fashion','Fashion & Care'],
-  ['family','Family & Everyday'],['sports','Sports & Outdoors'],['auto','Auto & Tools'],
-  ['travel','Travel'],['seasonal','Seasonal & Gifts']
-];
+let activeSub = '';
+let activeLevel = '';
+const PER_PAGE = 24;
+const CAT = window.EBF_CATALOG;
+const CATS = CAT.cats.map(c => [c.slug, c.name]);
+const catOf = d => CAT.alias[d.category] || d.category;
 
 /* show skeletons immediately */
 function showSkeletons(){
@@ -395,10 +424,13 @@ function showSkeletons(){
 /* ===== Load deals ===== */
 function loadDeals(){
   showSkeletons();
-  fetch('data/deals.json')
-    .then(r => r.json())
-    .then(data => { ALL_DEALS = data; loaded = true; buildRetailers(); renderDeals(); })
-    .catch(() => { loaded = true; renderDeals(); });
+  /* hand-picked deals + the category product catalog (both real store data) */
+  Promise.all(['data/deals.json','data/products.json'].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
+    .then(([deals, products]) => {
+      const seen = new Set();
+      ALL_DEALS = [...deals, ...products].filter(d => !seen.has(d.id) && seen.add(d.id));
+      loaded = true; buildRetailers(); renderDeals();
+    });
 }
 
 /* build category checkbox tree */
@@ -427,7 +459,18 @@ function buildRetailers(){
 function toggleGroup(id){ document.getElementById(id).classList.toggle('collapsed'); }
 function togglePanel(){ document.getElementById('filter-panel').classList.toggle('open'); }
 
-function toggleCat(cb){ cb.checked ? activeCats.add(cb.value) : activeCats.delete(cb.value); currentPage=1; renderDeals(); }
+function toggleCat(cb){ cb.checked ? activeCats.add(cb.value) : activeCats.delete(cb.value); activeSub=''; currentPage=1; syncURL(); renderDeals(); }
+function pickSub(sub){ activeSub = sub; currentPage=1; syncURL(); renderDeals(); }
+function pickLevel(lv){ activeLevel = lv; currentPage=1; syncURL(); renderDeals(); }
+function syncURL(){
+  const p = new URLSearchParams();
+  if(activeCats.size) p.set('cat',[...activeCats].join(','));
+  if(activeSub) p.set('sub',activeSub);
+  if(activeLevel) p.set('level',activeLevel);
+  if(searchQuery.trim()) p.set('q',searchQuery.trim());
+  const qs = p.toString();
+  try { history.replaceState(null,'', 'search.html' + (qs ? '?'+qs : '')); } catch(e){}
+}
 
 function setPrice(el,mn,mx){
   priceMin=mn; priceMax=mx;
@@ -462,7 +505,7 @@ function applySearch(){ currentPage=1; renderDeals(); }
 function applyFilters(){ priceFromInputs(); currentPage=1; renderDeals(); if(window.innerWidth<=860) togglePanel(); }
 
 function resetFilters(){
-  activeCats.clear(); priceMin=0; priceMax=999999; minDiscount=0; minRating=0; searchQuery='';
+  activeCats.clear(); activeSub=''; activeLevel=''; priceMin=0; priceMax=999999; minDiscount=0; minRating=0; searchQuery='';
   document.querySelectorAll('.cat-cb,.rate-cb').forEach(c=>c.checked=false);
   document.querySelectorAll('.disc-cb').forEach(c=>c.checked=false);
   document.querySelector('.disc-cb[value="0"]').checked=true;
@@ -472,30 +515,38 @@ function resetFilters(){
   document.querySelector('.pchip[data-price="any"]').classList.add('active');
   document.getElementById('retailer-select').value='';
   document.getElementById('main-search').value='';
-  currentPage=1; renderDeals();
+  currentPage=1; syncURL(); renderDeals();
 }
 function clearAll(){ resetFilters(); }
 
 /* remove one chip */
 function removeChip(type,val){
-  if(type==='cat'){ activeCats.delete(val); const cb=document.querySelector(`.cat-cb[value="${val}"]`); if(cb) cb.checked=false; }
+  if(type==='sub'){ activeSub=''; }
+  else if(type==='level'){ activeLevel=''; }
+  else if(type==='cat'){ activeCats.delete(val); activeSub=''; const cb=document.querySelector(`.cat-cb[value="${val}"]`); if(cb) cb.checked=false; }
   else if(type==='disc'){ minDiscount=0; document.querySelectorAll('.disc-cb').forEach(c=>c.checked=false); document.querySelector('.disc-cb[value="0"]').checked=true; }
   else if(type==='rate'){ minRating=0; document.querySelectorAll('.rate-cb').forEach(c=>c.checked=false); }
   else if(type==='price'){ priceMin=0; priceMax=999999; document.querySelectorAll('.pchip').forEach(c=>c.classList.remove('active')); document.querySelector('.pchip[data-price="any"]').classList.add('active'); document.getElementById('price-min').value=''; document.getElementById('price-max').value=''; }
   else if(type==='search'){ searchQuery=''; document.getElementById('main-search').value=''; }
-  currentPage=1; renderDeals();
+  currentPage=1; syncURL(); renderDeals();
 }
 
 /* ===== Filtering ===== */
-function getFiltered(){
+function baseFiltered(){
   let d=[...ALL_DEALS];
-  if(activeCats.size) d=d.filter(x=>activeCats.has(x.category));
+  if(activeCats.size) d=d.filter(x=>activeCats.has(catOf(x)));
   d=d.filter(x=>x.price>=priceMin && x.price<=priceMax);
   d=d.filter(x=>(x.discount||0)>=minDiscount);
   if(minRating) d=d.filter(x=>(x.rating||0)>=minRating);
   const r=document.getElementById('retailer-select').value;
   if(r) d=d.filter(x=>x.store===r);
-  if(searchQuery.trim()){ const q=searchQuery.toLowerCase(); d=d.filter(x=>x.title.toLowerCase().includes(q)||x.store.toLowerCase().includes(q)); }
+  if(searchQuery.trim()){ const q=searchQuery.toLowerCase(); d=d.filter(x=>x.title.toLowerCase().includes(q)||x.store.toLowerCase().includes(q)||(x.subcategory||'').toLowerCase().includes(q)); }
+  return d;
+}
+function getFiltered(){
+  let d=baseFiltered();
+  if(activeSub) d=d.filter(x=>x.subcategory===activeSub);
+  if(activeLevel) d=d.filter(x=>CAT.level(x).key===activeLevel);
   const sort=document.getElementById('sort-select').value;
   if(sort==='discount') d.sort((a,b)=>(b.discount||0)-(a.discount||0));
   else if(sort==='price_asc') d.sort((a,b)=>a.price-b.price);
@@ -510,6 +561,8 @@ function renderChips(){
   const chips=[];
   const catLabel=Object.fromEntries(CATS);
   activeCats.forEach(c=>{ if(!catLabel[c]) return; chips.push(`<span class="fchip">${esc(catLabel[c])}<button onclick="removeChip('cat','${esc(c)}')" aria-label="Remove">✕</button></span>`); });
+  if(activeSub) chips.push(`<span class="fchip">${esc(activeSub)}<button onclick="removeChip('sub')" aria-label="Remove">✕</button></span>`);
+  if(activeLevel){ const L={bf:'Doorbuster',big:'Hot Deal',light:'Price Drop',regular:'Everyday Price'}; chips.push(`<span class="fchip">${L[activeLevel]}<button onclick="removeChip('level')" aria-label="Remove">✕</button></span>`); }
   if(minDiscount>0) chips.push(`<span class="fchip">${minDiscount}% off or more<button onclick="removeChip('disc')">✕</button></span>`);
   if(minRating>0) chips.push(`<span class="fchip">${minRating}★ & up<button onclick="removeChip('rate')">✕</button></span>`);
   if(priceMin>0||priceMax<999999){ const lbl=(priceMax>=999999)?`$${priceMin}+`:(priceMin===0?`Under $${priceMax}`:`$${priceMin} – $${priceMax}`); chips.push(`<span class="fchip">${lbl}<button onclick="removeChip('price')">✕</button></span>`); }
@@ -526,9 +579,11 @@ function renderDeals(){
   const crumb=document.getElementById('results-crumb');
   const catLabel=Object.fromEntries(CATS);
   if(searchQuery.trim()){ title.textContent='Search results'; crumb.innerHTML=`for <b>“${esc(searchQuery)}”</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
-  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent='Deals'; crumb.innerHTML=`Category: <b>${esc(catLabel[c]||c)}</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
+  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent=activeSub||catLabel[c]||'Deals'; crumb.innerHTML=`<a href="categories.html">Categories</a> › ${activeSub?`<a href="search.html?cat=${encodeURIComponent(c)}">${esc(catLabel[c]||c)}</a> › <b>${esc(activeSub)}</b>`:`<b>${esc(catLabel[c]||c)}</b>`} · ${deals.length} product${deals.length!==1?'s':''}`; }
+  else if(activeCats.size>1){ title.textContent='Deals'; crumb.innerHTML=`${[...activeCats].map(c=>`<b>${esc(catLabel[c]||c)}</b>`).join(', ')} · ${deals.length} product${deals.length!==1?'s':''}`; }
   else { title.textContent='All deals'; crumb.innerHTML=`${deals.length} deal${deals.length!==1?'s':''} available`; }
   renderChips();
+  renderSubNav(); renderLevelTabs();
 
   if(!deals.length){
     grid.innerHTML=`<div class="empty">
@@ -545,8 +600,37 @@ function renderDeals(){
   }
   const start=(currentPage-1)*PER_PAGE;
   const page=deals.slice(start,start+PER_PAGE);
-  grid.innerHTML=page.map(d=>EBF.dealCard(d)).join('');
+  const grouped = document.getElementById('sort-select').value==='discount' && !activeLevel;
+  let last = page.length && start>0 ? CAT.level(deals[start-1]).key : '';
+  grid.innerHTML=page.map(d=>{
+    const lv=CAT.level(d); let head='';
+    if(grouped && lv.key!==last){ head=`<div class="lvl-head ${lv.key}"><h2>${lv.label}</h2><span>${lv.range}</span></div>`; last=lv.key; }
+    return head+EBF.dealCard(d);
+  }).join('');
   renderPagination(deals.length);
+}
+
+/* subcategory row for one category (only subcategories that have products) */
+function renderSubNav(){
+  const el=document.getElementById('sub-nav');
+  if(activeCats.size!==1){ el.innerHTML=''; return; }
+  const c=CAT.bySlug([...activeCats][0]); if(!c){ el.innerHTML=''; return; }
+  const base=baseFiltered(); const n={}; base.forEach(x=>{ n[x.subcategory]=(n[x.subcategory]||0)+1; });
+  const subs=c.subs.filter(s=>n[s]);
+  if(!subs.length){ el.innerHTML=''; return; }
+  el.innerHTML=`<button class="snav${activeSub?'':' active'}" onclick="pickSub('')">All ${c.name}<span class="n">${base.length}</span></button>`+
+    subs.map(s=>`<button class="snav${activeSub===s?' active':''}" onclick="pickSub(${JSON.stringify(s).replace(/"/g,'&quot;')})">${esc(s)}<span class="n">${n[s]}</span></button>`).join('');
+}
+/* deal-level tabs: Doorbuster / Hot Deal / Price Drop / Everyday Price */
+function renderLevelTabs(){
+  const el=document.getElementById('lvl-tabs');
+  let base=baseFiltered(); if(activeSub) base=base.filter(x=>x.subcategory===activeSub);
+  const n={}; base.forEach(x=>{ const k=CAT.level(x).key; n[k]=(n[k]||0)+1; });
+  const L={bf:'Doorbuster',big:'Hot Deal',light:'Price Drop',regular:'Everyday Price'};
+  const keys=CAT.levels.filter(k=>n[k]);
+  if(keys.length<2 && !activeLevel){ el.innerHTML=''; return; }
+  el.innerHTML=`<button class="snav${activeLevel?'':' active'}" onclick="pickLevel('')">Everything<span class="n">${base.length}</span></button>`+
+    keys.map(k=>`<button class="snav${activeLevel===k?' active':''}" onclick="pickLevel('${k}')">${L[k]}<span class="n">${n[k]}</span></button>`).join('');
 }
 
 function renderPagination(total){
@@ -554,7 +638,9 @@ function renderPagination(total){
   const pg=document.getElementById('pagination');
   if(pages<=1){ pg.innerHTML=''; return; }
   let html=`<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
-  for(let i=1;i<=pages;i++) html+=`<button class="pg-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  const show=new Set([1,pages,currentPage-1,currentPage,currentPage+1].filter(i=>i>=1&&i<=pages));
+  let prev=0;
+  [...show].sort((a,b)=>a-b).forEach(i=>{ if(prev && i-prev>1) html+=`<span class="pg-btn" style="cursor:default;border-color:transparent;background:none">…</span>`; html+=`<button class="pg-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`; prev=i; });
   html+=`<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
   pg.innerHTML=html;
 }
@@ -565,7 +651,9 @@ window.addEventListener('DOMContentLoaded',()=>{
   buildCats(); buildRatings();
   const params=new URLSearchParams(window.location.search);
   const cat=params.get('cat'); const q=params.get('q');
-  if(cat && cat!=='all' && CATS.some(([slug])=>slug===cat)){ activeCats.add(cat); const cb=document.querySelector(`.cat-cb[value="${cat}"]`); if(cb) cb.checked=true; }
+  if(cat && cat!=='all'){ cat.split(',').map(c=>CAT.alias[c.trim()]||c.trim()).filter(c=>c && CATS.some(([slug])=>slug===c)).forEach(c=>{ activeCats.add(c); const cb=document.querySelector(`.cat-cb[value="${c}"]`); if(cb) cb.checked=true; }); }
+  activeSub=params.get('sub')||'';
+  const lvp=params.get('level'); if(['bf','big','light','regular'].includes(lvp)) activeLevel=lvp;
   if(q){ searchQuery=q; document.getElementById('main-search').value=q; }
   if(typeof EBF!=='undefined') EBF.init();
   loadDeals();

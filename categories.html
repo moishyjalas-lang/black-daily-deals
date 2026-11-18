@@ -79,6 +79,20 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .chip{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:#15110b;color:#d8cdbb;font-size:13px;font-weight:500;transition:all .15s;}
 .chip:hover{border-color:var(--gold2);color:var(--gold2);background:rgba(244,209,139,.08);}
 
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:8px 0 18px;}
+.sec-head h2{font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:600;color:var(--ivory);}
+.sec-head span{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.sec-gap{height:44px;}
+.cat-grid.compact{grid-template-columns:repeat(3,1fr);gap:18px;}
+.cat-grid.compact .cat-name h2{font-size:20px;}
+.cat-grid.compact .cat-name{margin-bottom:12px;}
+.cat-count{font-size:12px;color:var(--gold2);letter-spacing:.06em;margin:-6px 0 12px;}
+.chip .n{color:var(--muted);font-size:11.5px;margin-left:5px;}
+.chip.all{border-color:var(--gold-deep);color:var(--gold2);}
+.cat-soon{font-size:13px;color:var(--muted);}
+@media(max-width:1000px){.cat-grid.compact{grid-template-columns:1fr 1fr;}}
+@media(max-width:760px){.cat-grid.compact{grid-template-columns:1fr;}}
+
 /* FOOTER */
 footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908;border-top:1px solid #3a3023;padding:48px 24px 32px;margin-top:20px;}
 .footer-inner{max-width:1200px;margin:0 auto;}
@@ -155,7 +169,11 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 
 <!-- GRID -->
 <div class="cat-wrap">
+  <div class="sec-head"><h2>Popular categories</h2><span id="catTotal"></span></div>
   <div class="cat-grid" id="catGrid"></div>
+  <div class="sec-gap"></div>
+  <div class="sec-head"><h2>All categories</h2><span>Every department, A to Z of savings</span></div>
+  <div class="cat-grid compact" id="catGridAll"></div>
 </div>
 
 <!-- FOOTER -->
@@ -218,60 +236,50 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
   </div>
 </div>
 
+<script src="js/catalog.js"></script>
 <script>
-// Full category directory (design book IA)
-const CATEGORIES = [
-  { slug:'electronics', name:'Electronics & Tech', img:'assets/categories/electronics.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-    subs:['Phones & Tablets','Phone Accessories','Computers & Tablets','Audio','TVs & Home Theater','Gaming','Cameras'] },
-  { slug:'home', name:'Home & Living', img:'assets/categories/home.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-    subs:['Furniture','Home Décor','Kitchen & Dining','Appliances','Bedding & Bath','Cleaning'] },
-  { slug:'fashion', name:'Fashion & Care', img:'assets/categories/fashion.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>',
-    subs:['Clothing','Shoes','Bags & Accessories','Jewelry','Beauty & Personal Care'] },
-  { slug:'family', name:'Family & Everyday', img:'assets/categories/family.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    subs:['Toys & Games','Baby & Kids','Pet Supplies','Office & School'] },
-  { slug:'sports', name:'Sports & Outdoors', img:'assets/categories/sports.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20l6-8 4 5 3-4 5 7"/><path d="M3 20h18"/></svg>',
-    subs:['Fitness','Outdoor Gear','Camping','Team Sports'] },
-  { slug:'auto', name:'Auto & Tools', img:'assets/categories/auto.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm18 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/><path d="M5 17l1.5-5h11L19 17M6.5 12l1-3h9l1 3"/></svg>',
-    subs:['Automotive','Tools & DIY','Car Accessories'] },
-  { slug:'travel', name:'Travel', img:'assets/categories/travel.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>',
-    subs:['Luggage','Travel Accessories'] },
-  { slug:'seasonal', name:'Seasonal & Gifts', img:'assets/categories/seasonal.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
-    subs:['Holiday Deals','Gift Ideas','Seasonal Events'] },
-];
-
-function renderCats(){
-  document.getElementById('catGrid').innerHTML = CATEGORIES.map(c => `
+// Full category directory: one shared list in js/catalog.js
+const CAT = window.EBF_CATALOG;
+const subHref = (c,sub) => `search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : '');
+function cardHTML(c, counts, withPhoto){
+  const total = Object.values(counts[c.slug]||{}).reduce((a,b)=>a+b,0);
+  const subs = c.subs.filter(s => (counts[c.slug]||{})[s]);
+  return `
     <div class="cat-card">
-      <a class="cat-photo" href="search.html?cat=${c.slug}">
-        <img src="${c.img}" alt="${c.name}" loading="lazy">
-      </a>
+      ${withPhoto && c.img ? `<a class="cat-photo" href="${subHref(c)}"><img src="${c.img}" alt="${c.name}" loading="lazy"></a>` : ''}
       <div class="cat-body">
-        <a class="cat-name" href="search.html?cat=${c.slug}">
-          <span class="ico">${c.ico}</span>
+        <a class="cat-name" href="${subHref(c)}">
+          ${c.ico ? `<span class="ico">${c.ico}</span>` : ''}
           <h2>${c.name}</h2>
         </a>
+        ${total ? `<div class="cat-count">${total} products</div>` : ''}
         <div class="chips">
-          ${c.subs.map(s => `<a class="chip" href="search.html?cat=${c.slug}">${s}</a>`).join('')}
+          ${subs.length ? `<a class="chip all" href="${subHref(c)}">Shop all</a>` + subs.map(s => `<a class="chip" href="${subHref(c,s)}">${s}<span class="n">${counts[c.slug][s]}</span></a>`).join('')
+                        : `<span class="cat-soon">New deals are being added to this category.</span>`}
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
 }
-
+function renderCats(items){
+  const counts = {};
+  items.forEach(d => { const c = CAT.alias[d.category]||d.category; (counts[c] = counts[c]||{}); counts[c][d.subcategory] = (counts[c][d.subcategory]||0)+1; });
+  const popular = CAT.cats.filter(c => c.img), rest = CAT.cats.filter(c => !c.img);
+  document.getElementById('catGrid').innerHTML = popular.map(c => cardHTML(c, counts, true)).join('');
+  document.getElementById('catGridAll').innerHTML = rest.map(c => cardHTML(c, counts, false)).join('');
+  if (items.length) document.getElementById('catTotal').textContent = `${items.length} products in ${CAT.cats.length} categories`;
+}
+function loadCats(){
+  Promise.all(['data/deals.json','data/products.json'].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
+    .then(([deals, products]) => { const seen = new Set(); renderCats([...products, ...deals].filter(d => !seen.has(d.id) && seen.add(d.id))); });
+}
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim();
   if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  renderCats();
+  renderCats([]);
+  loadCats();
   if(typeof EBF !== 'undefined') EBF.init();
 });
 </script>
