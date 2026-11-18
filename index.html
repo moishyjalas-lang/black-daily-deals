@@ -126,60 +126,53 @@ nav{
   .nav-logo img{height:32px;}
 }
 
-/* ───── HERO ───── */
+/* ───── HERO (full-width video banner) ───── */
 .hero{
-  position:relative;overflow:hidden;isolation:isolate;
-  max-width:1500px;margin:0 auto;
-  min-height:500px;
-  display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:clamp(2rem,5vw,5rem);
-  padding:56px 48px 48px;
+  position:relative;width:100%;overflow:hidden;isolation:isolate;
+  min-height:clamp(520px,78vh,780px);
+  display:flex;align-items:center;
+  border-bottom:1px solid rgba(139,99,47,0.4);
 }
-.hero-bg{
-  position:absolute;inset:0;z-index:-1;
+.hero-vid{
+  position:absolute;inset:0;z-index:0;
+  width:100%;height:100%;object-fit:cover;background:#0c0b0a;
+}
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    radial-gradient(ellipse 60% 70% at 72% 48%, rgba(212,147,59,0.14) 0%, transparent 62%),
-    radial-gradient(ellipse 50% 100% at 100% 50%, rgba(150,90,30,0.10) 0%, transparent 60%);
+    linear-gradient(90deg, rgba(10,9,8,0.88) 0%, rgba(10,9,8,0.55) 42%, rgba(10,9,8,0.18) 72%, rgba(10,9,8,0.35) 100%),
+    linear-gradient(0deg, rgba(10,9,8,0.7) 0%, transparent 42%),
+    radial-gradient(ellipse 60% 70% at 80% 45%, rgba(212,147,59,0.12), transparent 62%);
 }
-.hero::before{
-  content:'';position:absolute;z-index:-1;
-  right:-4%;top:-8%;width:min(53vw,680px);aspect-ratio:1;
-  border-radius:50%;
-  border:1px solid rgba(215,150,59,0.5);
-  box-shadow:0 0 60px rgba(212,147,59,0.24),inset 0 0 70px rgba(212,147,59,0.13);
-  -webkit-mask-image:linear-gradient(120deg,transparent 0 12%,#000 30% 75%,transparent 94%);
-  mask-image:linear-gradient(120deg,transparent 0 12%,#000 30% 75%,transparent 94%);
-  pointer-events:none;
+.hero-content{
+  position:relative;z-index:2;
+  max-width:1500px;margin:0 auto;width:100%;
+  padding:0 clamp(24px,5vw,64px);
 }
 .hero-eyebrow{
   color:var(--gold2);letter-spacing:0.19em;text-transform:uppercase;
   font-size:12px;font-weight:700;margin-bottom:14px;
 }
-.hero-content{position:relative;z-index:2;}
 .hero-content h1{
   font-family:'Playfair Display',Georgia,serif;
-  font-size:clamp(40px,5.1vw,76px);
-  font-weight:600;
-  line-height:1.02;
-  letter-spacing:-0.04em;
+  font-size:clamp(40px,5.3vw,78px);
+  font-weight:600;line-height:1.02;letter-spacing:-0.04em;
   color:var(--ivory);
-  text-shadow:0 3px 0 #49331e,0 0 30px rgba(217,169,79,0.35);
+  text-shadow:0 3px 0 #49331e,0 0 30px rgba(217,169,79,0.4);
   margin-bottom:6px;
 }
 .hero-content h1 span{color:var(--gold2);filter:drop-shadow(0 0 13px rgba(232,171,73,0.42));}
 .hero-sub{
-  font-size:19px;color:#d0c7b9;margin:18px 0 32px;
-  font-weight:400;line-height:1.7;max-width:480px;
+  font-size:19px;color:#e7ddce;margin:18px 0 32px;
+  font-weight:400;line-height:1.7;max-width:480px;text-shadow:0 1px 10px rgba(0,0,0,0.6);
 }
-.hero-art{
-  position:relative;display:grid;place-items:center;min-height:320px;
+.hero-slot-tag{
+  position:absolute;bottom:16px;right:18px;z-index:3;
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:600;color:var(--gold2);
+  background:rgba(14,11,8,0.6);border:1px dashed rgba(216,169,79,0.45);
+  border-radius:999px;padding:7px 14px;backdrop-filter:blur(4px);
 }
-.hero-art img{
-  width:min(100%,560px);object-fit:contain;
-  border-radius:26px;
-  filter:drop-shadow(0 28px 70px rgba(0,0,0,0.75)) drop-shadow(0 0 38px rgba(237,168,59,0.22));
-  animation:heroFloat 9s ease-in-out infinite;
-}
-@keyframes heroFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 .btn-primary{
   display:inline-flex;align-items:center;gap:10px;
   padding:15px 30px;border-radius:999px;
@@ -190,13 +183,10 @@ nav{
   box-shadow:0 4px 16px rgba(186,118,40,0.28),0 0 20px rgba(216,154,59,0.26),inset 0 1px rgba(255,255,255,0.55);
 }
 .btn-primary:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 6px 24px rgba(229,166,69,0.46),0 0 28px rgba(232,179,82,0.5);}
-@media(max-width:860px){
-  .hero{grid-template-columns:1fr;padding:44px 24px 24px;gap:1rem;min-height:0;}
-  .hero-art{grid-row:1;min-height:0;}
-  .hero-art img{width:min(100%,460px);}
-}
-@media(max-width:500px){
-  .hero-content h1{font-size:clamp(38px,12vw,52px);}
+@media(max-width:700px){
+  .hero{min-height:clamp(440px,68vh,620px);}
+  .hero-content h1{font-size:clamp(38px,11vw,54px);}
+  .hero-overlay{background:linear-gradient(0deg, rgba(10,9,8,0.9) 0%, rgba(10,9,8,0.4) 55%, rgba(10,9,8,0.5) 100%);}
 }
 
 /* ───── SECTION LAYOUT ───── */
@@ -508,9 +498,15 @@ footer{
   </div>
 </nav>
 
-<!-- ══ HERO ══ -->
+<!-- ══ HERO — full-width video banner (video drops in here) ══ -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <!-- VIDEO SLOT: when the hero video is ready, add a <source> line below.
+       e.g. <source src="assets/hero.mp4" type="video/mp4">
+       Until then the poster image shows. -->
+  <video class="hero-vid" id="heroVideo" autoplay muted loop playsinline
+         poster="assets/hero-ebf.png" aria-label="Everyday Black Friday hero">
+  </video>
+  <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">Everyday Black Friday</div>
     <h1>Black Friday prices.<br><span>All year round.</span></h1>
@@ -522,8 +518,9 @@ footer{
       </svg>
     </a>
   </div>
-  <div class="hero-art">
-    <img src="assets/hero-ebf.png" alt="Everyday Black Friday — premium deal display" loading="eager">
+  <div class="hero-slot-tag">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Hero video goes here
   </div>
 </section>
 
