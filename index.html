@@ -569,6 +569,8 @@ footer{
 }
 </style>
 <link rel="stylesheet" href="css/stage.css">
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
 </head>
 <body>
 
@@ -659,8 +661,7 @@ footer{
   <script>
   /* Biggest Deals — reads the SAME real data/deals.json, sorted by biggest
      discount. Update deals.json and this section updates itself. */
-  fetch('data/deals.json')
-    .then(r => r.json())
+  EBF.loadDeals()
     .then(deals => {
       const top = [...deals].sort((a,b) => b.discount - a.discount).slice(0, 6);
       const grid = document.getElementById('bf-grid');
@@ -833,8 +834,7 @@ footer{
       </div>
     </div>`;
   }
-  fetch('data/deals.json')
-    .then(r => r.json())
+  EBF.loadDeals()
     .then(deals => {
       const picks = deals.filter(d => d.deal_of_day).slice(0, 4);
       const grid = document.getElementById('dotd-grid');
