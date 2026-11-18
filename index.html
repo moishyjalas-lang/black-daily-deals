@@ -454,6 +454,55 @@ footer{
   background:none;border:none;text-decoration:underline;
 }
 .modal-skip:hover{color:#fff;}
+
+/* ───── STATEMENT BAND — "one site, every deal", sitting in the room ───── */
+.statement{
+  position:relative;
+  padding:clamp(72px,12vh,140px) 24px;
+  text-align:center;
+  overflow:hidden;
+}
+.statement::before{
+  /* soft glow pool so the words read clean over the showroom behind */
+  content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 50% 50%, rgba(10,9,8,0.55), transparent 72%);
+}
+.statement-inner{max-width:900px;margin:0 auto;}
+.statement-kicker{
+  font-family:'DM Sans',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold2);margin-bottom:18px;
+}
+.statement-line{
+  font-family:'Playfair Display',Georgia,serif;font-weight:600;
+  font-size:clamp(30px,5vw,58px);line-height:1.1;color:var(--ivory);
+  text-shadow:0 2px 40px rgba(0,0,0,0.6);
+}
+.statement-line span{
+  display:block;margin-top:10px;
+  background:linear-gradient(100deg,#d5a047,#f7e2b0 48%,#cf9a44);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.statement-rule{
+  width:70px;height:2px;margin:30px auto 0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+
+/* ───── Gentle reveal as sections enter view (native, reduced-motion safe) ───── */
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion: no-preference){
+    .statement-inner, .cat-tile{
+      animation: ebf-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    @keyframes ebf-rise{
+      from{opacity:0;transform:translateY(28px);}
+      to{opacity:1;transform:none;}
+    }
+  }
+}
 </style>
 <link rel="stylesheet" href="css/stage.css">
 </head>
@@ -521,6 +570,15 @@ footer{
   <div class="hero-slot-tag">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
     Hero video goes here
+  </div>
+</section>
+
+<!-- ══ STATEMENT BAND — sits in the showroom, pushes in as you scroll ══ -->
+<section class="statement">
+  <div class="statement-inner">
+    <p class="statement-kicker">One place. Every deal.</p>
+    <h2 class="statement-line">You don't need a hundred websites.<span>Just this one — watching every deal for you.</span></h2>
+    <div class="statement-rule"></div>
   </div>
 </section>
 

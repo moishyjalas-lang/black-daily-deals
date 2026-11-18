@@ -23,4 +23,21 @@ body::before{
     /* the real stage photo */
     url('../assets/bg-stage.jpg') center 20% / cover no-repeat,
     #0c0b0a;
+  transform-origin:50% 42%;        /* push toward the light at the end of the hall */
+  will-change:transform;
+}
+
+/* ── Walk-into-the-shop: the room pushes in as you scroll (native, GPU-smooth) ──
+   Only where the browser supports it AND the person hasn't asked for less motion. */
+@supports (animation-timeline: scroll()){
+  @media (prefers-reduced-motion: no-preference){
+    body::before{
+      animation: stage-push linear both;
+      animation-timeline: scroll(root block);
+    }
+    @keyframes stage-push{
+      from { transform: scale(1.03); }
+      to   { transform: scale(1.16); }
+    }
+  }
 }
