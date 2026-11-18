@@ -434,6 +434,8 @@ function loadDeals(){
 }
 
 /* build category checkbox tree */
+/* Escape text before it goes into HTML, so a search word or link can never add code to the page */
+function esc(v){ return String(v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function buildCats(){
   const el = document.getElementById('cat-list');
   el.innerHTML = CATS.map(([slug,label])=>`<label class="crow"><input type="checkbox" class="cb cat-cb" value="${slug}" onchange="toggleCat(this)"><span>${label}</span></label>`).join('');
@@ -450,7 +452,7 @@ function buildRatings(){
 function buildRetailers(){
   const sel = document.getElementById('retailer-select');
   const stores = [...new Set(ALL_DEALS.map(d=>d.store))].sort();
-  sel.innerHTML = '<option value="">All retailers</option>' + stores.map(s=>`<option value="${s}">${s}</option>`).join('');
+  sel.innerHTML = '<option value="">All retailers</option>' + stores.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
 }
 
 /* ===== Controls ===== */
@@ -558,13 +560,13 @@ function renderChips(){
   const row=document.getElementById('chip-row');
   const chips=[];
   const catLabel=Object.fromEntries(CATS);
-  activeCats.forEach(c=>chips.push(`<span class="fchip">${catLabel[c]||c}<button onclick="removeChip('cat','${c}')" aria-label="Remove">✕</button></span>`));
-  if(activeSub) chips.push(`<span class="fchip">${activeSub}<button onclick="removeChip('sub')" aria-label="Remove">✕</button></span>`);
+  activeCats.forEach(c=>{ if(!catLabel[c]) return; chips.push(`<span class="fchip">${esc(catLabel[c])}<button onclick="removeChip('cat','${esc(c)}')" aria-label="Remove">✕</button></span>`); });
+  if(activeSub) chips.push(`<span class="fchip">${esc(activeSub)}<button onclick="removeChip('sub')" aria-label="Remove">✕</button></span>`);
   if(activeLevel){ const L={bf:'Doorbuster',big:'Hot Deal',light:'Price Drop',regular:'Everyday Price'}; chips.push(`<span class="fchip">${L[activeLevel]}<button onclick="removeChip('level')" aria-label="Remove">✕</button></span>`); }
   if(minDiscount>0) chips.push(`<span class="fchip">${minDiscount}% off or more<button onclick="removeChip('disc')">✕</button></span>`);
   if(minRating>0) chips.push(`<span class="fchip">${minRating}★ & up<button onclick="removeChip('rate')">✕</button></span>`);
   if(priceMin>0||priceMax<999999){ const lbl=(priceMax>=999999)?`$${priceMin}+`:(priceMin===0?`Under $${priceMax}`:`$${priceMin} – $${priceMax}`); chips.push(`<span class="fchip">${lbl}<button onclick="removeChip('price')">✕</button></span>`); }
-  if(searchQuery.trim()) chips.push(`<span class="fchip">“${searchQuery}”<button onclick="removeChip('search')">✕</button></span>`);
+  if(searchQuery.trim()) chips.push(`<span class="fchip">“${esc(searchQuery)}”<button onclick="removeChip('search')">✕</button></span>`);
   row.innerHTML = chips.join('') + (chips.length?`<button class="clear-all" onclick="clearAll()">Clear all</button>`:'');
 }
 
@@ -576,9 +578,9 @@ function renderDeals(){
   const title=document.getElementById('results-title');
   const crumb=document.getElementById('results-crumb');
   const catLabel=Object.fromEntries(CATS);
-  if(searchQuery.trim()){ title.textContent='Search results'; crumb.innerHTML=`for <b>“${searchQuery}”</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
-  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent=activeSub||catLabel[c]||'Deals'; crumb.innerHTML=`<a href="categories.html">Categories</a> › ${activeSub?`<a href="search.html?cat=${c}">${catLabel[c]}</a> › <b>${activeSub}</b>`:`<b>${catLabel[c]}</b>`} · ${deals.length} product${deals.length!==1?'s':''}`; }
-  else if(activeCats.size>1){ title.textContent='Deals'; crumb.innerHTML=`${[...activeCats].map(c=>`<b>${catLabel[c]||c}</b>`).join(', ')} · ${deals.length} product${deals.length!==1?'s':''}`; }
+  if(searchQuery.trim()){ title.textContent='Search results'; crumb.innerHTML=`for <b>“${esc(searchQuery)}”</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
+  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent=activeSub||catLabel[c]||'Deals'; crumb.innerHTML=`<a href="categories.html">Categories</a> › ${activeSub?`<a href="search.html?cat=${encodeURIComponent(c)}">${esc(catLabel[c]||c)}</a> › <b>${esc(activeSub)}</b>`:`<b>${esc(catLabel[c]||c)}</b>`} · ${deals.length} product${deals.length!==1?'s':''}`; }
+  else if(activeCats.size>1){ title.textContent='Deals'; crumb.innerHTML=`${[...activeCats].map(c=>`<b>${esc(catLabel[c]||c)}</b>`).join(', ')} · ${deals.length} product${deals.length!==1?'s':''}`; }
   else { title.textContent='All deals'; crumb.innerHTML=`${deals.length} deal${deals.length!==1?'s':''} available`; }
   renderChips();
   renderSubNav(); renderLevelTabs();
@@ -617,7 +619,7 @@ function renderSubNav(){
   const subs=c.subs.filter(s=>n[s]);
   if(!subs.length){ el.innerHTML=''; return; }
   el.innerHTML=`<button class="snav${activeSub?'':' active'}" onclick="pickSub('')">All ${c.name}<span class="n">${base.length}</span></button>`+
-    subs.map(s=>`<button class="snav${activeSub===s?' active':''}" onclick="pickSub(${JSON.stringify(s).replace(/"/g,'&quot;')})">${s}<span class="n">${n[s]}</span></button>`).join('');
+    subs.map(s=>`<button class="snav${activeSub===s?' active':''}" onclick="pickSub(${JSON.stringify(s).replace(/"/g,'&quot;')})">${esc(s)}<span class="n">${n[s]}</span></button>`).join('');
 }
 /* deal-level tabs: Doorbuster / Hot Deal / Price Drop / Everyday Price */
 function renderLevelTabs(){
@@ -649,7 +651,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   buildCats(); buildRatings();
   const params=new URLSearchParams(window.location.search);
   const cat=params.get('cat'); const q=params.get('q');
-  if(cat && cat!=='all'){ cat.split(',').map(c=>CAT.alias[c.trim()]||c.trim()).filter(Boolean).forEach(c=>{ activeCats.add(c); const cb=document.querySelector(`.cat-cb[value="${c}"]`); if(cb) cb.checked=true; }); }
+  if(cat && cat!=='all'){ cat.split(',').map(c=>CAT.alias[c.trim()]||c.trim()).filter(c=>c && CATS.some(([slug])=>slug===c)).forEach(c=>{ activeCats.add(c); const cb=document.querySelector(`.cat-cb[value="${c}"]`); if(cb) cb.checked=true; }); }
   activeSub=params.get('sub')||'';
   const lvp=params.get('level'); if(['bf','big','light','regular'].includes(lvp)) activeLevel=lvp;
   if(q){ searchQuery=q; document.getElementById('main-search').value=q; }
