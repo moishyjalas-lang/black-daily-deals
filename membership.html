@@ -7,59 +7,79 @@
 <meta name="description" content="Upgrade to Pro — unlimited alerts, early deal access, and no ads. Black Friday prices all year round.">
 <link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
 <meta name="theme-color" content="#0a0a0a">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="js/shared.js" defer></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   :root{
-    --bg:#0a0a0a;
-    --surface:#111111;
-    --card:#181818;
-    --border:#222222;
-    --gold:#FFD700;
-    --gold2:#FFA500;
-    --text:#ffffff;
-    --muted:#888888;
-    --red:#ff3b3b;
-    --green:#22c55e;
+    --bg:#0c0b0a;
+    --surface:#141210;
+    --panel:#171614;
+    --card:#1a1613;
+    --card-top:#241c13;
+    --border:#6f5330;
+    --border-hover:#e3b963;
+    --line:#765326;
+    --gold:#d5a047;
+    --gold2:#f4d18b;
+    --gold-deep:#c78b36;
+    --ivory:#fff7e9;
+    --cream:#f7f0e5;
+    --text:#fff7e9;
+    --muted:#b8afa1;
+    --ink:#17120b;
+    --red:#e0603a;
+    --green:#9bc9a0;
   }
-  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+  body{color:var(--text);font-family:'DM Sans',Arial,sans-serif;min-height:100vh;
+    background:
+      radial-gradient(ellipse 72% 48% at 50% -6%, rgba(138,82,27,0.26), transparent 60%),
+      radial-gradient(ellipse 46% 42% at 100% 24%, rgba(150,90,30,0.15), transparent 55%),
+      radial-gradient(ellipse 46% 42% at 0% 55%, rgba(130,74,26,0.13), transparent 55%),
+      radial-gradient(ellipse 62% 44% at 50% 100%, rgba(110,66,24,0.13), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;}
 
   /* ── NAVBAR ── */
   nav{
     position:sticky;top:0;z-index:100;
-    background:rgba(10,10,10,0.95);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    padding:0 20px;
-    height:64px;
+    background:linear-gradient(180deg,rgba(21,18,15,0.95),rgba(16,16,15,0.95));
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(139,99,47,0.45);
+    box-shadow:0 6px 34px rgba(0,0,0,0.55),0 1px 18px rgba(224,164,59,0.08);
+    padding:0 24px;
+    height:72px;
     display:flex;align-items:center;gap:16px;
   }
-  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-  .nav-logo-img{height:36px;width:auto;}
-  .nav-logo-text{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-0.5px;line-height:1.1;}
-  .nav-logo-text span{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none;padding-right:22px;border-right:1px solid rgba(139,99,47,0.4);}
+  .nav-logo-img{height:38px;width:auto;filter:drop-shadow(0 0 10px rgba(237,170,64,0.35));}
+  .nav-logo-text{display:flex;flex-direction:column;line-height:0.98;}
+  .nav-logo-text .w1{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:600;color:var(--ivory);letter-spacing:0.02em;}
+  .nav-logo-text .w2{font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--gold2);}
   .nav-links{display:flex;align-items:center;gap:4px;}
   .nav-link{
     padding:6px 12px;border-radius:6px;text-decoration:none;
     font-size:13px;font-weight:500;color:var(--muted);
     transition:color 0.2s,background 0.2s;white-space:nowrap;
   }
-  .nav-link:hover{color:#fff;background:#1a1a1a;}
-  .nav-link.active{color:var(--gold);background:#1a1200;}
+  .nav-link:hover{color:var(--ivory);background:rgba(217,169,79,0.07);}
+  .nav-link.active{color:var(--gold2);background:rgba(217,169,79,0.07);}
   .nav-search{
     flex:1;min-width:0;max-width:420px;margin:0 auto;
     position:relative;
   }
   .nav-search input{
-    width:100%;padding:10px 16px 10px 40px;
-    background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
-    color:#fff;font-size:14px;outline:none;
-    transition:border-color 0.2s;
+    width:100%;padding:11px 16px 11px 42px;
+    background:#16130f;border:1px solid #6b542f;border-radius:999px;
+    color:var(--ivory);font-size:14px;outline:none;
+    box-shadow:0 0 15px rgba(212,147,52,0.12);
+    transition:border-color 0.2s,box-shadow 0.2s;
   }
-  .nav-search input:focus{border-color:var(--gold);}
-  .nav-search input::placeholder{color:#555;}
+  .nav-search input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(216,169,79,0.18);}
+  .nav-search input::placeholder{color:#8a8070;}
   .nav-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;}
   .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
   .nav-countdown{
@@ -71,11 +91,11 @@
   .nav-countdown .label{color:var(--muted);}
   .nav-countdown .time{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;}
   .btn-signin{
-    padding:8px 16px;background:var(--gold);border:none;border-radius:8px;
-    color:#000;font-size:13px;font-weight:700;cursor:pointer;
-    transition:background 0.2s,transform 0.1s;white-space:nowrap;
+    padding:9px 18px;background:#15110b;border:1px solid var(--gold);border-radius:999px;
+    color:var(--gold2);font-size:14px;font-weight:700;cursor:pointer;
+    transition:all 0.2s;white-space:nowrap;
   }
-  .btn-signin:hover{background:var(--gold2);}
+  .btn-signin:hover{background:#231a10;color:var(--ivory);box-shadow:0 0 17px rgba(216,169,79,0.45);}
   .btn-signin:active{transform:scale(0.97);}
   .user-pill{
     display:flex;align-items:center;gap:8px;
@@ -112,23 +132,24 @@
 
   /* ── PAGE HEADER ── */
   .page-header{
-    background:linear-gradient(135deg,#0a0a0a 0%,#111111 40%,#1a1200 100%);
+    background:linear-gradient(135deg,#0c0b0a 0%,#15110c 50%,#1a140c 100%);
     padding:60px 20px 50px;
     text-align:center;
-    border-bottom:1px solid var(--border);
+    border-bottom:1px solid rgba(139,99,47,0.35);
     position:relative;overflow:hidden;
   }
   .page-header::before{
     content:'';position:absolute;inset:0;
-    background:radial-gradient(ellipse at 50% 100%,rgba(255,215,0,0.08) 0%,transparent 70%);
+    background:radial-gradient(ellipse at 50% 120%,rgba(212,147,59,0.15) 0%,transparent 62%);
     pointer-events:none;
   }
   .page-header h1{
-    font-size:clamp(28px,5vw,46px);font-weight:900;
-    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:clamp(32px,5vw,54px);font-weight:600;
+    background:linear-gradient(135deg,var(--gold2),var(--gold));
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     background-clip:text;
-    margin-bottom:12px;letter-spacing:-1px;line-height:1.1;
+    margin-bottom:12px;letter-spacing:-0.01em;line-height:1.08;
   }
   .page-header p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto;}
 
@@ -170,9 +191,9 @@
     transition:border-color 0.2s;
   }
   .plan-card.pro{
-    border-color:#3a2f00;
-    background:linear-gradient(160deg,#181400,#111100,var(--card));
-    box-shadow:0 0 40px rgba(255,215,0,0.06);
+    border-color:var(--gold2);
+    background:radial-gradient(ellipse at 100% 0%,rgba(216,154,59,0.16),transparent 55%),linear-gradient(160deg,#2a2013,#1a150f,var(--card));
+    box-shadow:0 0 34px rgba(216,154,59,0.18),inset 0 1px rgba(255,255,255,0.06);
   }
   .plan-badge{
     position:absolute;top:-1px;right:24px;
@@ -201,7 +222,7 @@
     background:linear-gradient(90deg,var(--gold),var(--gold2));
     color:#000;
   }
-  .plan-cta.pro:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(255,215,0,0.25);}
+  .plan-cta.pro:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 6px 24px rgba(229,166,69,0.45);}
   .plan-cta.pro:active{transform:translateY(0);}
   .plan-divider{border:none;border-top:1px solid var(--border);margin-bottom:24px;}
   .plan-features{list-style:none;display:flex;flex-direction:column;gap:12px;}
@@ -219,8 +240,9 @@
   /* ── COMPARISON TABLE ── */
   .compare-section{margin-bottom:60px;}
   .compare-section h2{
-    font-size:22px;font-weight:800;text-align:center;margin-bottom:24px;
-    color:#fff;
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:28px;font-weight:600;text-align:center;margin-bottom:24px;
+    color:var(--ivory);
   }
   .compare-table{
     width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;
@@ -245,7 +267,7 @@
 
   /* ── FAQ ── */
   .faq-section{margin-bottom:60px;}
-  .faq-section h2{font-size:22px;font-weight:800;text-align:center;margin-bottom:24px;}
+  .faq-section h2{font-family:'Playfair Display',Georgia,serif;font-size:28px;font-weight:600;text-align:center;margin-bottom:24px;color:var(--ivory);}
   .faq-list{display:flex;flex-direction:column;gap:4px;}
   .faq-item{
     background:var(--card);border:1px solid var(--border);border-radius:10px;
@@ -378,8 +400,7 @@
   <a class="nav-logo" href="index.html">
     <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
     <div class="nav-logo-text">
-      Everyday Black Friday
-      <span>Black Friday prices. All year round.</span>
+      <span class="w1">Everyday</span><span class="w2">Black Friday</span>
     </div>
   </a>
   <div class="nav-links">
@@ -416,12 +437,9 @@
 <div class="page-header">
   <h1>Go Pro. Save More.</h1>
   <p>Unlock unlimited alerts, early deal access, and an ad-free experience — for less than a cup of coffee a month.</p>
-  <div class="billing-toggle">
-    <span class="billing-label active" id="label-monthly">Monthly</span>
-    <div class="toggle-switch" id="billing-toggle" onclick="toggleBilling()">
-      <div class="toggle-knob"></div>
-    </div>
-    <span class="billing-label" id="label-annual">Annual <span class="save-badge">Save 40%</span></span>
+  <div style="margin-top:28px;display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid rgba(216,169,79,.35);border-radius:999px;background:rgba(216,154,59,.08);color:var(--gold2);font-size:13px;font-weight:600;">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    Simple pricing — $8/month, cancel anytime
   </div>
 </div>
 
@@ -474,10 +492,10 @@
     <!-- PRO -->
     <div class="plan-card pro">
       <div class="plan-badge">MOST POPULAR</div>
-      <div class="plan-name">Pro</div>
-      <div class="plan-price" id="pro-price"><sup>$</sup>4<span class="cents">.99</span></div>
-      <div class="plan-period" id="pro-period">per month · billed monthly</div>
-      <button class="plan-cta pro" id="btn-pro-cta" onclick="handleProCta()">Upgrade to Pro</button>
+      <div class="plan-name">Everyday Plus</div>
+      <div class="plan-price" id="pro-price"><sup>$</sup>8</div>
+      <div class="plan-period" id="pro-period">per month · unlimited watchers</div>
+      <button class="plan-cta pro" id="btn-pro-cta" onclick="handleProCta()">Upgrade to Everyday Plus</button>
       <hr class="plan-divider">
       <ul class="plan-features">
         <li>
@@ -571,7 +589,7 @@
         <tr>
           <td>Monthly price</td>
           <td class="text-cell">Free</td>
-          <td class="text-cell gold" id="compare-price">$4.99 / mo</td>
+          <td class="text-cell gold" id="compare-price">$8 / mo</td>
         </tr>
       </tbody>
     </table>
@@ -581,7 +599,7 @@
   <div class="trust-strip">
     <div class="trust-item">
       <div class="trust-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f4d18b" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       Secure payment via Stripe
     </div>
@@ -639,10 +657,10 @@
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          What's the difference between monthly and annual billing?
+          How much is Everyday Plus and how am I billed?
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Monthly billing is $4.99/month. Annual billing is $35.88/year — that's $2.99/month, saving you 40%. Both plans include all Pro features. The annual plan is billed as a single charge once per year.</div>
+        <div class="faq-a">Everyday Plus is $8/month, billed monthly, and includes unlimited deal watchers plus all Plus features. You can cancel anytime. Checkout is handled securely by Stripe (being connected).</div>
       </div>
     </div>
   </div>
@@ -656,7 +674,7 @@
     <div class="stripe-plan-summary">
       <div class="s-row">
         <span class="label">Plan</span>
-        <span class="value" id="stripe-plan-name">Everyday Black Friday Pro</span>
+        <span class="value" id="stripe-plan-name">Everyday Plus</span>
       </div>
       <div class="s-row">
         <span class="label">Billing</span>
@@ -665,7 +683,7 @@
       <hr>
       <div class="s-row total">
         <span class="label">Total today</span>
-        <span class="value" id="stripe-total">$4.99</span>
+        <span class="value" id="stripe-total">$8.00 / month</span>
       </div>
     </div>
     <button class="btn-stripe" onclick="handleStripeCheckout()">
@@ -721,35 +739,8 @@
 
 <script>
 // ── BILLING TOGGLE ──
-let isAnnual = false;
-function toggleBilling() {
-  isAnnual = !isAnnual;
-  const sw = document.getElementById('billing-toggle');
-  const lm = document.getElementById('label-monthly');
-  const la = document.getElementById('label-annual');
-  const pp = document.getElementById('pro-price');
-  const per = document.getElementById('pro-period');
-  const cp = document.getElementById('compare-price');
-  const sb = document.getElementById('stripe-billing');
-  const st = document.getElementById('stripe-total');
-  if (isAnnual) {
-    sw.classList.add('on');
-    lm.classList.remove('active'); la.classList.add('active');
-    pp.innerHTML = '<sup>$</sup>5<span class="cents">.33</span>';
-    per.innerHTML = 'per month · <span class="annual-note">billed $63.96/yr (save 33%)</span>';
-    cp.textContent = '$5.33 / mo (annual)';
-    if(sb) sb.textContent = 'Annual';
-    if(st) st.textContent = '$63.96 / year';
-  } else {
-    sw.classList.remove('on');
-    lm.classList.add('active'); la.classList.remove('active');
-    pp.innerHTML = '<sup>$</sup>8<span class="cents">.00</span>';
-    per.textContent = 'per month · billed monthly';
-    cp.textContent = '$8.00 / mo';
-    if(sb) sb.textContent = 'Monthly';
-    if(st) st.textContent = '$8.00';
-  }
-}
+// Everyday Plus is a single plan: $8/month. (No annual tier is offered.)
+function toggleBilling() { /* pricing is flat $8/month — no billing toggle */ }
 
 // ── CTA HANDLERS ──
 function handleFreeCta() {
@@ -768,8 +759,8 @@ function handleProCta() {
     EBF.showToast('Sign in to upgrade to Pro', 'success');
     return;
   }
-  document.getElementById('stripe-billing').textContent = isAnnual ? 'Annual' : 'Monthly';
-  document.getElementById('stripe-total').textContent = isAnnual ? '$63.96 / year' : '$8.00';
+  document.getElementById('stripe-billing').textContent = 'Monthly';
+  document.getElementById('stripe-total').textContent = '$8.00 / month';
   document.getElementById('stripe-modal').classList.add('show');
 }
 function closeStripeModal() {

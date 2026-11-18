@@ -3,139 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deal Alerts — Everyday Black Friday</title>
+<title>My Deal Alerts — Everyday Black Friday</title>
+<meta name="theme-color" content="#0c0b0a">
+<link rel="icon" href="assets/logo-ebf-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="js/shared.js" defer></script>
 <style>
+:root{
+  --bg:#0c0b0a;--surface:#141210;--panel:#171614;--card:#1a1613;--card-top:#241c13;
+  --border:#6f5330;--border-hover:#e3b963;--line:#765326;
+  --gold:#d5a047;--gold2:#f4d18b;--gold-deep:#c78b36;
+  --ivory:#fff7e9;--cream:#f7f0e5;--muted:#b8afa1;--ink:#17120b;--red:#e0603a;--green:#9bc9a0;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#0a0a0a;--surface:#111111;--card:#181818;--border:#222222;--gold:#FFD700;--gold2:#FFA500;--text:#ffffff;--muted:#888888;--red:#ff3b3b;--green:#22c55e;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+html{scroll-behavior:smooth;}
+body{color:var(--ivory);font-family:'DM Sans',Arial,sans-serif;min-height:100vh;
+  background:
+    radial-gradient(ellipse 72% 48% at 50% -6%, rgba(138,82,27,0.26), transparent 60%),
+    radial-gradient(ellipse 46% 42% at 100% 24%, rgba(150,90,30,0.15), transparent 55%),
+    radial-gradient(ellipse 46% 42% at 0% 55%, rgba(130,74,26,0.13), transparent 55%),
+    radial-gradient(ellipse 62% 44% at 50% 100%, rgba(110,66,24,0.13), transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
+a{color:inherit;text-decoration:none;}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px;gap:20px;}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-.nav-logo-img{width:36px;height:36px;object-fit:contain;}
-.nav-logo-text{font-size:14px;font-weight:800;color:#fff;white-space:nowrap;line-height:1.2;}
-.nav-logo-text span{display:block;font-size:9px;color:var(--gold);font-weight:500;letter-spacing:.4px;}
-.nav-links{display:flex;gap:4px;margin-left:8px;}
-.nav-link{text-decoration:none;color:var(--muted);font-size:13px;font-weight:500;padding:6px 12px;border-radius:6px;transition:.2s;}
-.nav-link:hover{color:#fff;background:rgba(255,255,255,.06);}
-.nav-link.active{color:var(--gold);background:rgba(255,215,0,.08);}
-.nav-search{flex:1;max-width:360px;position:relative;}
-.nav-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:#fff;font-size:13px;outline:none;transition:.2s;}
-.nav-search input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,0,.12);}
-.nav-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.4;}
-.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
-.nav-timer{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.5px;white-space:nowrap;}
-#nav-signin-btn{background:var(--gold);color:#000;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-#nav-signin-btn:hover{background:var(--gold2);}
-.nav-user-pill{display:none;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;text-decoration:none;}
-.nav-user-pill img{width:26px;height:26px;border-radius:50%;object-fit:cover;}
-.nav-user-pill span{font-size:12px;font-weight:600;color:#fff;}
-@media(max-width:600px){.nav-search{display:none;}}
-
+nav{position:sticky;top:0;z-index:1000;background:linear-gradient(180deg,rgba(21,18,15,.95),rgba(16,16,15,.95));backdrop-filter:blur(16px);border-bottom:1px solid rgba(139,99,47,.45);box-shadow:0 6px 34px rgba(0,0,0,.55),0 1px 18px rgba(224,164,59,.08);height:72px;display:flex;align-items:center;padding:0 24px;gap:16px;}
+.nav-logo{display:flex;align-items:center;gap:11px;flex-shrink:0;padding-right:22px;border-right:1px solid rgba(139,99,47,.4);}
+.nav-logo img{height:38px;width:auto;object-fit:contain;filter:drop-shadow(0 0 10px rgba(237,170,64,.35));}
+.nav-logo-wm{display:flex;flex-direction:column;line-height:.98;}
+.nav-logo-wm .w1{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:600;color:var(--ivory);}
+.nav-logo-wm .w2{font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--gold2);}
+.nav-links{display:flex;gap:2px;margin-left:6px;}
+.nav-link{font-size:14px;color:#ddd4c5;padding:8px 13px;border-radius:7px;transition:color .15s,background .15s;white-space:nowrap;}
+.nav-link:hover{color:var(--ivory);background:rgba(217,169,79,.07);}
+.nav-link.active{color:var(--gold2);}
+.nav-search{flex:1;max-width:420px;margin:0 auto;position:relative;display:flex;align-items:center;}
+.nav-search svg{position:absolute;left:14px;pointer-events:none;color:var(--gold2);opacity:.8;}
+.nav-search input{width:100%;background:#16130f;border:1px solid #6b542f;color:var(--ivory);padding:11px 14px 11px 42px;border-radius:999px;font-size:14px;outline:none;box-shadow:0 0 15px rgba(212,147,52,.12),inset 0 0 9px rgba(229,181,92,.05);transition:border-color .15s,box-shadow .15s;}
+.nav-search input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(216,169,79,.18);}
+.nav-search input::placeholder{color:#8a8070;}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
+.signin-btn{background:#15110b;color:var(--gold2);border:1px solid var(--gold);padding:9px 18px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;transition:all .15s;white-space:nowrap;}
+.signin-btn:hover{background:#231a10;color:var(--ivory);box-shadow:0 0 17px rgba(216,169,79,.45);}
 
 /* PAGE */
-.page-wrap{max-width:900px;margin:0 auto;padding:40px 24px 80px;}
-.page-header{margin-bottom:32px;}
-.page-title{font-size:28px;font-weight:900;margin-bottom:6px;}
-.page-subtitle{color:var(--muted);font-size:14px;}
+.page-wrap{max-width:1000px;margin:0 auto;padding:40px 24px 80px;}
+.page-header{margin-bottom:26px;}
+.page-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,4vw,44px);font-weight:600;color:var(--ivory);text-shadow:0 0 20px rgba(217,169,79,.2);margin-bottom:8px;}
+.page-subtitle{color:var(--muted);font-size:15px;line-height:1.6;max-width:680px;}
 
 /* AUTH GATE */
-.auth-gate{text-align:center;padding:80px 24px;}
-.auth-gate-icon{width:72px;height:72px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
-.auth-gate h2{font-size:26px;font-weight:800;margin-bottom:10px;}
-.auth-gate p{color:var(--muted);font-size:15px;margin-bottom:32px;}
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
-.btn-gold:hover{opacity:.9;}
+.auth-gate{text-align:center;padding:70px 24px;}
+.auth-gate-icon{width:76px;height:76px;background:linear-gradient(145deg,#49331b,#191511);border:1px solid rgba(180,132,63,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--gold2);box-shadow:0 0 20px rgba(220,154,57,.26);}
+.auth-gate h2{font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:600;margin-bottom:10px;}
+.auth-gate p{color:var(--muted);font-size:15px;margin-bottom:30px;}
+.btn-gold{background:linear-gradient(110deg,#c78b36,#f7d891 48%,#d39a42);color:var(--ink);border:none;border-radius:999px;padding:14px 30px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 3px 14px rgba(186,118,40,.28),inset 0 1px rgba(255,255,255,.5);transition:filter .15s;}
+.btn-gold:hover{filter:brightness(1.07);}
 
-/* ADD ALERT FORM */
-.add-alert-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;}
-.add-alert-card h2{font-size:17px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.form-group{display:flex;flex-direction:column;gap:6px;}
+/* PLAN CARDS */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.plan{display:flex;align-items:center;gap:16px;border:1px solid var(--border);border-radius:16px;padding:20px 22px;background:linear-gradient(140deg,#201a12,#161412);}
+.plan.plus{border-color:var(--gold2);background:radial-gradient(ellipse at 100% 0%,rgba(216,154,59,.2),transparent 55%),linear-gradient(140deg,#2c2113,#1a1510);box-shadow:0 0 28px rgba(216,154,59,.2),inset 0 1px rgba(255,255,255,.08);}
+.plan-ico{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:linear-gradient(145deg,#49331b,#191511);border:1px solid rgba(180,132,63,.4);color:var(--gold2);}
+.plan.plus .plan-ico{background:linear-gradient(145deg,#6b4a1e,#2a1f12);box-shadow:0 0 16px rgba(220,154,57,.4);}
+.plan-txt strong{display:block;font-size:16px;font-weight:700;color:var(--ivory);margin-bottom:3px;}
+.plan.plus .plan-txt strong{color:var(--gold2);}
+.plan-txt span{font-size:13px;color:var(--muted);line-height:1.5;}
+.plan.plus{cursor:pointer;}
+
+/* PANEL */
+.panel{border:1px solid var(--border);border-radius:16px;background:radial-gradient(ellipse at 2% 0%,rgba(200,136,51,.08),transparent 45%),linear-gradient(145deg,#231b13,#161513 70%);box-shadow:inset 0 1px rgba(255,255,255,.05),0 16px 50px rgba(0,0,0,.35);padding:26px;margin-bottom:24px;}
+.panel h2{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:600;color:var(--ivory);margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:7px;}
 .form-group.full{grid-column:1/-1;}
-.form-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px;text-transform:uppercase;}
-.form-input,.form-select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;transition:.2s;width:100%;}
-.form-input:focus,.form-select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,0,.1);}
-.form-select option{background:var(--card);}
-.form-row{display:flex;gap:12px;align-items:flex-end;}
-.price-prefix{position:relative;}
-.price-prefix::before{content:'$';position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
-.price-prefix input{padding-left:24px;}
-.btn-add{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:9px;padding:11px 24px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;}
-.btn-add:hover{opacity:.9;}
-.form-hint{font-size:11px;color:var(--muted);margin-top:4px;}
+.form-label{font-size:13px;font-weight:600;color:#e2d8c7;}
+.form-label b{color:var(--gold2);font-weight:600;}
+.form-input,.form-select{background:linear-gradient(120deg,#151310,#201a12);border:1px solid #8b693a;border-radius:10px;padding:12px 14px;color:var(--ivory);font-size:14px;outline:none;transition:.15s;width:100%;min-height:48px;font-family:inherit;}
+.form-input:focus,.form-select:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(216,169,79,.14);}
+.form-input::placeholder{color:#8a8070;}
+.freq-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:6px;}
+.radio{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;color:#d8cdbb;}
+.radio input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid #6b542f;border-radius:50%;background:#15110b;cursor:pointer;position:relative;flex-shrink:0;transition:.15s;}
+.radio input:checked{border-color:var(--gold2);}
+.radio input:checked::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--gold2);}
+.radio:hover{color:var(--ivory);}
+.watcher-form-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-top:20px;flex-wrap:wrap;}
+.btn-save{background:linear-gradient(110deg,#c78b36,#f7d891 48%,#d39a42);color:var(--ink);border:none;border-radius:999px;padding:13px 30px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 14px rgba(186,118,40,.28),inset 0 1px rgba(255,255,255,.5);transition:filter .15s;white-space:nowrap;}
+.btn-save:hover{filter:brightness(1.07);}
 
-/* ALERT LIST */
-.alerts-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;}
-.alerts-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.alerts-section-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.alert-count-badge{background:rgba(255,215,0,.12);color:var(--gold);border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;}
-.btn-clear-all{background:none;border:1px solid rgba(255,59,59,.3);color:var(--red);border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;}
-.btn-clear-all:hover{background:rgba(255,59,59,.08);}
+/* WATCHERS */
+.section-title{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:600;color:var(--ivory);margin:4px 0 16px;display:flex;align-items:center;gap:12px;}
+.wcount{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--gold2);background:rgba(244,209,139,.12);border:1px solid rgba(216,169,79,.3);border-radius:999px;padding:3px 11px;}
+.watcher{display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(120deg,#241d14,#151412);box-shadow:inset 0 1px rgba(255,255,255,.04);margin-bottom:10px;}
+.watcher .wico{width:42px;height:42px;border-radius:11px;background:linear-gradient(145deg,#49331b,#191511);border:1px solid rgba(180,132,63,.4);color:var(--gold2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.watcher .wname{font-size:15px;font-weight:700;color:var(--ivory);}
+.watcher .wsep{width:1px;height:32px;background:var(--line);}
+.watcher .wmeta{font-size:13px;color:var(--muted);}
+.watcher .wmeta b{color:#d8cdbb;font-weight:600;}
+.watcher .wactions{margin-left:auto;display:flex;gap:8px;}
+.wbtn{width:36px;height:36px;border-radius:9px;background:#15110b;border:1px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.wbtn:hover{border-color:var(--gold);color:var(--gold2);}
+.wbtn.del:hover{border-color:var(--red);color:var(--red);}
+.status-line{font-size:13px;color:var(--muted);margin-bottom:14px;}
+.status-line a{color:var(--gold2);}
+.empty-watch{text-align:center;padding:30px 20px;border:1px dashed #5a4a2d;border-radius:12px;color:var(--muted);font-size:14px;background:rgba(21,17,11,.4);}
 
-.alert-list{display:grid;gap:12px;}
-.alert-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;transition:.2s;}
-.alert-item:hover{border-color:rgba(255,215,0,.2);}
-.alert-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,215,0,.08);color:var(--gold);}
-.alert-info{flex:1;min-width:0;}
-.alert-keyword{font-size:14px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.alert-meta{display:flex;gap:10px;flex-wrap:wrap;}
-.alert-tag{font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;padding:2px 7px;}
-.alert-tag.price{color:var(--green);}
-.alert-actions{display:flex;gap:8px;flex-shrink:0;}
-.alert-toggle{background:none;border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);}
-.alert-toggle.active{color:var(--green);border-color:rgba(34,197,94,.3);}
-.alert-toggle:hover{border-color:rgba(255,255,255,.2);color:#fff;}
-.alert-delete{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px;}
-.alert-delete:hover{color:var(--red);background:rgba(255,59,59,.08);}
-
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:48px 24px;}
-.empty-icon{width:64px;height:64px;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--gold);opacity:.5;}
-.empty-title{font-size:16px;font-weight:700;margin-bottom:8px;}
-.empty-desc{color:var(--muted);font-size:14px;}
-
-/* HOW IT WORKS */
-.how-it-works{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:20px;}
-.how-it-works h3{font-size:15px;font-weight:700;margin-bottom:16px;}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.step{text-align:center;}
-.step-num{width:32px;height:32px;border-radius:50%;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.2);color:var(--gold);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
-.step-title{font-size:13px;font-weight:700;margin-bottom:4px;}
-.step-desc{font-size:12px;color:var(--muted);line-height:1.4;}
-
-/* PRO UPSELL */
-.pro-banner{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,165,0,.04));border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:20px 24px;margin-top:20px;display:flex;align-items:center;gap:16px;}
-.pro-banner-icon{font-size:28px;flex-shrink:0;}
-.pro-banner-text{flex:1;}
-.pro-banner-text strong{display:block;font-size:14px;font-weight:800;margin-bottom:3px;}
-.pro-banner-text span{font-size:13px;color:var(--muted);}
-.btn-pro{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;text-decoration:none;}
-.btn-pro:hover{opacity:.9;}
+/* PREVIEW */
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:4px;}
+.skel-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:linear-gradient(140deg,#201913,#161412);padding-bottom:14px;}
+.skel-img{height:120px;background:linear-gradient(100deg,#2a2217,#201a14 40%,#2a2217 80%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+.skel-line{height:10px;border-radius:5px;margin:12px 14px 0;background:linear-gradient(100deg,#2a2217,#201a14 40%,#2a2217 80%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+.skel-line.short{width:55%;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.note{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#9a8f7d;border-top:1px solid rgba(139,99,47,.3);margin-top:26px;padding-top:18px;line-height:1.6;}
+.note svg{color:var(--gold2);flex-shrink:0;margin-top:1px;}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:#222;border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;}
+.toast{position:fixed;bottom:24px;right:24px;background:#201a12;border:1px solid #97743d;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;color:var(--ivory);}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.success{border-color:var(--green);color:var(--green);}
 .toast.error{border-color:var(--red);color:var(--red);}
 
-@media(max-width:600px){
-  .form-grid{grid-template-columns:1fr;}
-  .steps{grid-template-columns:1fr;}
-  .pro-banner{flex-direction:column;text-align:center;}
-}
+@media(max-width:820px){.form-grid{grid-template-columns:1fr;}.plans{grid-template-columns:1fr;}.preview-grid{grid-template-columns:1fr 1fr;}.nav-links{display:none;}}
+@media(max-width:560px){.nav-search{display:none;}.watcher{flex-wrap:wrap;}.watcher .wsep{display:none;}}
 </style>
 </head>
 <body>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/shared.js" defer></script>
-
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="index.html">
-    <img class="nav-logo-img" src="assets/logo-ebf.png" alt="Everyday Black Friday">
-    <div class="nav-logo-text">Everyday Black Friday<span>Black Friday prices. All year round.</span></div>
+  <a class="nav-logo" href="index.html" aria-label="Everyday Black Friday — Home">
+    <img src="assets/logo-ebf.png" alt="Everyday Black Friday logo">
+    <span class="nav-logo-wm"><span class="w1">Everyday</span><span class="w2">Black Friday</span></span>
   </a>
   <div class="nav-links">
     <a class="nav-link" href="index.html">Home</a>
@@ -145,340 +150,223 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
     <a class="nav-link" href="membership.html">Pro</a>
   </div>
   <div class="nav-search">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Search deals…" id="nav-search-input">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="nav-search-input" placeholder="Search for deals, categories, and more">
   </div>
   <div class="nav-right">
-    <div class="nav-timer" id="nav-timer">⚡ LIVE DEALS</div>
-    <button class="btn-signin" data-auth-btn onclick="EBF.openSignInModal()">Sign In</button>
+    <button class="signin-btn" data-auth-btn onclick="EBF.openSignInModal()">Sign In</button>
   </div>
 </nav>
 
-<!-- PAGE -->
 <div class="page-wrap">
   <div class="page-header">
-    <h1 class="page-title">🔔 Deal Alerts</h1>
-    <p class="page-subtitle">Set keywords and target prices — we'll notify you when deals match.</p>
+    <h1 class="page-title">My Deal Alerts</h1>
+    <p class="page-subtitle">Tell us what to watch for. Type a keyword (e.g. "laptop" or "headphones"), and optionally choose a category to make it more specific. We'll watch for matching deals and notify you on your chosen schedule.</p>
   </div>
 
   <!-- SIGNED-OUT GATE -->
   <div class="auth-gate" id="auth-gate" style="display:none;">
     <div class="auth-gate-icon">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </div>
-    <h2>Sign In to Set Alerts</h2>
-    <p>Create 1 free keyword alert and get notified when prices drop. Go Pro for unlimited.</p>
-    <button class="btn-gold" onclick="EBF.openSignInModal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      Sign In with Google
-    </button>
+    <h2>Sign in to set deal watchers</h2>
+    <p>Create a free watcher and get notified when matching deals go live.</p>
+    <button class="btn-gold" onclick="EBF.openSignInModal()">Sign in with Google</button>
   </div>
 
-  <!-- ALERTS CONTENT -->
+  <!-- CONTENT -->
   <div id="alerts-content" style="display:none;">
 
-    <!-- Add Alert Form -->
-    <div class="add-alert-card">
-      <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Create New Alert
-      </h2>
+    <!-- Plan cards -->
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
+        <div class="plan-txt"><strong>Free plan includes 1 watcher</strong><span>Create and keep one deal watcher at no cost.</span></div>
+      </div>
+      <div class="plan plus" onclick="window.location='membership.html'">
+        <div class="plan-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 20h20M4 17l2-9 4 5 2-7 2 7 4-5 2 9"/></svg></div>
+        <div class="plan-txt"><strong>Everyday Plus · $8/month · unlimited watchers</strong><span>Create as many deal watchers as you want, with no limits.</span></div>
+      </div>
+    </div>
+
+    <!-- Create a Deal Watcher -->
+    <div class="panel">
+      <h2>Create a Deal Watcher</h2>
       <div class="form-grid">
         <div class="form-group full">
-          <label class="form-label">Keyword or Product Name</label>
-          <input class="form-input" type="text" id="alert-keyword" placeholder="e.g. Sony headphones, iPad Pro, Instant Pot…" maxlength="80">
-          <div class="form-hint">Be specific for better matches — "Sony WH-1000XM5" beats just "headphones"</div>
+          <label class="form-label">Keyword <b>(required)</b></label>
+          <input class="form-input" type="text" id="alert-keyword" placeholder="e.g. laptop, smartphone, headphones…" maxlength="80">
         </div>
         <div class="form-group">
-          <label class="form-label">Category</label>
-          <select class="form-select" id="alert-category">
+          <label class="form-label">Category <span style="color:#8a8070">(optional)</span></label>
+          <select class="form-select" id="alert-category" onchange="fillSubcats()">
             <option value="all">All Categories</option>
-            <option value="electronics">Electronics</option>
-            <option value="home">Home & Kitchen</option>
-            <option value="fashion">Fashion</option>
-            <option value="family">Toys & Family</option>
-            <option value="sports">Sports & Outdoors</option>
-            <option value="auto">Automotive & Tools</option>
-            <option value="travel">Travel & Luggage</option>
-            <option value="seasonal">Seasonal & Holiday</option>
+            <option value="electronics">Electronics &amp; Tech</option>
+            <option value="home">Home &amp; Living</option>
+            <option value="fashion">Fashion &amp; Care</option>
+            <option value="family">Family &amp; Everyday</option>
+            <option value="sports">Sports &amp; Outdoors</option>
+            <option value="auto">Auto &amp; Tools</option>
+            <option value="travel">Travel</option>
+            <option value="seasonal">Seasonal &amp; Gifts</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Target Price (optional)</label>
-          <div class="price-prefix">
-            <input class="form-input" type="number" id="alert-price" placeholder="150" min="1" max="99999" step="0.01">
-          </div>
-          <div class="form-hint">Alert fires when price drops to or below this</div>
+          <label class="form-label">Subcategory <span style="color:#8a8070">(optional)</span></label>
+          <select class="form-select" id="alert-subcategory"><option value="">All Subcategories</option></select>
         </div>
         <div class="form-group">
-          <label class="form-label">Min. Discount</label>
-          <select class="form-select" id="alert-discount">
-            <option value="0">Any discount</option>
-            <option value="10">10% or more</option>
-            <option value="20">20% or more</option>
-            <option value="30" selected>30% or more</option>
-            <option value="40">40% or more</option>
-            <option value="50">50% or more</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email for Alerts</label>
+          <label class="form-label">Email for alerts</label>
           <input class="form-input" type="email" id="alert-email" placeholder="your@email.com">
-          <div class="form-hint">Leave blank to use your account email</div>
         </div>
-        <div class="form-group" style="display:flex;align-items:flex-end;">
-          <button class="btn-add" onclick="addAlert()" style="width:100%;justify-content:center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Alert
-          </button>
+      </div>
+      <div class="watcher-form-foot">
+        <div>
+          <label class="form-label" style="display:block;margin-bottom:8px;">Notification Frequency</label>
+          <div class="freq-row">
+            <label class="radio"><input type="radio" name="freq" value="instant" checked><span>As soon as matching deals are found</span></label>
+            <label class="radio"><input type="radio" name="freq" value="daily"><span>Daily summary</span></label>
+            <label class="radio"><input type="radio" name="freq" value="weekly"><span>Weekly summary</span></label>
+          </div>
         </div>
+        <button class="btn-save" onclick="addAlert()">Save Alert</button>
       </div>
     </div>
 
-    <!-- Active Alerts -->
-    <div class="alerts-section">
-      <div class="alerts-section-header">
-        <div class="alerts-section-title">
-          Active Alerts
-          <span class="alert-count-badge" id="alert-count-badge">0</span>
-        </div>
-        <button class="btn-clear-all" id="clear-all-btn" onclick="clearAllAlerts()" style="display:none;">Clear All</button>
-      </div>
-      <div id="alert-status-bar" style="padding:8px 0 12px;"></div>
-      <div id="alert-list"></div>
+    <!-- Your Deal Watchers -->
+    <h2 class="section-title">Your Deal Watchers <span class="wcount" id="alert-count-badge">0</span></h2>
+    <div class="status-line" id="alert-status-bar"></div>
+    <div id="alert-list"></div>
+
+    <!-- Matching Deals Preview -->
+    <h2 class="section-title" style="margin-top:28px;">Matching Deals Preview</h2>
+    <p class="status-line">A preview of matching deals will appear here when we find results for your watcher.</p>
+    <div class="preview-grid">
+      <div class="skel-card"><div class="skel-img"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+      <div class="skel-card"><div class="skel-img"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+      <div class="skel-card"><div class="skel-img"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+      <div class="skel-card"><div class="skel-img"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
     </div>
 
-    <!-- How It Works -->
-    <div class="how-it-works">
-      <h3>How Deal Alerts Work</h3>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-title">Set a keyword</div>
-          <div class="step-desc">Type any product name or keyword you're watching</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-title">We scan deals</div>
-          <div class="step-desc">Our system checks prices across top retailers daily</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-title">Get notified</div>
-          <div class="step-desc">Email alert the moment a matching deal goes live</div>
-        </div>
-      </div>
+    <div class="note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span><b>Note:</b> Watchers are saved to your account. Email delivery and $8/month Plus billing are being connected — your watchers and limits work today; delivery goes live once email and payment are wired in.</span>
     </div>
 
-    <!-- Pro Upsell -->
-    <div class="pro-banner">
-      <div class="pro-banner-icon">⚡</div>
-      <div class="pro-banner-text">
-        <strong>Go Pro — Unlimited Alerts + Instant Notifications</strong>
-        <span>Free plan: 5 alerts, daily checks. Pro: unlimited alerts, real-time price tracking, SMS alerts.</span>
-      </div>
-      <a href="membership.html" class="btn-pro">Upgrade to Pro</a>
-    </div>
-
-  </div><!-- /alerts-content -->
-</div>
-
-<!-- FOOTER -->
-<footer style="background:var(--surface);border-top:1px solid var(--border);padding:48px 24px 24px;">
-  <div style="max-width:1200px;margin:0 auto;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-      <img src="assets/logo-ebf.png" alt="EBF" style="width:44px;height:44px;object-fit:contain;">
-      <div>
-        <div style="font-weight:800;font-size:14px;color:#fff;">Everyday Black Friday</div>
-        <div style="font-size:11px;color:var(--muted);">Black Friday prices. All year round.</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:40px;flex-wrap:wrap;margin-bottom:32px;">
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Shop</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <a href="categories.html" style="color:var(--muted);text-decoration:none;font-size:13px;">All Categories</a>
-          <a href="search.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Today's Deals</a>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Account</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <a href="profile.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Profile</a>
-          <a href="alerts.html" style="color:var(--gold);text-decoration:none;font-size:13px;">Alerts</a>
-          <a href="membership.html" style="color:var(--muted);text-decoration:none;font-size:13px;">Go Pro</a>
-        </div>
-      </div>
-    </div>
-    <div style="border-top:1px solid var(--border);padding-top:20px;text-align:center;font-size:11px;color:var(--muted);">
-      © 2026 Everyday Black Friday · Prices and availability subject to change. We may earn commissions on qualifying purchases.
-    </div>
   </div>
-</footer>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ---- USES EBF from js/shared.js ----
+const SUBCATS = {
+  all:[], electronics:['Phones & Tablets','Phone Accessories','Computers & Tablets','Audio','TVs & Home Theater','Gaming','Cameras'],
+  home:['Furniture','Home Décor','Kitchen & Dining','Appliances','Bedding & Bath','Cleaning'],
+  fashion:['Clothing','Shoes','Bags & Accessories','Jewelry','Beauty & Personal Care'],
+  family:['Toys & Games','Baby & Kids','Pet Supplies','Office & School'],
+  sports:['Fitness','Outdoor Gear','Camping','Team Sports'],
+  auto:['Automotive','Tools & DIY','Car Accessories'],
+  travel:['Luggage','Travel Accessories'], seasonal:['Holiday Deals','Gift Ideas','Seasonal Events']
+};
+const CAT_LABELS = {all:'All Categories',electronics:'Electronics & Tech',home:'Home & Living',fashion:'Fashion & Care',family:'Family & Everyday',sports:'Sports & Outdoors',auto:'Auto & Tools',travel:'Travel',seasonal:'Seasonal & Gifts'};
 
-// ---- ADD ALERT ----
-function addAlert() {
+function fillSubcats(){
+  const cat = document.getElementById('alert-category').value;
+  const sel = document.getElementById('alert-subcategory');
+  const subs = SUBCATS[cat] || [];
+  sel.innerHTML = '<option value="">All Subcategories</option>' + subs.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
+
+function addAlert(){
   const user = EBF.getUser();
-  if (!user) { EBF.openSignInModal(); return; }
-
+  if(!user){ EBF.openSignInModal(); return; }
   const keyword = document.getElementById('alert-keyword').value.trim();
-  if (!keyword) { EBF.showToast('Please enter a keyword or product name', 'error'); return; }
-
-  if (!EBF.canCreateAlert()) {
-    if (!EBF.isPro()) {
-      EBF.showToast('Free plan: 1 alert max. Upgrade to Pro for unlimited!', 'error');
-      setTimeout(() => { window.location.href = 'membership.html'; }, 1500);
-    }
+  if(!keyword){ EBF.showToast('Please enter a keyword to watch for', 'error'); return; }
+  if(!EBF.canCreateAlert()){
+    EBF.showToast('Free plan: 1 watcher max. Upgrade to Everyday Plus for unlimited!', 'error');
+    setTimeout(()=>{ window.location.href='membership.html'; }, 1500);
     return;
   }
-
   const alerts = EBF.getAlerts();
-  if (alerts.some(a => a.keyword.toLowerCase() === keyword.toLowerCase())) {
-    EBF.showToast('You already have an alert for "' + keyword + '"', 'error'); return;
+  if(alerts.some(a => (a.keyword||'').toLowerCase() === keyword.toLowerCase())){
+    EBF.showToast('You already have a watcher for "'+keyword+'"', 'error'); return;
   }
-
-  const priceVal = document.getElementById('alert-price').value;
-  const alertObj = {
-    id: Date.now(),
-    keyword,
+  const freq = (document.querySelector('input[name="freq"]:checked')||{}).value || 'instant';
+  EBF.createAlert({
+    id: Date.now(), keyword,
     category: document.getElementById('alert-category').value,
-    targetPrice: priceVal ? parseFloat(priceVal) : null,
-    minDiscount: parseInt(document.getElementById('alert-discount').value),
+    subcategory: document.getElementById('alert-subcategory').value,
+    frequency: freq,
     email: document.getElementById('alert-email').value.trim() || user.email,
-    active: true,
-    created: Date.now()
-  };
-
-  EBF.createAlert(alertObj);
-
-  // Clear form
-  document.getElementById('alert-keyword').value = '';
-  document.getElementById('alert-price').value = '';
-  document.getElementById('alert-email').value = '';
-  document.getElementById('alert-category').value = 'all';
-  document.getElementById('alert-discount').value = '30';
-
+    active: true, created: Date.now()
+  });
+  document.getElementById('alert-keyword').value='';
+  document.getElementById('alert-email').value='';
   renderAlertList();
-  EBF.showToast('Alert created for "' + keyword + '"', 'success');
+  EBF.showToast('Watcher saved for "'+keyword+'"', 'success');
 }
 
-// ---- TOGGLE / DELETE ----
-function toggleAlert(id) {
-  const alerts = EBF.getAlerts();
-  const a = alerts.find(x => x.id === id);
-  if (a) { a.active = !a.active; localStorage.setItem('bdd_alerts', JSON.stringify(alerts)); renderAlertList(); }
-}
-function deleteAlert(id) {
+function deleteAlert(id){
   const alerts = EBF.getAlerts().filter(a => a.id !== id);
   localStorage.setItem('bdd_alerts', JSON.stringify(alerts));
   renderAlertList();
-  EBF.showToast('Alert removed');
-}
-function clearAllAlerts() {
-  if (!confirm('Remove all alerts?')) return;
-  localStorage.setItem('bdd_alerts', JSON.stringify([]));
-  renderAlertList();
-  EBF.showToast('All alerts cleared');
+  EBF.showToast('Watcher removed');
 }
 
-// ---- RENDER LIST ----
-const CAT_LABELS = {all:'All Categories',electronics:'Electronics',home:'Home & Kitchen',fashion:'Fashion',family:'Toys & Family',sports:'Sports',auto:'Automotive',travel:'Travel',seasonal:'Seasonal'};
+const FREQ_LABEL = {instant:'As soon as matching deals are found', daily:'Daily summary', weekly:'Weekly summary'};
+function escHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function renderAlertList() {
+function renderAlertList(){
   const alerts = EBF.getAlerts();
   const container = document.getElementById('alert-list');
-  const badge = document.getElementById('alert-count-badge');
-  const clearBtn = document.getElementById('clear-all-btn');
-  badge.textContent = alerts.length;
-  clearBtn.style.display = alerts.length ? '' : 'none';
-
-  // Show pro/free status bar
+  document.getElementById('alert-count-badge').textContent = alerts.length;
   const isPro = EBF.isPro();
-  const limitLabel = isPro
-    ? `<span style="color:var(--gold);font-size:12px;font-weight:600;">PRO — Unlimited alerts</span>`
-    : `<span style="color:var(--muted);font-size:12px;">${alerts.length} / ${EBF.FREE_ALERT_LIMIT} free alert used${alerts.length !== 1 ? 's' : ''} — <a href="membership.html" style="color:var(--gold);text-decoration:none;">Upgrade for unlimited</a></span>`;
-  const statusEl = document.getElementById('alert-status-bar');
-  if (statusEl) statusEl.innerHTML = limitLabel;
+  const status = document.getElementById('alert-status-bar');
+  status.innerHTML = isPro
+    ? 'Everyday Plus — unlimited watchers.'
+    : `${alerts.length} / ${EBF.FREE_ALERT_LIMIT} free watcher used. <a href="membership.html">Upgrade to Everyday Plus</a> for unlimited.`;
 
-  if (!alerts.length) {
-    container.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </div>
-      <div class="empty-title">No alerts yet</div>
-      <div class="empty-desc">Create your first alert above to get notified when deals match.</div>
-    </div>`;
+  if(!alerts.length){
+    container.innerHTML = `<div class="empty-watch">No watchers yet — create your first one above.</div>`;
     return;
   }
-
-  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  container.innerHTML = `<div class="alert-list">${alerts.map(a => `
-    <div class="alert-item" id="alert-${a.id}">
-      <div class="alert-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </div>
-      <div class="alert-info">
-        <div class="alert-keyword">${escHtml(a.keyword)}</div>
-        <div class="alert-meta">
-          <span class="alert-tag">${CAT_LABELS[a.category] || a.category}</span>
-          ${a.targetPrice ? `<span class="alert-tag price">Under $${a.targetPrice}</span>` : ''}
-          ${a.minDiscount > 0 ? `<span class="alert-tag">${a.minDiscount}%+ off</span>` : ''}
-          <span class="alert-tag">${escHtml(a.email)}</span>
-        </div>
-      </div>
-      <div class="alert-actions">
-        <button class="alert-toggle ${a.active ? 'active' : ''}" onclick="toggleAlert(${a.id})">
-          ${a.active ? 'Active' : 'Paused'}
-        </button>
-        <button class="alert-delete" onclick="deleteAlert(${a.id})" title="Delete">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+  container.innerHTML = alerts.map(a => `
+    <div class="watcher">
+      <div class="wico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <div class="wname">${escHtml(a.keyword)}</div>
+      <div class="wsep"></div>
+      <div class="wmeta">Category: <b>${CAT_LABELS[a.category]||a.category}${a.subcategory?' › '+escHtml(a.subcategory):''}</b></div>
+      <div class="wsep"></div>
+      <div class="wmeta">Notifications: <b>${FREQ_LABEL[a.frequency]||'As soon as matching deals are found'}</b></div>
+      <div class="wactions">
+        <button class="wbtn del" onclick="deleteAlert(${a.id})" title="Delete watcher">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
       </div>
-    </div>
-  `).join('')}</div>`;
+    </div>`).join('');
 }
 
-// ---- RENDER PAGE ----
-function renderAlertsContent() {
+function renderAlertsContent(){
   const user = EBF.getUser();
   const gate = document.getElementById('auth-gate');
   const content = document.getElementById('alerts-content');
-  if (!user) {
-    gate.style.display = '';
-    content.style.display = 'none';
-    return;
-  }
-  gate.style.display = 'none';
-  content.style.display = '';
-  // Pre-fill email from user
+  if(!user){ gate.style.display=''; content.style.display='none'; return; }
+  gate.style.display='none'; content.style.display='';
   const emailField = document.getElementById('alert-email');
-  if (emailField && !emailField.value) emailField.placeholder = user.email;
+  if(emailField && !emailField.value) emailField.placeholder = user.email;
   renderAlertList();
 }
 
-// INIT — EBF.init() handles auth UI + announcements; we hook into auth changes
 document.addEventListener('DOMContentLoaded', () => {
-  // Nav search
+  fillSubcats();
   const ns = document.getElementById('nav-search-input');
-  if (ns) ns.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && e.target.value.trim()) {
-      window.location.href = 'search.html?q=' + encodeURIComponent(e.target.value.trim());
-    }
-  });
-  // Enter key on keyword field
+  if(ns) ns.addEventListener('keydown', e => { if(e.key==='Enter' && e.target.value.trim()) window.location.href='search.html?q='+encodeURIComponent(e.target.value.trim()); });
   const kw = document.getElementById('alert-keyword');
-  if (kw) kw.addEventListener('keydown', e => { if (e.key === 'Enter') addAlert(); });
-
-  if (typeof EBF !== 'undefined') {
+  if(kw) kw.addEventListener('keydown', e => { if(e.key==='Enter') addAlert(); });
+  if(typeof EBF !== 'undefined'){
     EBF.init();
-    // Re-render after sign-in
     const origUpdate = EBF.updateAuthUI.bind(EBF);
-    EBF.updateAuthUI = function() { origUpdate(); renderAlertsContent(); };
+    EBF.updateAuthUI = function(){ origUpdate(); renderAlertsContent(); };
     renderAlertsContent();
   }
 });
