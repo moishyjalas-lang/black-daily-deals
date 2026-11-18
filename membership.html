@@ -352,6 +352,7 @@
     background:var(--card);border:1px solid #3a2f00;border-radius:16px;
     padding:40px 32px;max-width:460px;width:90%;text-align:center;
     max-height:calc(100vh - 32px);overflow-y:auto;
+    scrollbar-width:thin;scrollbar-color:var(--border) transparent;
   }
   .stripe-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
   .stripe-box p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;}
@@ -402,8 +403,15 @@
     font-size:13px;line-height:1.5;color:var(--muted);margin-bottom:18px;cursor:pointer;
   }
   .renew-agree input{
-    flex-shrink:0;width:16px;height:16px;margin-top:2px;accent-color:var(--gold);cursor:pointer;
+    -webkit-appearance:none;appearance:none;flex-shrink:0;width:18px;height:18px;margin-top:1px;
+    border:1.5px solid var(--gold);border-radius:4px;background:#111;cursor:pointer;
+    display:grid;place-content:center;transition:background 0.15s;
   }
+  .renew-agree input:checked{background:linear-gradient(90deg,var(--gold),var(--gold2));border-color:var(--gold2);}
+  .renew-agree input:checked::after{
+    content:"";width:5px;height:9px;border:solid var(--ink);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg);
+  }
+  .renew-agree input:focus-visible{outline:2px solid var(--gold2);outline-offset:2px;}
   .renew-agree a{color:var(--gold2);text-decoration:underline;}
   .btn-stripe:disabled{opacity:0.45;cursor:not-allowed;filter:none;transform:none;}
   .plan-renew-note{font-size:12px;color:var(--muted);line-height:1.5;margin:-18px 0 24px;text-align:center;}
