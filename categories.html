@@ -90,6 +90,11 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .chip .n{color:var(--muted);font-size:11.5px;margin-left:5px;}
 .chip.all{border-color:var(--gold-deep);color:var(--gold2);}
 .cat-soon{font-size:13px;color:var(--muted);}
+.cat-photo.prod{height:170px;background:#fff;}
+.cat-photo.prod::after{display:none;}
+.cat-photo.prod img{object-fit:contain;object-position:center;padding:14px;}
+.chip.th{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 4px;}
+.chip .th-img{width:26px;height:26px;border-radius:50%;background:#fff;object-fit:contain;padding:2px;flex-shrink:0;}
 @media(max-width:1000px){.cat-grid.compact{grid-template-columns:1fr 1fr;}}
 @media(max-width:760px){.cat-grid.compact{grid-template-columns:1fr;}}
 
@@ -241,12 +246,20 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 // Full category directory: one shared list in js/catalog.js
 const CAT = window.EBF_CATALOG;
 const subHref = (c,sub) => `search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : '');
-function cardHTML(c, counts, withPhoto){
-  const total = Object.values(counts[c.slug]||{}).reduce((a,b)=>a+b,0);
-  const subs = c.subs.filter(s => (counts[c.slug]||{})[s]);
+// pick a real product photo for a category or subcategory: the biggest deal that has a photo
+function coverOf(list){ return (list||[]).filter(d => d.image).sort((a,b) => (b.discount||0)-(a.discount||0))[0]; }
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const imgTag = (src, alt, cls) => `<img${cls ? ` class="${cls}"` : ''} src="${esc(src)}" alt="${esc(alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`;
+function cardHTML(c, groups){
+  const g = groups[c.slug] || {};
+  const total = Object.values(g).reduce((a,b)=>a+b.length,0);
+  const subs = c.subs.filter(s => (g[s]||[]).length);
+  const cover = !c.img && coverOf(Object.values(g).flat());
+  const photo = c.img ? `<a class="cat-photo" href="${subHref(c)}">${imgTag(c.img, c.name)}</a>`
+              : cover ? `<a class="cat-photo prod" href="${subHref(c)}">${imgTag(cover.image, cover.title)}</a>` : '';
   return `
     <div class="cat-card">
-      ${withPhoto && c.img ? `<a class="cat-photo" href="${subHref(c)}"><img src="${c.img}" alt="${c.name}" loading="lazy"></a>` : ''}
+      ${photo}
       <div class="cat-body">
         <a class="cat-name" href="${subHref(c)}">
           ${c.ico ? `<span class="ico">${c.ico}</span>` : ''}
@@ -254,18 +267,18 @@ function cardHTML(c, counts, withPhoto){
         </a>
         ${total ? `<div class="cat-count">${total} products</div>` : ''}
         <div class="chips">
-          ${subs.length ? `<a class="chip all" href="${subHref(c)}">Shop all</a>` + subs.map(s => `<a class="chip" href="${subHref(c,s)}">${s}<span class="n">${counts[c.slug][s]}</span></a>`).join('')
+          ${subs.length ? `<a class="chip all" href="${subHref(c)}">Shop all</a>` + subs.map(s => { const t = coverOf(g[s]); return `<a class="chip${t ? ' th' : ''}" href="${subHref(c,s)}">${t ? imgTag(t.image, '', 'th-img') : ''}${s}<span class="n">${g[s].length}</span></a>`; }).join('')
                         : `<span class="cat-soon">New deals are being added to this category.</span>`}
         </div>
       </div>
     </div>`;
 }
 function renderCats(items){
-  const counts = {};
-  items.forEach(d => { const c = CAT.alias[d.category]||d.category; (counts[c] = counts[c]||{}); counts[c][d.subcategory] = (counts[c][d.subcategory]||0)+1; });
+  const groups = {};
+  items.forEach(d => { const c = CAT.alias[d.category]||d.category; (groups[c] = groups[c]||{}); (groups[c][d.subcategory] = groups[c][d.subcategory]||[]).push(d); });
   const popular = CAT.cats.filter(c => c.img), rest = CAT.cats.filter(c => !c.img);
-  document.getElementById('catGrid').innerHTML = popular.map(c => cardHTML(c, counts, true)).join('');
-  document.getElementById('catGridAll').innerHTML = rest.map(c => cardHTML(c, counts, false)).join('');
+  document.getElementById('catGrid').innerHTML = popular.map(c => cardHTML(c, groups)).join('');
+  document.getElementById('catGridAll').innerHTML = rest.map(c => cardHTML(c, groups)).join('');
   if (items.length) document.getElementById('catTotal').textContent = `${items.length} products in ${CAT.cats.length} categories`;
 }
 function loadCats(){
