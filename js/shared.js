@@ -179,7 +179,19 @@ const EBF = {
 
   openSignInModal() {
     const m = document.getElementById('signInModal');
-    if (m) { m.style.display = 'flex'; return; }
+    if (m) {
+      m.style.display = 'flex';
+      if (!m.dataset.closeWired) {
+        m.dataset.closeWired = '1';
+        // a click on the dark backdrop (outside the box) closes it
+        m.addEventListener('click', e => { if (e.target === m) EBF.closeSignInModal(); });
+        // the Escape key closes it
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && m.style.display !== 'none') EBF.closeSignInModal();
+        });
+      }
+      return;
+    }
     // create modal on the fly if page doesn't have one
     const html = `<div id="signInModal" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;">
       <div style="background:#181818;border:1px solid #333;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;position:relative;">
@@ -195,6 +207,16 @@ const EBF = {
       </div>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', html);
+  },
+
+  // Closes the sign-in window however it was opened. Pages open it with
+  // an inline style (openSignInModal) or a class (.show / .open), so clear both.
+  closeSignInModal(skipped) {
+    const m = document.getElementById('signInModal');
+    if (!m) return;
+    if (skipped) { try { localStorage.setItem('skipped_signin', '1'); } catch (e) {} }
+    m.style.display = 'none';
+    m.classList.remove('show', 'open');
   },
 
   /* ---- Alert creation with gating ---- */
