@@ -135,3 +135,75 @@ Immersive layer added and signed off this session:
 - Sender.net email (subscribe + watcher alerts) — token + group ID needed.
 - Google OAuth — new Cloud project/client.
 - Real product feeds (Amazon/Best Buy/Walmart) for auto-updating deals.
+
+## TODO 2026-11-18 (~2am ET) — Swap OAuth support email before launch
+- Google OAuth consent screen "User support email" is TEMPORARILY moishyjalas@gmail.com.
+- This is only acceptable while the app stays in TESTING mode (not public — nobody but MJ can reach it).
+- MUST change before going public so the personal email is never shown on the consent screen.
+- Plan (tomorrow): use the iPhone his mother has to create the real brand email(s) and the email system, then set a brand email / Google Group as the support contact and swap it here.
+
+## SESSION PLAN — set 2026-11-18 ~2:25am ET (MJ restarting computer, coming back for a long session)
+Ordered by MJ emphasis:
+1. CATEGORIES (MOST IMPORTANT): finish categories page + how deals load per category. Make it work live.
+2. Finish the Google sign-in button (OAuth consent screen was half-done, not saved — redo quickly; support email = moishyjalas@gmail.com TEMP in testing mode).
+3. Build the Admin Control Center (per docs/CONTROL-CENTER-SPEC.md).
+4. Build the system/user profile — CONFIRM exact scope with MJ (ambiguous: "build our profile of our system").
+5. Put the site live on the domain (everydayblackfriday.com is TAKEN — need a name pick).
+6. Black Friday centerpiece (special attention-grabbing feature).
+AMBIGUOUS TO CONFIRM: MJ also said "we got what you said to me for last" — confirm which item.
+TOMORROW: swap OAuth support email via mom iPhone to real brand email (see TODO above).
+
+## 2026-11-18 (~3am ET) — Sign-in rebuilt to proper Supabase Auth (STAGED, not deployed)
+DONE in code (workspace only, live site untouched):
+- Removed foreign Google client ID (875134997725...) from js/shared.js — violated the no-reused-credentials rule.
+- Rewrote sign-in to use Supabase Auth (GoTrue) with Google: signIn() redirects to /auth/v1/authorize?provider=google; handleAuthRedirect() captures tokens from the URL hash; loadSbUser() fetches the user + profiles row (is_pro, is_admin); refreshSb() + signOut() added. Lightweight REST, no extra library.
+- Unified the EBF object (window.EBF + Object.assign) so shared.js and supabase-client.js share one object. This ALSO fixes the search.html deal-loading bug (EBF.loadDeals was being shadowed).
+- Added js/supabase-config.js to categories/alerts/profile/membership so auth works site-wide.
+- Fixed announcements.json path (was the old GitHub Pages /black-daily-deals/ prefix).
+- node --check passed.
+REMAINING to finish + test (ALL need MJ logged into Supabase):
+1. Supabase Auth > Providers > Google: enable, paste Client ID + Secret (from the new everyday-black-friday OAuth client; regenerate secret if the one-time dialog was closed).
+2. Supabase Auth > URL Configuration: set Site URL + Redirect URLs to the live site + preview URLs (so redirect_to is allowlisted — REQUIRED or login bounces).
+3. Deploy updated code to a PREVIEW branch (not main).
+4. Live-test: click Sign in -> Google -> back -> signed in; confirm a profiles row is created.
+NOTE: Google GIS script tags (accounts.google.com/gsi/client) left in pages but now unused — can be removed in a later cleanup.
+
+## 2026-11-18 (~3:15am ET) — Owner HQ foundation built (hq.html) — STAGED, not deployed
+Source design: HQ-Design-Pack (16 screens) staged from MJ computer; read specs + roadmap + saw dashboard PNG.
+Built in hq.html (one shared shell, warm black/gold per design, hash-routed, owner-gated):
+- Owner GATE: on load, Supabase session -> loadSbUser -> only user.is_admin enters; others see sign-in or owner-only message. (Needs auth live + MJ account flagged is_admin.)
+- Top bar + grouped 16-screen sidebar (Overview / Deals & Catalog / Website & Marketing / People / Operations).
+- DASHBOARD: metric row (honest em-dash until data connected), clicks!=sales note, quick shortcuts, deal-activity/recent-changes/failed-job panels with honest not-connected states.
+- DEAL LIBRARY: reads LIVE Supabase deals via EBF.loadDeals(); search + status tabs + table (image/status/price/discount/retailer/last-checked) + Edit.
+- ADD/EDIT DEAL: full form + live public preview; saveDeal() writes to Supabase REST (POST/PATCH deals) using the owner access token (RLS admin-write). UNTESTED until auth live.
+- Other 12 screens: honest "In build queue" placeholders listing each screen real features (NOT fake controls).
+- node --check on inline JS: passed.
+REMAINING before HQ works end-to-end (all need MJ Supabase login):
+1. Finish Supabase Google auth (enable provider + creds + URL config).
+2. Flag MJ as owner: update public.profiles set is_admin=true where email=(MJ email).
+3. Deploy to PREVIEW; MJ signs in; confirm gate opens + deal read/write works.
+4. Then build remaining 12 screens one at a time, each checked vs its design.
+
+## 2026-11-18 (fork, while MJ away) — All 12 remaining Owner HQ screens built (hq.html) — STAGED, not deployed
+Shared helpers added to hq.html: sbSelect/sbWrite (owner-token REST), logAudit, notSetUp degrade state.
+Appended ~13 new tables + RLS to supabase/schema.sql (idempotent, admin-gated; NOT run): category_nodes, import_batches, import_rows, site_settings, site_revisions, promotions, email_campaigns, support_cases, team_invites, audit_events, emergency_flags, search_log, integrations; plus columns profiles.role, newsletter_subscribers.status/consent_source/unsubscribed_at.
+
+Screens wired to EXISTING tables (real reads/writes, UNTESTED until auth live):
+- Billing: reads profiles; manual Pro grant/revoke writes profiles + audit (never counted as revenue); Stripe revenue = em dash.
+- Subscribers & Demand: reads newsletter_subscribers (search + CSV export), watchers (aggregated popular keywords), unsubscribe writes; search_log degrades.
+- Email: reads subscriber count + deals (approved-deal picker + live preview); SENDING DISABLED (needs Sender.net); draft saves to email_campaigns.
+- Team: reads profiles; role change writes profiles.role/is_admin; last-owner protection; MFA/sessions noted as Supabase-managed.
+- Integrations: live DB + auth status check; Cloudflare = live (page served); Stripe/Sender/Amazon = Not connected; provider links only, no secrets.
+- Health: live DB/auth ping; audit log read; honest backup/restore guidance (Supabase free = self-export).
+
+Screens needing NEW tables (degrade to "not set up yet" until MJ runs schema):
+- Categories (category_nodes): tree + add/rename/archive.
+- Imports (import_batches history; APPROVE writes straight to deals — works now): CSV upload, client-side parse + validate (missing/dup/suspicious-discount), approve clean rows.
+- Appearance (site_settings): settings form; public site reads them only after a later wiring step (not live yet).
+- Promotions (promotions): editor + visitor preview + list; public site honors them after later wiring.
+- Support (support_cases): inbox/report queue + resolve.
+- Emergency (emergency_flags): 7 independent reversible pause switches + confirm/reason/audit; public site honors after later wiring.
+- AI (control surface only): drafting DISABLED — no scoped connector implemented; honest; action log reads audit_events.
+
+node --check passed after every batch. Existing screens (shell/gate/router/Dashboard/Deal Library/Add-Edit) untouched.
+NEEDS MJ: (1) Supabase login to finish Google auth; (2) run updated supabase/schema.sql; (3) set profiles.is_admin=true for his account; (4) deploy to PREVIEW; (5) live-test gate + each screen's reads/writes. Nothing deployed or claimed working.

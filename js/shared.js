@@ -10,8 +10,8 @@
    - Site-wide announcement banner (from data/announcements.json)
    ============================================================ */
 
-const EBF = {
-  CLIENT_ID: '875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com',
+window.EBF = window.EBF || {};
+Object.assign(window.EBF, {
   STRIPE_LINK: 'https://buy.stripe.com/PLACEHOLDER_STRIPE_LINK',
   FREE_ALERT_LIMIT: 1,
   PRO_ALERT_LIMIT: 999,
@@ -112,36 +112,76 @@ const EBF = {
 </div>`;
   },
 
-  /* ---- Google Sign In ---- */
+  /* ---- Supabase auth helpers ---- */
+  _sbUrl() { return (window.EBF_SUPABASE || {}).url || ''; },
+  _sbKey() { return (window.EBF_SUPABASE || {}).publishableKey || ''; },
+  getSession() { try { return JSON.parse(localStorage.getItem('ebf_sb_session') || 'null'); } catch { return null; } },
+  setSession(s) { if (s) localStorage.setItem('ebf_sb_session', JSON.stringify(s)); else localStorage.removeItem('ebf_sb_session'); },
+
+  /* ---- Sign in with Google (via Supabase Auth) ---- */
   signIn() {
-    if (typeof google === 'undefined') { this.showToast('Google Sign-In unavailable', 'error'); return; }
-    const client = google.accounts.oauth2.initTokenClient({
-      client_id: this.CLIENT_ID,
-      scope: 'openid email profile',
-      callback: (resp) => {
-        if (resp.error) { this.showToast('Sign-in failed', 'error'); return; }
-        this.fetchUserInfo(resp.access_token);
-      }
-    });
-    client.requestAccessToken();
+    const url = this._sbUrl();
+    if (!url) { this.showToast('Sign-in isn\'t configured yet', 'error'); return; }
+    const redirectTo = window.location.origin + window.location.pathname;
+    window.location.href = url + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(redirectTo);
   },
 
-  async fetchUserInfo(token) {
+  /* After Supabase redirects back, capture the tokens from the URL hash */
+  async handleAuthRedirect() {
+    const hash = window.location.hash || '';
+    if (hash.indexOf('access_token') === -1) return false;
+    const p = new URLSearchParams(hash.replace(/^#/, ''));
+    const access_token = p.get('access_token');
+    if (!access_token) return false;
+    this.setSession({ access_token, refresh_token: p.get('refresh_token') || '', at: Date.now() });
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    const user = await this.loadSbUser();
+    if (user) this.showToast('Welcome, ' + (user.name || 'there').split(' ')[0] + '!', 'success');
+    const m = document.getElementById('signInModal'); if (m) m.style.display = 'none';
+    return true;
+  },
+
+  /* Load the signed-in user (+ their profile row) and cache it */
+  async loadSbUser() {
+    const url = this._sbUrl(), key = this._sbKey(), sess = this.getSession();
+    if (!url || !key || !sess || !sess.access_token) return null;
     try {
-      const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + token } });
-      const u = await r.json();
-      const existing = this.getUser() || {};
-      const user = { name: u.name || u.email, email: u.email, avatar: u.picture || '', id: u.sub, pro: existing.pro || false };
+      let r = await fetch(url + '/auth/v1/user', { headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } });
+      if (r.status === 401 && sess.refresh_token) {
+        if (await this.refreshSb()) return this.loadSbUser();
+        this.setSession(null); this.clearUser(); this.updateAuthUI(null); return null;
+      }
+      if (!r.ok) return null;
+      const au = await r.json();
+      const meta = au.user_metadata || {};
+      let pro = false, is_admin = false;
+      try {
+        const pr = await fetch(url + '/rest/v1/profiles?select=is_pro,is_admin&id=eq.' + au.id, { headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } });
+        if (pr.ok) { const rows = await pr.json(); if (rows && rows[0]) { pro = !!rows[0].is_pro; is_admin = !!rows[0].is_admin; } }
+      } catch (e) { /* profile row optional */ }
+      const user = { id: au.id, email: au.email, name: meta.full_name || meta.name || au.email, avatar: meta.avatar_url || meta.picture || '', pro, is_admin };
       this.setUser(user);
       this.updateAuthUI(user);
-      this.showToast('Welcome, ' + user.name.split(' ')[0] + '!', 'success');
-      // close modal if open
-      const m = document.getElementById('signInModal');
-      if (m) m.style.display = 'none';
-    } catch (e) { this.showToast('Sign-in error', 'error'); }
+      return user;
+    } catch (e) { return null; }
   },
 
-  signOut() {
+  async refreshSb() {
+    const url = this._sbUrl(), key = this._sbKey(), sess = this.getSession();
+    if (!url || !key || !sess || !sess.refresh_token) return false;
+    try {
+      const r = await fetch(url + '/auth/v1/token?grant_type=refresh_token', { method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: sess.refresh_token }) });
+      if (!r.ok) { this.setSession(null); return false; }
+      const d = await r.json();
+      this.setSession({ access_token: d.access_token, refresh_token: d.refresh_token || sess.refresh_token, at: Date.now() });
+      return true;
+    } catch (e) { this.setSession(null); return false; }
+  },
+
+  async signOut() {
+    const url = this._sbUrl(), key = this._sbKey(), sess = this.getSession();
+    try { if (url && key && sess && sess.access_token) await fetch(url + '/auth/v1/logout', { method: 'POST', headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } }); } catch (e) { /* ignore */ }
+    this.setSession(null);
     this.clearUser();
     this.updateAuthUI(null);
     this.showToast('Signed out');
@@ -224,7 +264,7 @@ const EBF = {
   /* ---- Announcement banner ---- */
   async loadAnnouncement() {
     try {
-      const r = await fetch('/black-daily-deals/data/announcements.json?t=' + Date.now());
+      const r = await fetch('data/announcements.json?t=' + Date.now());
       const ann = await r.json();
       if (!ann.active) return;
       // check dismissed
@@ -260,9 +300,10 @@ const EBF = {
 
   /* ---- Init (called on every page) ---- */
   init() {
-    // restore auth state
-    const user = this.getUser();
-    this.updateAuthUI(user);
+    // show any cached user immediately for snappy UI
+    this.updateAuthUI(this.getUser());
+    // handle a fresh Google redirect, otherwise refresh the stored session
+    this.handleAuthRedirect().then(handled => { if (!handled && this.getSession()) this.loadSbUser(); });
     // load announcement
     this.loadAnnouncement();
     // inject toast animation CSS
@@ -273,7 +314,8 @@ const EBF = {
       document.head.appendChild(s);
     }
   }
-};
+});
+const EBF = window.EBF;
 
 // Auto-init when DOM is ready
 if (document.readyState === 'loading') {

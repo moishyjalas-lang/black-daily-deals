@@ -206,6 +206,8 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 @media(max-width:560px){.deals-grid{grid-template-columns:1fr;}.nav-search{display:none;}.toolbar,.results-hero-inner,.search-page{padding-left:16px;padding-right:16px;}}
 </style>
 <link rel="stylesheet" href="css/stage.css">
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
 </head>
 <body>
 
@@ -395,8 +397,9 @@ function showSkeletons(){
 /* ===== Load deals ===== */
 function loadDeals(){
   showSkeletons();
-  fetch('data/deals.json')
-    .then(r => r.json())
+  // Live deals from Supabase (EBF.loadDeals normalizes fields and
+  // automatically falls back to data/deals.json if Supabase is unreachable).
+  EBF.loadDeals()
     .then(data => { ALL_DEALS = data; loaded = true; buildRetailers(); renderDeals(); })
     .catch(() => { loaded = true; renderDeals(); });
 }
