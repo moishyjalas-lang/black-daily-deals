@@ -197,6 +197,18 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .lvl-head span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
 .sub-nav,.lvl-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .sub-nav:empty,.lvl-tabs:empty{display:none;}
+/* category and product-type picture tiles (MJ's 60 category pictures) */
+.pic-nav{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:12px;scrollbar-width:thin;scrollbar-color:#6b5328 transparent;}
+.pic-nav:empty{display:none;}
+.ptile{flex:0 0 148px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#15110b;cursor:pointer;text-align:left;padding:0;color:#d8cdbb;font:inherit;transition:border-color .15s,transform .15s;}
+.ptile img{width:100%;height:76px;object-fit:cover;display:block;}
+.ptile .pl{display:block;padding:7px 9px 8px;font-size:12.5px;font-weight:500;line-height:1.25;}
+.ptile .n{color:var(--muted);font-size:11px;margin-left:4px;}
+.ptile:hover{border-color:var(--gold2);transform:translateY(-2px);}
+.ptile.active{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2),0 0 18px rgba(213,151,59,.25);}
+.ptile.active .pl{color:var(--gold2);}
+.type-nav .ptile{flex-basis:132px;}
+.type-nav .ptile img{height:62px;}
 .snav{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:#15110b;color:#d8cdbb;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
 .snav .n{color:var(--muted);font-size:11.5px;margin-left:5px;}
 .snav:hover,.snav.active{border-color:var(--gold2);color:var(--gold2);background:rgba(244,209,139,.08);}
@@ -390,7 +402,8 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 
   <!-- RESULTS -->
   <div class="results-main">
-    <div class="sub-nav" id="sub-nav"></div>
+    <div class="pic-nav" id="sub-nav"></div>
+    <div class="pic-nav type-nav" id="type-nav"></div>
     <div class="lvl-tabs" id="lvl-tabs"></div>
     <div class="deals-grid" id="deals-grid"></div>
     <div class="pagination" id="pagination"></div>
@@ -409,6 +422,7 @@ let minRating = 0;
 let searchQuery = '';
 let currentPage = 1;
 let activeSub = '';
+let activeType = '';
 let activeLevel = '';
 const PER_PAGE = 24;
 const CAT = window.EBF_CATALOG;
@@ -459,13 +473,15 @@ function buildRetailers(){
 function toggleGroup(id){ document.getElementById(id).classList.toggle('collapsed'); }
 function togglePanel(){ document.getElementById('filter-panel').classList.toggle('open'); }
 
-function toggleCat(cb){ cb.checked ? activeCats.add(cb.value) : activeCats.delete(cb.value); activeSub=''; currentPage=1; syncURL(); renderDeals(); }
-function pickSub(sub){ activeSub = sub; currentPage=1; syncURL(); renderDeals(); }
+function toggleCat(cb){ cb.checked ? activeCats.add(cb.value) : activeCats.delete(cb.value); activeSub=''; activeType=''; currentPage=1; syncURL(); renderDeals(); }
+function pickSub(sub){ activeSub = sub; activeType=''; currentPage=1; syncURL(); renderDeals(); }
+function pickType(t){ activeType = t; currentPage=1; syncURL(); renderDeals(); }
 function pickLevel(lv){ activeLevel = lv; currentPage=1; syncURL(); renderDeals(); }
 function syncURL(){
   const p = new URLSearchParams();
   if(activeCats.size) p.set('cat',[...activeCats].join(','));
   if(activeSub) p.set('sub',activeSub);
+  if(activeType) p.set('type',activeType);
   if(activeLevel) p.set('level',activeLevel);
   if(searchQuery.trim()) p.set('q',searchQuery.trim());
   const qs = p.toString();
@@ -505,7 +521,7 @@ function applySearch(){ currentPage=1; renderDeals(); }
 function applyFilters(){ priceFromInputs(); currentPage=1; renderDeals(); if(window.innerWidth<=860) togglePanel(); }
 
 function resetFilters(){
-  activeCats.clear(); activeSub=''; activeLevel=''; priceMin=0; priceMax=999999; minDiscount=0; minRating=0; searchQuery='';
+  activeCats.clear(); activeSub=''; activeType=''; activeLevel=''; priceMin=0; priceMax=999999; minDiscount=0; minRating=0; searchQuery='';
   document.querySelectorAll('.cat-cb,.rate-cb').forEach(c=>c.checked=false);
   document.querySelectorAll('.disc-cb').forEach(c=>c.checked=false);
   document.querySelector('.disc-cb[value="0"]').checked=true;
@@ -521,9 +537,10 @@ function clearAll(){ resetFilters(); }
 
 /* remove one chip */
 function removeChip(type,val){
-  if(type==='sub'){ activeSub=''; }
+  if(type==='sub'){ activeSub=''; activeType=''; }
+  else if(type==='type'){ activeType=''; }
   else if(type==='level'){ activeLevel=''; }
-  else if(type==='cat'){ activeCats.delete(val); activeSub=''; const cb=document.querySelector(`.cat-cb[value="${val}"]`); if(cb) cb.checked=false; }
+  else if(type==='cat'){ activeCats.delete(val); activeSub=''; activeType=''; const cb=document.querySelector(`.cat-cb[value="${val}"]`); if(cb) cb.checked=false; }
   else if(type==='disc'){ minDiscount=0; document.querySelectorAll('.disc-cb').forEach(c=>c.checked=false); document.querySelector('.disc-cb[value="0"]').checked=true; }
   else if(type==='rate'){ minRating=0; document.querySelectorAll('.rate-cb').forEach(c=>c.checked=false); }
   else if(type==='price'){ priceMin=0; priceMax=999999; document.querySelectorAll('.pchip').forEach(c=>c.classList.remove('active')); document.querySelector('.pchip[data-price="any"]').classList.add('active'); document.getElementById('price-min').value=''; document.getElementById('price-max').value=''; }
@@ -540,12 +557,13 @@ function baseFiltered(){
   if(minRating) d=d.filter(x=>(x.rating||0)>=minRating);
   const r=document.getElementById('retailer-select').value;
   if(r) d=d.filter(x=>x.store===r);
-  if(searchQuery.trim()){ const q=searchQuery.toLowerCase(); d=d.filter(x=>x.title.toLowerCase().includes(q)||x.store.toLowerCase().includes(q)||(x.subcategory||'').toLowerCase().includes(q)); }
+  if(searchQuery.trim()){ const q=searchQuery.toLowerCase(); d=d.filter(x=>x.title.toLowerCase().includes(q)||x.store.toLowerCase().includes(q)||(x.subcategory||'').toLowerCase().includes(q)||(x.type||'').toLowerCase().includes(q)); }
   return d;
 }
 function getFiltered(){
   let d=baseFiltered();
   if(activeSub) d=d.filter(x=>x.subcategory===activeSub);
+  if(activeType) d=d.filter(x=>x.type===activeType);
   if(activeLevel) d=d.filter(x=>CAT.level(x).key===activeLevel);
   const sort=document.getElementById('sort-select').value;
   if(sort==='discount') d.sort((a,b)=>(b.discount||0)-(a.discount||0));
@@ -562,6 +580,7 @@ function renderChips(){
   const catLabel=Object.fromEntries(CATS);
   activeCats.forEach(c=>{ if(!catLabel[c]) return; chips.push(`<span class="fchip">${esc(catLabel[c])}<button onclick="removeChip('cat','${esc(c)}')" aria-label="Remove">✕</button></span>`); });
   if(activeSub) chips.push(`<span class="fchip">${esc(activeSub)}<button onclick="removeChip('sub')" aria-label="Remove">✕</button></span>`);
+  if(activeType) chips.push(`<span class="fchip">${esc(activeType)}<button onclick="removeChip('type')" aria-label="Remove">✕</button></span>`);
   if(activeLevel){ const L={bf:'Doorbuster',big:'Hot Deal',light:'Price Drop',regular:'Everyday Price'}; chips.push(`<span class="fchip">${L[activeLevel]}<button onclick="removeChip('level')" aria-label="Remove">✕</button></span>`); }
   if(minDiscount>0) chips.push(`<span class="fchip">${minDiscount}% off or more<button onclick="removeChip('disc')">✕</button></span>`);
   if(minRating>0) chips.push(`<span class="fchip">${minRating}★ & up<button onclick="removeChip('rate')">✕</button></span>`);
@@ -579,7 +598,7 @@ function renderDeals(){
   const crumb=document.getElementById('results-crumb');
   const catLabel=Object.fromEntries(CATS);
   if(searchQuery.trim()){ title.textContent='Search results'; crumb.innerHTML=`for <b>“${esc(searchQuery)}”</b> · ${deals.length} deal${deals.length!==1?'s':''}`; }
-  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent=activeSub||catLabel[c]||'Deals'; crumb.innerHTML=`<a href="categories.html">Categories</a> › ${activeSub?`<a href="search.html?cat=${encodeURIComponent(c)}">${esc(catLabel[c]||c)}</a> › <b>${esc(activeSub)}</b>`:`<b>${esc(catLabel[c]||c)}</b>`} · ${deals.length} product${deals.length!==1?'s':''}`; }
+  else if(activeCats.size===1){ const c=[...activeCats][0]; title.textContent=activeType||activeSub||catLabel[c]||'Deals'; const subLink=`search.html?cat=${encodeURIComponent(c)}&sub=${encodeURIComponent(activeSub)}`; crumb.innerHTML=`<a href="categories.html">Categories</a> › ${activeSub?`<a href="search.html?cat=${encodeURIComponent(c)}">${esc(catLabel[c]||c)}</a> › ${activeType?`<a href="${subLink}">${esc(activeSub)}</a> › <b>${esc(activeType)}</b>`:`<b>${esc(activeSub)}</b>`}`:`<b>${esc(catLabel[c]||c)}</b>`} · ${deals.length} product${deals.length!==1?'s':''}`; }
   else if(activeCats.size>1){ title.textContent='Deals'; crumb.innerHTML=`${[...activeCats].map(c=>`<b>${esc(catLabel[c]||c)}</b>`).join(', ')} · ${deals.length} product${deals.length!==1?'s':''}`; }
   else { title.textContent='All deals'; crumb.innerHTML=`${deals.length} deal${deals.length!==1?'s':''} available`; }
   renderChips();
@@ -610,21 +629,30 @@ function renderDeals(){
   renderPagination(deals.length);
 }
 
-/* subcategory row for one category (only subcategories that have products) */
+/* category tiles for one department, then product-type tiles for one category (only ones that have products) */
+const jsq=v=>JSON.stringify(v).replace(/"/g,'&quot;');
+const tileImg=src=>src?`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.remove()">`:'';
 function renderSubNav(){
-  const el=document.getElementById('sub-nav');
-  if(activeCats.size!==1){ el.innerHTML=''; return; }
-  const c=CAT.bySlug([...activeCats][0]); if(!c){ el.innerHTML=''; return; }
+  const el=document.getElementById('sub-nav'), tl=document.getElementById('type-nav');
+  if(activeCats.size!==1){ el.innerHTML=''; tl.innerHTML=''; return; }
+  const c=CAT.bySlug([...activeCats][0]); if(!c){ el.innerHTML=''; tl.innerHTML=''; return; }
   const base=baseFiltered(); const n={}; base.forEach(x=>{ n[x.subcategory]=(n[x.subcategory]||0)+1; });
   const subs=c.subs.filter(s=>n[s]);
-  if(!subs.length){ el.innerHTML=''; return; }
-  el.innerHTML=`<button class="snav${activeSub?'':' active'}" onclick="pickSub('')">All ${c.name}<span class="n">${base.length}</span></button>`+
-    subs.map(s=>`<button class="snav${activeSub===s?' active':''}" onclick="pickSub(${JSON.stringify(s).replace(/"/g,'&quot;')})">${esc(s)}<span class="n">${n[s]}</span></button>`).join('');
+  if(!subs.length){ el.innerHTML=''; tl.innerHTML=''; return; }
+  const img=c.subImg||{};
+  el.innerHTML=`<button class="ptile${activeSub?'':' active'}" onclick="pickSub('')">${tileImg(c.img)}<span class="pl">All ${esc(c.name)}<span class="n">${base.length}</span></span></button>`+
+    subs.map(s=>`<button class="ptile${activeSub===s?' active':''}" onclick="pickSub(${jsq(s)})">${tileImg(img[s])}<span class="pl">${esc(s)}<span class="n">${n[s]}</span></span></button>`).join('');
+  const types=(c.types||{})[activeSub]||[];
+  const inSub=base.filter(x=>x.subcategory===activeSub); const tn={}; inSub.forEach(x=>{ if(x.type) tn[x.type]=(tn[x.type]||0)+1; });
+  const shown=types.filter(t=>tn[t.name]);
+  if(!activeSub || shown.length<2 && !activeType){ tl.innerHTML=''; return; }
+  tl.innerHTML=`<button class="ptile${activeType?'':' active'}" onclick="pickType('')">${tileImg(img[activeSub])}<span class="pl">All ${esc(activeSub)}<span class="n">${inSub.length}</span></span></button>`+
+    shown.map(t=>`<button class="ptile${activeType===t.name?' active':''}" onclick="pickType(${jsq(t.name)})">${tileImg(t.img)}<span class="pl">${esc(t.name)}<span class="n">${tn[t.name]}</span></span></button>`).join('');
 }
 /* deal-level tabs: Doorbuster / Hot Deal / Price Drop / Everyday Price */
 function renderLevelTabs(){
   const el=document.getElementById('lvl-tabs');
-  let base=baseFiltered(); if(activeSub) base=base.filter(x=>x.subcategory===activeSub);
+  let base=baseFiltered(); if(activeSub) base=base.filter(x=>x.subcategory===activeSub); if(activeType) base=base.filter(x=>x.type===activeType);
   const n={}; base.forEach(x=>{ const k=CAT.level(x).key; n[k]=(n[k]||0)+1; });
   const L={bf:'Doorbuster',big:'Hot Deal',light:'Price Drop',regular:'Everyday Price'};
   const keys=CAT.levels.filter(k=>n[k]);
@@ -653,6 +681,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   const cat=params.get('cat'); const q=params.get('q');
   if(cat && cat!=='all'){ cat.split(',').map(c=>CAT.alias[c.trim()]||c.trim()).filter(c=>c && CATS.some(([slug])=>slug===c)).forEach(c=>{ activeCats.add(c); const cb=document.querySelector(`.cat-cb[value="${c}"]`); if(cb) cb.checked=true; }); }
   activeSub=params.get('sub')||'';
+  activeType=params.get('type')||'';
   const lvp=params.get('level'); if(['bf','big','light','regular'].includes(lvp)) activeLevel=lvp;
   if(q){ searchQuery=q; document.getElementById('main-search').value=q; }
   if(typeof EBF!=='undefined') EBF.init();
