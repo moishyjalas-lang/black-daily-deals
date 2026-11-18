@@ -503,6 +503,51 @@ footer{
     }
   }
 }
+
+/* ───── BLACK FRIDAY SPOTLIGHT — the centerpiece magnet ───── */
+.bf-spotlight{max-width:1280px;margin:0 auto;padding:46px 24px 8px;}
+.bf-panel{
+  position:relative;border-radius:22px;padding:30px clamp(20px,3vw,40px) 30px;
+  background:
+    radial-gradient(ellipse 80% 120% at 50% 0%, rgba(199,139,54,0.16), transparent 70%),
+    linear-gradient(180deg, rgba(36,28,19,0.93), rgba(20,16,13,0.95));
+  border:1px solid var(--border);
+  box-shadow:0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(244,209,139,0.14);
+  overflow:hidden;
+}
+.bf-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold2),transparent);opacity:.6;}
+.bf-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+.bf-live{display:flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);}
+.bf-dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:bf-pulse 1.8s infinite;}
+@keyframes bf-pulse{0%{box-shadow:0 0 0 0 rgba(224,96,58,.55);}70%{box-shadow:0 0 0 10px rgba(224,96,58,0);}100%{box-shadow:0 0 0 0 rgba(224,96,58,0);}}
+.bf-title{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:clamp(26px,4vw,42px);color:var(--ivory);line-height:1.05;margin-top:7px;}
+.bf-title b{color:transparent;background:linear-gradient(100deg,#d5a047,#f7e2b0 50%,#cf9a44);-webkit-background-clip:text;background-clip:text;}
+.bf-sub{color:var(--muted);font-size:14px;margin-top:7px;}
+.bf-all{display:inline-flex;align-items:center;gap:7px;color:var(--gold2);font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap;}
+.bf-all:hover{color:var(--ivory);}
+.bf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:900px){.bf-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.bf-grid{grid-template-columns:1fr;}}
+.bf-card{position:relative;display:flex;flex-direction:column;text-decoration:none;
+  background:linear-gradient(180deg,#201a14,#17130e);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s;}
+.bf-card:hover{transform:translateY(-4px);border-color:#e3b963;box-shadow:0 18px 44px rgba(0,0,0,.5);}
+.bf-imgwrap{position:relative;aspect-ratio:1/1;background:#fff;}
+.bf-imgwrap img{width:100%;height:100%;object-fit:contain;padding:14px;}
+.bf-badge{position:absolute;top:12px;left:12px;background:linear-gradient(180deg,#e0603a,#c4492a);
+  color:#fff;font-weight:800;font-size:13px;padding:6px 11px;border-radius:999px;box-shadow:0 4px 14px rgba(224,96,58,.4);}
+.bf-body{padding:14px 15px 16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.bf-name{font-weight:600;font-size:15px;color:var(--cream);line-height:1.3;}
+.bf-store{font-size:12px;color:var(--muted);}
+.bf-prices{display:flex;align-items:baseline;gap:10px;margin-top:auto;}
+.bf-now{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:26px;color:var(--gold2);}
+.bf-was{font-size:14px;color:#8a8070;text-decoration:line-through;}
+.bf-btn{margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;
+  border-radius:999px;font-weight:700;font-size:14px;color:#17120b;
+  background:linear-gradient(110deg,#c78b36,#f7d891 48%,#d39a42);transition:filter .18s;}
+.bf-card:hover .bf-btn{filter:brightness(1.08);}
+.bf-updated{margin-top:18px;text-align:center;font-size:12px;color:#8a8070;}
 </style>
 <link rel="stylesheet" href="css/stage.css">
 </head>
@@ -580,6 +625,58 @@ footer{
     <h2 class="statement-line">You don't need a hundred websites.<span>Just this one — watching every deal for you.</span></h2>
     <div class="statement-rule"></div>
   </div>
+</section>
+
+<!-- ══ BLACK FRIDAY SPOTLIGHT — the centerpiece magnet ══ -->
+<section class="bf-spotlight">
+  <div class="bf-panel">
+    <div class="bf-head">
+      <div>
+        <div class="bf-live"><span class="bf-dot"></span> Live Deals</div>
+        <div class="bf-title">Biggest Deals <b>Right Now</b></div>
+        <div class="bf-sub">Black Friday prices, live — every day of the year.</div>
+      </div>
+      <a class="bf-all" href="search.html">View all deals
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="bf-grid" id="bf-grid"></div>
+    <div class="bf-updated" id="bf-updated"></div>
+  </div>
+  <script>
+  /* Biggest Deals — reads the SAME real data/deals.json, sorted by biggest
+     discount. Update deals.json and this section updates itself. */
+  fetch('data/deals.json')
+    .then(r => r.json())
+    .then(deals => {
+      const top = [...deals].sort((a,b) => b.discount - a.discount).slice(0, 6);
+      const grid = document.getElementById('bf-grid');
+      if (grid && top.length) {
+        grid.innerHTML = top.map(d => `
+          <a class="bf-card" href="${d.affiliate_url}" target="_blank" rel="noopener sponsored">
+            <div class="bf-imgwrap">
+              <img src="${d.image}" alt="${d.title.replace(/"/g,'&quot;')}" loading="lazy">
+              <span class="bf-badge">${d.discount}% OFF</span>
+            </div>
+            <div class="bf-body">
+              <div class="bf-name">${d.title}</div>
+              <div class="bf-store">${d.store}</div>
+              <div class="bf-prices">
+                <span class="bf-now">$${d.price.toFixed(2)}</span>
+                <span class="bf-was">$${d.original_price.toFixed(2)}</span>
+              </div>
+              <span class="bf-btn">Grab this deal
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </span>
+            </div>
+          </a>`).join('');
+      }
+      const dates = deals.map(d => d.price_checked).filter(Boolean).sort();
+      const stamp = document.getElementById('bf-updated');
+      if (stamp && dates.length) stamp.textContent = 'Prices last checked ' + dates[dates.length-1] + ' · affiliate links';
+    })
+    .catch(() => {});
+  </script>
 </section>
 
 <!-- ══ SHOP BY CATEGORY ══ -->
