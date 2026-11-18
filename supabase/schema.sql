@@ -199,7 +199,7 @@ create policy "newsletter admin manage" on public.newsletter_subscribers
 -- ============================================================
 
 -- add a role + consent columns used by Team and Audience screens
-alter table public.profiles              add column if not exists role text not null default 'owner';
+alter table public.profiles              add column if not exists role text not null default 'member';
 alter table public.newsletter_subscribers add column if not exists status text not null default 'subscribed'; -- subscribed | unsubscribed
 alter table public.newsletter_subscribers add column if not exists consent_source text;
 alter table public.newsletter_subscribers add column if not exists unsubscribed_at timestamptz;
