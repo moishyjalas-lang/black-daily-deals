@@ -1,0 +1,26 @@
+/* Everyday Black Friday — shared "stage" backdrop.
+   Puts the gold tunnel/stage environment behind every page so the
+   content sits in a lit room instead of floating on flat black.
+   Linked on every page; overrides each page's own body background. */
+
+html { background:#0c0b0a; }
+
+body { background:transparent !important; }
+
+/* Fixed backdrop behind all content */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    /* warm glow pools (top layer) */
+    radial-gradient(ellipse 70% 42% at 50% -4%, rgba(150,92,30,0.22), transparent 62%),
+    radial-gradient(ellipse 62% 44% at 50% 104%, rgba(120,72,26,0.20), transparent 62%),
+    /* readability overlay — darkens the photo so text stays legible */
+    linear-gradient(180deg, rgba(12,11,10,0.62) 0%, rgba(12,11,10,0.70) 45%, rgba(12,11,10,0.80) 100%),
+    /* the real stage photo */
+    url('../assets/bg-stage.jpg') center 20% / cover no-repeat,
+    #0c0b0a;
+}
