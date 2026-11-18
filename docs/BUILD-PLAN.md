@@ -62,3 +62,19 @@ place, all year.
 - Shelf-filler network: FlexOffers (single join, 6,000+ stores).
 - Price history: ShopSavvy (later).
 - Payments: Stripe ($8/mo). Email: Sender.net. Sign-in: Google (new project).
+
+## Zero-down (free-tier) launch — total $0 upfront
+- Website: GitHub Pages — free (already live).
+- Engine (DB + Auth + storage + functions + cron): Supabase FREE — 500MB db,
+  1GB storage, 50K monthly active users, 500K function calls/mo, no card.
+  Google sign-in built into Supabase Auth (free). Quirk: free project pauses
+  after 7 days idle -> keep awake with a free scheduled ping (GitHub Actions /
+  cron / UptimeRobot).
+- Email: Sender.net FREE forever — 2,500 subscribers, 15,000 emails/mo,
+  automation + transactional included. "Powered by Sender" footer unless $7/mo.
+- Payments: Stripe — $0 to open, no setup/monthly fee; 2.9% + 30c per sale
+  (~53c out of each $8 membership, deducted from the sale, never upfront).
+- Deal data: free to join affiliate networks (see STAGE2-DEALS-RESEARCH).
+- Pay-later, optional, only when growing: Sender $7/mo (remove footer),
+  Supabase $25/mo (past 500MB/50K users), custom domain ~$10-12/yr.
+- Accounts to open (all $0, Moishy's): Supabase, Stripe. (Sender already set up.)
