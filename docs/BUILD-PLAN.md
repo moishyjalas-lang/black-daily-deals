@@ -56,20 +56,43 @@ place, all year.
    switch feeds on as they're approved.
 
 ## Tech stack (decided)
-- Front end: the current static site (GitHub Pages) for the look — stays.
+- Front end / hosting: Cloudflare Pages — LIVE at black-daily-deals.pages.dev
+  (connected to the GitHub repo moishyjalas-lang/black-daily-deals, auto-deploys
+  on every push to main). Unlimited static bandwidth, free. GitHub Pages still
+  up as a backup for now. Hosted in the Benefit Fund Cloudflare account as its
+  own separate Pages project (hosting-account reuse only; all LOGIN/API creds —
+  Supabase, Google sign-in — stay separate per the one-project-one-credential
+  rule).
 - Backend/engine: Supabase (auth, database, storage, scheduled cron).
+
+## Two separate jobs (how the site is run day to day)
+- Everyday deal + promo changes -> an ADMIN SCREEN (no code). Add/edit a deal
+  (retailer, link, price, category, expiry), publish a pop-up (message, button,
+  audience, start/end + close button + frequency cap). Moishy does this himself.
+- Occasional look/structure changes -> Claude makes the code change, previews
+  it, Moishy reviews, then it goes live. Build the Admin screen BEFORE loading
+  lots of deals.
+- Admin security: it's just "Moishy logged in with an admin role." Safety =
+  Supabase Auth + Row Level Security (everyone reads deals, only admin writes).
+  The service-role key NEVER goes in the website/front end.
 - Deal data + links: Affiliate.com (keep 100% commission, own IDs).
 - Shelf-filler network: FlexOffers (single join, 6,000+ stores).
 - Price history: ShopSavvy (later).
 - Payments: Stripe ($8/mo). Email: Sender.net. Sign-in: Google (new project).
 
 ## Zero-down (free-tier) launch — total $0 upfront
-- Website: GitHub Pages — free (already live).
+- Website: Cloudflare Pages — free, unlimited static bandwidth (LIVE). The only
+  metered free number is 500 builds/month = plenty (1 build per push).
 - Engine (DB + Auth + storage + functions + cron): Supabase FREE — 500MB db,
-  1GB storage, 50K monthly active users, 500K function calls/mo, no card.
-  Google sign-in built into Supabase Auth (free). Quirk: free project pauses
-  after 7 days idle -> keep awake with a free scheduled ping (GitHub Actions /
-  cron / UptimeRobot).
+  1GB storage, 50K monthly active users, 500K function calls/mo, no card (so it
+  literally can't charge us — no card to charge). Google sign-in built into
+  Supabase Auth (free). 15,000 subscribers fits easily (well under 50K users).
+  HONEST CAVEAT: free Supabase is a starting/testing tier, NOT guaranteed
+  always-on production. Free projects pause after 7 days idle (data is NOT
+  deleted) -> keep awake with a free scheduled ping. Free has NO downloadable
+  backups. Upgrade trigger is reliability, not a user cap: when real PAYING
+  members depend on it, Pro ($25/mo) buys daily backups (7-day retention) and
+  no-pause. Don't treat "15K users for $0" as a promise — measure real egress.
 - Email: Sender.net FREE forever — 2,500 subscribers, 15,000 emails/mo,
   automation + transactional included. "Powered by Sender" footer unless $7/mo.
 - Payments: Stripe — $0 to open, no setup/monthly fee; 2.9% + 30c per sale

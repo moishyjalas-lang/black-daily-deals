@@ -85,7 +85,8 @@ traces back to building from my own guesses instead of his actual assets.
 ## Working rules going forward
 1. Use his real images and mockups exactly — never draw or improvise.
 2. Champagne gold, Playfair + DM Sans, ambient glow — the Design System.
-3. Test the real live GitHub Pages URL in his Chrome before saying "done."
+3. Test the real live URL in his Chrome before saying "done." Primary host is
+   now Cloudflare Pages (black-daily-deals.pages.dev); GitHub Pages is backup.
 4. Never invent data (prices, deals, ratings) — only verified/real.
 5. Improve the existing site; don't rebuild from scratch.
 6. Save every asset he provides right away.
@@ -111,6 +112,18 @@ Immersive layer added and signed off this session:
   showroom image, saved in `assets/rooms/` (aisle-left, aisle-right,
   corner-electronics, corner-travel). Route for per-page images: crop first,
   generate only new angles (Google AI mode / Picsart).
+
+## Hosting migration — DONE (2026-11-18)
+- Moved hosting from GitHub Pages to **Cloudflare Pages** — LIVE and verified
+  in Chrome at **black-daily-deals.pages.dev** (home + deals data + footer all
+  render). Connected to the GitHub repo (moishyjalas-lang/black-daily-deals),
+  auto-deploys on every push to `main`. Unlimited static bandwidth, free.
+- Set up as a separate Pages project inside the Benefit Fund Cloudflare account
+  (option B). Hosting-account reuse only — all login/API creds stay per-project.
+- GitHub Pages left live as a backup for now (decide later whether to turn off).
+- Decided: Cloudflare (front) + Supabase (accounts/alerts/deals) stack; Admin
+  screen for daily deal/pop-up changes, Claude+preview for code changes; free
+  Supabase is a testing tier, not guaranteed production (see BUILD-PLAN).
 
 ## Still to do (Stage 2)
 - **Per-page rooms rollout** — make every page a different corner of the
