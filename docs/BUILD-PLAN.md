@@ -31,7 +31,11 @@ place, all year.
 
 ## 🟡 TOMORROW (needs Moishy — Claude preps, Moishy submits/decides)
 - [ ] Submit FlexOffers + Affiliate.com applications (~1–2 day approval).
-- [ ] Create the Supabase project (Moishy's account) — the backend.
+- [x] Create the Supabase project — DONE 2026-11-18. Project "Everyday Black
+      Friday" (ref ncdmhmgkurfphdrjvhin), own org "Black Daily Deals", Free plan.
+      schema.sql + seed.sql applied: 5 tables, RLS security, 11 deals loaded.
+      Details + how-to-maintain in supabase/README.md. Admin bootstrap: after
+      first sign-in, set is_admin=true for moishyjalas@gmail.com.
 - [ ] Open a Stripe account for the $8/mo plan.
 - [ ] Get the Sender.net API token + group ID for emails.
 - [ ] Start a NEW Google Cloud project for sign-in (never reuse another app's).
