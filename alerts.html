@@ -32,16 +32,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
 .nav-user-pill span{font-size:12px;font-weight:600;color:#fff;}
 @media(max-width:600px){.nav-search{display:none;}}
 
-/* SIGN-IN OVERLAY */
-.signin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;}
-.signin-overlay.active{display:flex;}
-.signin-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;}
-.signin-logo{width:56px;height:56px;object-fit:contain;margin-bottom:16px;}
-.signin-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
-.signin-box p{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.5;}
-.g-signin-wrap{display:flex;justify-content:center;margin-bottom:16px;}
-.signin-skip{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 24px;font-size:13px;cursor:pointer;width:100%;}
-.signin-skip:hover{color:#fff;border-color:rgba(255,255,255,.2);}
 
 /* PAGE */
 .page-wrap{max-width:900px;margin:0 auto;padding:40px 24px 80px;}
@@ -160,38 +150,9 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.95);backdrop-fi
   </div>
   <div class="nav-right">
     <div class="nav-timer" id="nav-timer">⚡ LIVE DEALS</div>
-    <button id="nav-signin-btn" onclick="openSignin()">Sign In</button>
-    <a class="nav-user-pill" id="nav-user-pill" href="profile.html">
-      <img id="nav-avatar" src="" alt="">
-      <span id="nav-name"></span>
-    </a>
+    <button class="btn-signin" data-auth-btn onclick="EBF.openSignInModal()">Sign In</button>
   </div>
 </nav>
-
-<!-- SIGN-IN OVERLAY -->
-<div class="signin-overlay" id="signin-overlay">
-  <div class="signin-box">
-    <img class="signin-logo" src="assets/logo-ebf.png" alt="EBF">
-    <h2>Sign in to set alerts</h2>
-    <p>Create deal alerts and get notified when prices drop on the products you want.</p>
-    <div class="g-signin-wrap">
-      <div id="g_id_onload"
-        data-client_id="875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com"
-        data-callback="handleGoogleSignIn"
-        data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
-        data-type="standard"
-        data-size="large"
-        data-theme="outline"
-        data-text="sign_in_with"
-        data-shape="rectangular"
-        data-logo_alignment="left">
-      </div>
-    </div>
-    <button class="signin-skip" onclick="closeSignin()">Maybe later</button>
-  </div>
-</div>
 
 <!-- PAGE -->
 <div class="page-wrap">
@@ -500,21 +461,19 @@ function renderAlertsContent() {
   renderAlertList();
 }
 
-// NAV SEARCH
-document.getElementById('nav-search-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.value.trim()) {
-    window.location.href = 'search.html?q=' + encodeURIComponent(e.target.value.trim());
-  }
-});
-
-// Enter key on keyword field
-document.addEventListener('DOMContentLoaded', () => {
-  const kw = document.getElementById('alert-keyword');
-  if (kw) kw.addEventListener('keydown', e => { if (e.key === 'Enter') addAlert(); });
-});
-
 // INIT — EBF.init() handles auth UI + announcements; we hook into auth changes
 document.addEventListener('DOMContentLoaded', () => {
+  // Nav search
+  const ns = document.getElementById('nav-search-input');
+  if (ns) ns.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.value.trim()) {
+      window.location.href = 'search.html?q=' + encodeURIComponent(e.target.value.trim());
+    }
+  });
+  // Enter key on keyword field
+  const kw = document.getElementById('alert-keyword');
+  if (kw) kw.addEventListener('keydown', e => { if (e.key === 'Enter') addAlert(); });
+
   if (typeof EBF !== 'undefined') {
     EBF.init();
     // Re-render after sign-in

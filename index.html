@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="js/shared.js" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -466,16 +467,12 @@ footer{
       </svg>
       Get Alerts
     </a>
-    <button class="btn-signin" id="btnSignin" onclick="openSignin()">
+    <button class="btn-signin" data-auth-btn onclick="EBF.openSignInModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
       </svg>
       Sign In
     </button>
-    <div class="user-pill" id="userPill" onclick="location.href='profile.html'" style="display:none;">
-      <img id="userAvatar" src="" alt="">
-      <span id="userName"></span>
-    </div>
   </div>
 </nav>
 
@@ -799,9 +796,9 @@ footer{
 </footer>
 
 <!-- ══ SIGN-IN MODAL ══ -->
-<div class="modal-overlay" id="signinModal">
+<div class="modal-overlay" id="signInModal">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeSignin()" aria-label="Close">&times;</button>
+    <button class="modal-close" onclick="document.getElementById('signInModal').style.display='none'" aria-label="Close">&times;</button>
     <div style="font-size:32px;margin-bottom:12px;">
       <img src="assets/logo-ebf-icon.png" alt="EBF" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
     </div>
@@ -818,7 +815,7 @@ footer{
       Continue with Google
     </button>
     <div class="modal-or">— or —</div>
-    <button class="modal-skip" onclick="skipSignin()">Continue browsing without an account</button>
+    <button class="modal-skip" onclick="localStorage.setItem('skipped_signin','1');document.getElementById('signInModal').style.display='none'">Continue browsing without an account</button>
   </div>
 </div>
 
@@ -826,64 +823,12 @@ footer{
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Google OAuth ──
-const CLIENT_ID = '875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com';
-
-function openSignin(){
-  document.getElementById('signinModal').classList.add('open');
-}
-function closeSignin(){
-  document.getElementById('signinModal').classList.remove('open');
-}
-function skipSignin(){
-  localStorage.setItem('skipped_signin','1');
-  closeSignin();
-}
-
-function signInWithGoogle(){
-  if(typeof google === 'undefined'){
-    showToast('Google Sign-In is loading — try again in a moment.','error');return;
-  }
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: 'openid email profile',
-    callback:(resp)=>{
-      if(resp.error){showToast('Sign-in failed: '+resp.error,'error');return;}
-      fetchUserInfo(resp.access_token);
-    }
-  });
-  client.requestAccessToken();
-}
-
-async function fetchUserInfo(token){
-  try{
-    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{
-      headers:{Authorization:'Bearer '+token}
-    });
-    const u = await r.json();
-    const user={name:u.name||u.email,email:u.email,avatar:u.picture||'',id:u.sub};
-    localStorage.setItem('bdd_user',JSON.stringify(user));
-    updateAuthUI(user);
-    closeSignin();
-    showToast('Welcome, '+user.name.split(' ')[0]+'!','success');
-  }catch(e){showToast('Could not load your profile.','error');}
-}
-
-function updateAuthUI(user){
-  if(!user)return;
-  document.getElementById('btnSignin').style.display='none';
-  const pill=document.getElementById('userPill');
-  pill.style.display='flex';
-  if(user.avatar){document.getElementById('userAvatar').src=user.avatar;}
-  document.getElementById('userName').textContent=user.name.split(' ')[0];
-}
-
 // ── Wishlist ──
 function toggleWish(btn,id){
   const list=JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
   const idx=list.indexOf(id);
-  if(idx===-1){list.push(id);btn.classList.add('active');showToast('Saved to wishlist','success');}
-  else{list.splice(idx,1);btn.classList.remove('active');showToast('Removed from wishlist','');}
+  if(idx===-1){list.push(id);btn.classList.add('active');EBF.showToast('Saved to wishlist','success');}
+  else{list.splice(idx,1);btn.classList.remove('active');EBF.showToast('Removed from wishlist','');}
   localStorage.setItem('bdd_wishlist',JSON.stringify(list));
   btn.querySelector('svg').setAttribute('fill',btn.classList.contains('active')?'currentColor':'none');
 }
@@ -895,50 +840,39 @@ function subscribeNewsletter(e){
   if(!email)return;
   const subs=JSON.parse(localStorage.getItem('ebf_subscribers')||'[]');
   if(!subs.includes(email)){subs.push(email);localStorage.setItem('ebf_subscribers',JSON.stringify(subs));}
-  showToast('Subscribed! Check your inbox soon.','success');
+  EBF.showToast('Subscribed! Check your inbox soon.','success');
   document.getElementById('nlEmail').value='';
 }
 
-// ── Toast ──
-let toastTimer;
-function showToast(msg,type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast'+(type?' '+type:'');
-  void t.offsetWidth;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
-}
-
-// ── Search ──
-document.getElementById('mainSearch').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&e.target.value.trim()){
-    location.href='search.html?q='+encodeURIComponent(e.target.value.trim());
-  }
-});
-
 // ── Init ──
-(function init(){
-  const user=JSON.parse(localStorage.getItem('bdd_user')||'null');
-  if(user) updateAuthUI(user);
+document.addEventListener('DOMContentLoaded', function() {
+  EBF.init();
 
-  // restore wishlist state
+  // Search bar
+  const ms = document.getElementById('mainSearch');
+  if(ms) ms.addEventListener('keydown', e=>{
+    if(e.key==='Enter' && e.target.value.trim()){
+      location.href='search.html?q='+encodeURIComponent(e.target.value.trim());
+    }
+  });
+
+  // Restore wishlist state on deal cards
   const list=JSON.parse(localStorage.getItem('bdd_wishlist')||'[]');
   document.querySelectorAll('.deal-wish').forEach(btn=>{
     const click=btn.getAttribute('onclick')||'';
     const m=click.match(/'([^']+)'\)/);
-    if(m&&list.includes(m[1])){
+    if(m && list.includes(m[1])){
       btn.classList.add('active');
       btn.querySelector('svg').setAttribute('fill','currentColor');
     }
   });
 
-  // close modal on overlay click
-  document.getElementById('signinModal').addEventListener('click',e=>{
-    if(e.target.id==='signinModal') closeSignin();
+  // Close modal on overlay click
+  const modal=document.getElementById('signInModal');
+  if(modal) modal.addEventListener('click', e=>{
+    if(e.target===modal) modal.style.display='none';
   });
-})();
+});
 </script>
 </body>
 </html>

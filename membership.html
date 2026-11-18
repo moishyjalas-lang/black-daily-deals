@@ -8,6 +8,8 @@
 <link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
 <meta name="theme-color" content="#0a0a0a">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="js/shared.js" defer></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   :root{
@@ -396,31 +398,17 @@
       <span class="label">Deals reset in</span>
       <span class="time" id="nav-timer">--:--:--</span>
     </div>
-    <div id="auth-btn-wrap">
-      <button class="btn-signin" id="btn-open-signin">Sign In</button>
-    </div>
+    <button class="btn-signin" data-auth-btn onclick="EBF.openSignInModal()">Sign In</button>
   </div>
 </nav>
 
 <!-- SIGN-IN OVERLAY -->
-<div class="signin-overlay" id="signin-overlay">
+<div class="signin-overlay" id="signInModal">
   <div class="signin-box">
-    <div id="g_id_onload"
-      data-client_id="875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com"
-      data-callback="handleGoogleSignIn"
-      data-auto_prompt="false">
-    </div>
     <h2>Sign in to Upgrade</h2>
     <p>Create a free account to save deals, set alerts, and unlock Pro features.</p>
-    <div class="g_id_signin"
-      data-type="standard"
-      data-shape="pill"
-      data-theme="outline"
-      data-text="sign_in_with"
-      data-size="large"
-      data-logo_alignment="left">
-    </div>
-    <div class="signin-skip" onclick="skipSignin()">Continue without signing in</div>
+    <div id="ebf-signin-btn-membership"></div>
+    <div class="signin-skip" onclick="localStorage.setItem('skipped_signin','1');document.getElementById('signInModal').classList.remove('show')">Continue without signing in</div>
   </div>
 </div>
 
@@ -458,7 +446,7 @@
         </li>
         <li>
           <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span class="feat-text">Up to <strong>5 price alerts</strong></span>
+          <span class="feat-text">Up to <strong>1 price alert</strong></span>
         </li>
         <li>
           <span class="feat-icon check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
@@ -626,7 +614,7 @@
           What's included in the free plan?
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">The free plan includes full access to all deals, wishlist saving, up to 5 price alerts, and email notifications. You can use Everyday Black Friday forever without paying a cent.</div>
+        <div class="faq-a">The free plan includes full access to all deals, wishlist saving, 1 price alert, and email notifications. You can use Everyday Black Friday forever without paying a cent.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
@@ -731,8 +719,6 @@
 
 <div id="toast"></div>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-
 <script>
 // ── BILLING TOGGLE ──
 let isAnnual = false;
@@ -749,93 +735,49 @@ function toggleBilling() {
   if (isAnnual) {
     sw.classList.add('on');
     lm.classList.remove('active'); la.classList.add('active');
-    pp.innerHTML = '<sup>$</sup>2<span class="cents">.99</span>';
-    per.innerHTML = 'per month · <span class="annual-note">billed $35.88/yr (save 40%)</span>';
-    cp.textContent = '$2.99 / mo (annual)';
+    pp.innerHTML = '<sup>$</sup>5<span class="cents">.33</span>';
+    per.innerHTML = 'per month · <span class="annual-note">billed $63.96/yr (save 33%)</span>';
+    cp.textContent = '$5.33 / mo (annual)';
     if(sb) sb.textContent = 'Annual';
-    if(st) st.textContent = '$35.88 / year';
+    if(st) st.textContent = '$63.96 / year';
   } else {
     sw.classList.remove('on');
     lm.classList.add('active'); la.classList.remove('active');
-    pp.innerHTML = '<sup>$</sup>4<span class="cents">.99</span>';
+    pp.innerHTML = '<sup>$</sup>8<span class="cents">.00</span>';
     per.textContent = 'per month · billed monthly';
-    cp.textContent = '$4.99 / mo';
+    cp.textContent = '$8.00 / mo';
     if(sb) sb.textContent = 'Monthly';
-    if(st) st.textContent = '$4.99';
-  }
-}
-
-// ── AUTH ──
-function getUser() {
-  try { return JSON.parse(localStorage.getItem('bdd_user')); } catch(e){ return null; }
-}
-function parseJwt(token) {
-  const b64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-  return JSON.parse(decodeURIComponent(atob(b64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-}
-function handleGoogleSignIn(response) {
-  const data = parseJwt(response.credential);
-  const user = { name: data.name, email: data.email, picture: data.picture, joined: Date.now() };
-  const existing = getUser();
-  if (existing && existing.joined) user.joined = existing.joined;
-  localStorage.setItem('bdd_user', JSON.stringify(user));
-  localStorage.removeItem('skipped_signin');
-  closeSignin();
-  updateAuthUI();
-  showToast('Welcome, ' + data.given_name + '!', 'success');
-}
-function closeSignin() {
-  document.getElementById('signin-overlay').classList.remove('show');
-}
-function skipSignin() {
-  localStorage.setItem('skipped_signin', '1');
-  closeSignin();
-}
-function updateAuthUI() {
-  const user = getUser();
-  const wrap = document.getElementById('auth-btn-wrap');
-  if (!wrap) return;
-  if (user) {
-    if (user.picture) {
-      wrap.innerHTML = `<div class="user-pill" onclick="window.location='profile.html'"><img src="${user.picture}" alt="${user.name}"><span>${user.name.split(' ')[0]}</span></div>`;
-    } else {
-      const initials = user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-      wrap.innerHTML = `<div class="user-pill" onclick="window.location='profile.html'"><div class="pill-initials">${initials}</div><span>${user.name.split(' ')[0]}</span></div>`;
-    }
-  } else {
-    wrap.innerHTML = `<button class="btn-signin" id="btn-open-signin" onclick="document.getElementById('signin-overlay').classList.add('show')">Sign In</button>`;
+    if(st) st.textContent = '$8.00';
   }
 }
 
 // ── CTA HANDLERS ──
 function handleFreeCta() {
-  const user = getUser();
+  const user = JSON.parse(localStorage.getItem('bdd_user')||'null');
   if (!user) {
-    document.getElementById('signin-overlay').classList.add('show');
-    showToast('Sign in to get started', 'success');
+    EBF.openSignInModal();
+    EBF.showToast('Sign in to get started', 'success');
   } else {
     window.location.href = 'search.html';
   }
 }
 function handleProCta() {
-  const user = getUser();
+  const user = JSON.parse(localStorage.getItem('bdd_user')||'null');
   if (!user) {
-    document.getElementById('signin-overlay').classList.add('show');
-    showToast('Sign in to upgrade to Pro', 'success');
+    EBF.openSignInModal();
+    EBF.showToast('Sign in to upgrade to Pro', 'success');
     return;
   }
-  // Update modal billing info
   document.getElementById('stripe-billing').textContent = isAnnual ? 'Annual' : 'Monthly';
-  document.getElementById('stripe-total').textContent = isAnnual ? '$35.88 / year' : '$4.99';
+  document.getElementById('stripe-total').textContent = isAnnual ? '$63.96 / year' : '$8.00';
   document.getElementById('stripe-modal').classList.add('show');
 }
 function closeStripeModal() {
   document.getElementById('stripe-modal').classList.remove('show');
 }
 function handleStripeCheckout() {
-  // Stripe placeholder — payment integration goes here
   closeStripeModal();
-  showToast('Stripe integration coming soon — stay tuned!', 'success');
+  window.open(EBF.STRIPE_LINK, '_blank');
 }
 
 // ── FAQ ──
@@ -866,43 +808,28 @@ function updateTimer() {
 setInterval(updateTimer, 1000);
 updateTimer();
 
-// ── NAV SEARCH ──
-document.getElementById('nav-search-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && this.value.trim()) {
-    window.location.href = 'search.html?q=' + encodeURIComponent(this.value.trim());
-  }
-});
-
-// ── TOAST ──
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show ' + (type || '');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => { t.className = ''; }, 3000);
-}
-
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', function() {
-  updateAuthUI();
-  const user = getUser();
-  const skipped = localStorage.getItem('skipped_signin');
-  if (!user && !skipped) {
-    setTimeout(() => document.getElementById('signin-overlay').classList.add('show'), 1200);
-  }
-  // If user is already Pro (future feature), update CTA
+  EBF.init();
+
+  // If user is already Pro, update CTA
+  const user = JSON.parse(localStorage.getItem('bdd_user')||'null');
   if (user && user.isPro) {
     const cta = document.getElementById('btn-pro-cta');
-    if (cta) { cta.textContent = 'You\'re a Pro member ✓'; cta.style.opacity = '0.7'; cta.onclick = null; }
+    if (cta) { cta.textContent = "You're a Pro member ✓"; cta.style.opacity = '0.7'; cta.onclick = null; }
   }
-});
 
-// Close modals on overlay click
-document.getElementById('stripe-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeStripeModal();
-});
-document.getElementById('signin-overlay').addEventListener('click', function(e) {
-  if (e.target === this) skipSignin();
+  document.getElementById('nav-search-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      window.location.href = 'search.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  // Close modals on overlay click
+  const stripeModal = document.getElementById('stripe-modal');
+  if (stripeModal) stripeModal.addEventListener('click', function(e) {
+    if (e.target === this) closeStripeModal();
+  });
 });
 </script>
 </body>
