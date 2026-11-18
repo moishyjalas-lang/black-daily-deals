@@ -3,7 +3,7 @@
    content sits in a lit room instead of floating on flat black.
    Linked on every page; overrides each page's own body background. */
 
-html { background:#0c0b0a; }
+html { background:#0f0c08; }
 
 body { background:transparent !important; }
 
