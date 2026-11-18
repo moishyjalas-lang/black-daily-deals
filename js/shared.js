@@ -101,7 +101,7 @@ const EBF = {
   </a>
   <div class="card-body">
     <h3 class="card-title"><a href="${d.affiliate_url}" target="_blank" rel="noopener noreferrer">${d.title}</a></h3>
-    <div class="card-rating">${this.renderStars(d.rating)} <span class="rating-num">${d.rating}</span> <span class="rating-count">(${d.reviews.toLocaleString()})</span></div>
+    ${d.rating ? `<div class="card-rating">${this.renderStars(d.rating)} <span class="rating-num">${d.rating}</span>${d.reviews ? ` <span class="rating-count">(${d.reviews.toLocaleString()})</span>` : ''}</div>` : ''}
     <div class="card-store">${d.store}</div>
     <div class="card-price">
       <span class="price-now">${this.fmt(d.price)}</span>

@@ -418,7 +418,7 @@ function getFilteredDeals() {
   if(sort === 'discount') deals.sort((a,b) => (b.discount||0) - (a.discount||0));
   else if(sort === 'price_asc') deals.sort((a,b) => a.price - b.price);
   else if(sort === 'price_desc') deals.sort((a,b) => b.price - a.price);
-  else if(sort === 'popular') deals.sort((a,b) => b.reviews - a.reviews);
+  else if(sort === 'popular') deals.sort((a,b) => (b.reviews||b.discount||0) - (a.reviews||a.discount||0));
   return deals;
 }
 
