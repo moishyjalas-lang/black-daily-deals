@@ -80,3 +80,56 @@ Smiling Tree Toys, Travelpro. Amazon is broad but lower (~2–4.5%).
 Affiliate applications, account sign-ups, and any payment/eligibility terms are
 yours to approve/submit. I can draft the applications and build all the site
 logic; I don't create accounts or accept terms on your behalf.
+
+---
+
+# DEEPER SEARCH (2026-11-18) — better options than the first pass
+
+## New top pick for deal DATA + LINKS: Affiliate.com
+- One API: 1B+ products, 16,000+ merchants, 30+ networks — incl. Amazon,
+  Walmart, Best Buy down to niche brands.
+- Carries 30+ fields INCLUDING sale price, discount, stock, image, barcode —
+  deal-ready out of the box (richer than Skimlinks/Squirrel).
+- You plug in YOUR OWN affiliate IDs and keep 100% of commission.
+- Pricing: embed tool ~$29/mo Starter, ~$79/mo Basic (+ small per-click after
+  included clicks). Raw Product API = custom quote (contact sales). Also a
+  pay-per-use agent endpoint (zeroclick.affiliate.com).
+- Catch: it unifies DATA + LINKS, does NOT skip approvals — you still join the
+  underlying networks/merchants and enter your IDs.
+- Docs: https://guides.affiliate.com · https://api.affiliate.com
+
+## Best single-join NETWORK to fill all 8 categories: FlexOffers
+- One feed = 650M+ products, 6,000+ stores, API or FTP, daily updates, with an
+  on-sale flag in /products/full.
+- Approval ~1–2 business days. Has a "shopping & promotions publisher" type for
+  coupon/comparison/deal sites — declare it on the application.
+- https://www.flexoffers.com/product-feeds/
+
+## Best PRICE HISTORY (prove a real deal): ShopSavvy Data API
+- Barcode / ASIN / URL -> current offers across tens of thousands of retailers
+  + price history back to 2011 (dense from 2019). Built for deal/price-compare
+  apps. From ~$490/yr. Treat as price-data, confirm if links are commissionable.
+- Backups: RetailerAPI.com (cross-retailer price/sellers/history by UPC/GTIN,
+  new 2026); Keepa (Amazon price history, extensive).
+
+## Auto-link converters (hands-off, but take a cut): Sovrn / Skimlinks
+- Convert ordinary links to tracked ones across ~12k–30k merchants; no
+  per-merchant approval, but they keep a share. Sovrn needs its script
+  installed + clicks generated before it approves the site, and its product API
+  doesn't return direct merchant URLs. Use only if we want set-and-forget.
+
+## Amazon note
+- Amazon retired PA-API 5.0 in 2026 -> Creators API for Associates (affiliate
+  links, no product history). Needs approved Associates + 3 qualifying sales in
+  30 days; category rates ~1–10% (commonly 2–4.5%). Broad selection, low rate.
+
+## REVISED best path
+1. **Deal data + links:** Affiliate.com (one hookup, deal-ready, keep 100%).
+2. **Shelf-filler network:** FlexOffers (single join, 6,000+ stores).
+3. **Price history:** ShopSavvy (add when budget allows).
+4. **Launch now:** manual/CSV upload — no waiting on approvals.
+5. **Money mix:** broad retailers (Amazon/Walmart ~2–4.5%) to fill shelves +
+   higher-rate specialists per category (B&H/Adorama 8%, Sijo/ILIA/EXPED 10%,
+   A-Premium up to 20%, Travelpro 8%). Every "up to" rate needs the merchant to
+   confirm a deals site qualifies and sale items pay.
+- Applications are Moishy's to submit; I draft them + build all site logic.
