@@ -613,38 +613,19 @@ footer{
 
 <!-- ══ HERO — welcome video (logo → categories) + flashing text ══ -->
 <section class="hero">
-  <video class="hero-vid" id="heroVideo" autoplay muted loop playsinline preload="auto"
-         poster="assets/hero-bg-poster.jpg" aria-label="Everyday Black Friday welcome">
-    <source src="assets/hero-bg.mp4" type="video/mp4">
-  </video>
+  <img class="hero-vid" src="assets/welcome/logo.png" alt="Everyday Black Friday" fetchpriority="high">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow reveal r1">Everyday Black Friday</div>
-    <h1>
-      <span class="hl reveal r2">Black Friday prices.</span>
-      <span class="hl hl-gold reveal r3">All year round.</span>
-    </h1>
-    <p class="hero-rotator reveal r4"><span id="heroRotate" class="rot-word">Watching every deal for you.</span></p>
-    <a class="btn-primary reveal r5" href="search.html">
+    <div class="hero-eyebrow">Everyday Black Friday</div>
+    <h1><span class="hl">Black Friday prices.</span><span class="hl hl-gold">All year round.</span></h1>
+    <p class="hero-sub">Great deals from stores you trust.</p>
+    <a class="btn-primary" href="search.html">
       Shop All Deals
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
       </svg>
     </a>
   </div>
-  <script>
-  (function(){
-    var el=document.getElementById('heroRotate');
-    if(!el) return;
-    var lines=["Watching every deal for you.","One site — not a hundred.","New deals, every single day."];
-    var i=0;
-    setInterval(function(){
-      i=(i+1)%lines.length;
-      el.style.opacity=0;
-      setTimeout(function(){ el.textContent=lines[i]; el.style.opacity=1; },260);
-    },3000);
-  })();
-  </script>
 </section>
 
 <!-- ══ STATEMENT BAND — sits in the showroom, pushes in as you scroll ══ -->
