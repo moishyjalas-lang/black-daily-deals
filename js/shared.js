@@ -12,7 +12,7 @@
 
 window.EBF = window.EBF || {};
 Object.assign(window.EBF, {
-  STRIPE_LINK: 'https://buy.stripe.com/PLACEHOLDER_STRIPE_LINK',
+  STRIPE_LINK: 'https://buy.stripe.com/aFa00l3TE2lteuVgBffbq00',
   FREE_ALERT_LIMIT: 1,
   PRO_ALERT_LIMIT: 999,
   AFFILIATE_TAG: 'blackdailydeals-20',
