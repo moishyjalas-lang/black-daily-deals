@@ -1,13 +1,39 @@
 /* Everyday Black Friday — shared "stage" backdrop.
-   Puts the gold tunnel/stage environment behind every page so the
-   content sits in a lit room instead of floating on flat black.
+   Puts the showroom hallway behind every page so the content sits in a
+   lit room instead of floating on flat black. As the shopper scrolls,
+   js/hallway.js walks the room forward through all 60 scenes.
    Linked on every page; overrides each page's own body background. */
 
 html { background:#0f0c08; }
 
 body { background:transparent !important; }
 
-/* Fixed backdrop behind all content */
+/* ── The hallway itself: photo layers behind everything ──
+   If JavaScript never runs, the single still photo below still shows,
+   so the page is never bare. */
+.hallway{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
+  pointer-events:none;
+  background:url('../assets/bg-stage.jpg') center 20% / cover no-repeat, #0f0c08;
+}
+.hallway img{
+  position:absolute;
+  inset:-3%;
+  width:106%;
+  height:106%;
+  object-fit:cover;
+  object-position:center;
+  filter:brightness(0.84) saturate(0.92);
+  will-change:transform,opacity;
+  transform-origin:50% 42%;        /* push toward the light at the end of the hall */
+}
+
+/* ── Readability scrim: above the photo, below the content ──
+   This is what keeps every deal card and every line of text legible
+   no matter which scene is behind it. */
 body::before{
   content:'';
   position:fixed;
@@ -19,25 +45,10 @@ body::before{
     radial-gradient(ellipse 70% 42% at 50% -4%, rgba(150,92,30,0.22), transparent 62%),
     radial-gradient(ellipse 62% 44% at 50% 104%, rgba(120,72,26,0.20), transparent 62%),
     /* readability overlay — darkens the photo so text stays legible */
-    linear-gradient(180deg, rgba(12,11,10,0.62) 0%, rgba(12,11,10,0.70) 45%, rgba(12,11,10,0.80) 100%),
-    /* the real stage photo */
-    url('../assets/bg-stage.jpg') center 20% / cover no-repeat,
-    #0c0b0a;
-  transform-origin:50% 42%;        /* push toward the light at the end of the hall */
-  will-change:transform;
+    linear-gradient(180deg, rgba(12,11,10,0.62) 0%, rgba(12,11,10,0.70) 45%, rgba(12,11,10,0.80) 100%);
 }
 
-/* ── Walk-into-the-shop: the room pushes in as you scroll (native, GPU-smooth) ──
-   Only where the browser supports it AND the person hasn't asked for less motion. */
-@supports (animation-timeline: scroll()){
-  @media (prefers-reduced-motion: no-preference){
-    body::before{
-      animation: stage-push linear both;
-      animation-timeline: scroll(root block);
-    }
-    @keyframes stage-push{
-      from { transform: scale(1.03); }
-      to   { transform: scale(1.16); }
-    }
-  }
+/* Someone who asked for less motion gets a still room, not a moving one. */
+@media (prefers-reduced-motion: reduce){
+  .hallway img{ will-change:auto; transform:none !important; }
 }
