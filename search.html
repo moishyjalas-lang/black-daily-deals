@@ -642,14 +642,14 @@ function renderSubNav(){
   const subs=c.subs.filter(s=>n[s]);
   if(!subs.length){ el.innerHTML=''; tl.innerHTML=''; return; }
   const img=c.subImg||{};
-  el.innerHTML=`<button class="ptile${activeSub?'':' active'}" onclick="pickSub('')">${tileImg(c.img)}<span class="pl">All ${esc(c.name)}<span class="n">${base.length}</span></span></button>`+
-    subs.map(s=>`<button class="ptile${activeSub===s?' active':''}" onclick="pickSub(${jsq(s)})">${tileImg(img[s])}<span class="pl">${esc(s)}<span class="n">${n[s]}</span></span></button>`).join('');
+  el.innerHTML=`<button class="ptile${activeSub?'':' active'}" onclick="pickSub('')">${tileImg(c.img)}<span class="pl">All ${esc(c.name)}</span></button>`+
+    subs.map(s=>`<button class="ptile${activeSub===s?' active':''}" onclick="pickSub(${jsq(s)})">${tileImg(img[s])}<span class="pl">${esc(s)}</span></button>`).join('');
   const types=(c.types||{})[activeSub]||[];
   const inSub=base.filter(x=>x.subcategory===activeSub); const tn={}; inSub.forEach(x=>{ if(x.type) tn[x.type]=(tn[x.type]||0)+1; });
   const shown=types.filter(t=>tn[t.name]);
   if(!activeSub || shown.length<2 && !activeType){ tl.innerHTML=''; return; }
-  tl.innerHTML=`<button class="ptile${activeType?'':' active'}" onclick="pickType('')">${tileImg(img[activeSub])}<span class="pl">All ${esc(activeSub)}<span class="n">${inSub.length}</span></span></button>`+
-    shown.map(t=>`<button class="ptile${activeType===t.name?' active':''}" onclick="pickType(${jsq(t.name)})">${tileImg(t.img)}<span class="pl">${esc(t.name)}<span class="n">${tn[t.name]}</span></span></button>`).join('');
+  tl.innerHTML=`<button class="ptile${activeType?'':' active'}" onclick="pickType('')">${tileImg(img[activeSub])}<span class="pl">All ${esc(activeSub)}</span></button>`+
+    shown.map(t=>`<button class="ptile${activeType===t.name?' active':''}" onclick="pickType(${jsq(t.name)})">${tileImg(t.img)}<span class="pl">${esc(t.name)}</span></button>`).join('');
 }
 /* deal-level tabs: Doorbuster / Hot Deal / Price Drop / Everyday Price */
 function renderLevelTabs(){
@@ -659,8 +659,8 @@ function renderLevelTabs(){
   const L={bf:'Doorbuster',big:'Hot Deal',light:'Price Drop',regular:'Everyday Price'};
   const keys=CAT.levels.filter(k=>n[k]);
   if(keys.length<2 && !activeLevel){ el.innerHTML=''; return; }
-  el.innerHTML=`<button class="snav${activeLevel?'':' active'}" onclick="pickLevel('')">Everything<span class="n">${base.length}</span></button>`+
-    keys.map(k=>`<button class="snav${activeLevel===k?' active':''}" onclick="pickLevel('${k}')">${L[k]}<span class="n">${n[k]}</span></button>`).join('');
+  el.innerHTML=`<button class="snav${activeLevel?'':' active'}" onclick="pickLevel('')">Everything</button>`+
+    keys.map(k=>`<button class="snav${activeLevel===k?' active':''}" onclick="pickLevel('${k}')">${L[k]}</button>`).join('');
 }
 
 function renderPagination(total){
