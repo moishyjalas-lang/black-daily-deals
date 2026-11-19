@@ -290,9 +290,27 @@ Object.assign(window.EBF, {
     }
   },
 
+  /* Inject the email form into a page's own inline sign-in modal (so every page gets it) */
+  _injectEmailForm(modal) {
+    if (!modal || modal.querySelector('#ebfEmail')) return;
+    const box = modal.querySelector('.modal-box') || modal.firstElementChild;
+    if (!box) return;
+    const skip = box.querySelector('.modal-skip');
+    const inStyle = 'width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:10px;outline:none;';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:4px;';
+    wrap.innerHTML =
+      '<input id="ebfEmail" type="email" placeholder="Email" autocomplete="email" style="' + inStyle + '">' +
+      '<input id="ebfPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key===\'Enter\')EBF.submitEmailAuth()" style="' + inStyle + '">' +
+      '<div id="ebfAuthErr" style="color:#ff6b6b;font-size:13px;min-height:16px;margin-bottom:8px;text-align:left;"></div>' +
+      '<button id="ebfEmailBtn" onclick="EBF.submitEmailAuth()" style="background:#FFD700;color:#000;border:none;padding:13px 20px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;width:100%;">Sign in</button>' +
+      '<p id="ebfToggle" onclick="EBF.setAuthMode(EBF._authMode===\'signup\'?\'signin\':\'signup\')" style="color:#aaa;font-size:13px;margin:16px 0 4px;cursor:pointer;">New here? <b style="color:#FFD700;">Create an account</b></p>';
+    if (skip) box.insertBefore(wrap, skip); else box.appendChild(wrap);
+  },
+
   openSignInModal() {
     const m = document.getElementById('signInModal');
-    if (m) { m.style.display = 'flex'; this.setAuthMode('signin'); return; }
+    if (m) { this._injectEmailForm(m); m.style.display = 'flex'; this.setAuthMode('signin'); return; }
     // create modal on the fly if page doesn't have one
     const html = `<div id="signInModal" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;">
       <div style="background:#181818;border:1px solid #333;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;position:relative;">
