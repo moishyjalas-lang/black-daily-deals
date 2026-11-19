@@ -352,6 +352,8 @@
   .stripe-box{
     background:var(--card);border:1px solid #3a2f00;border-radius:16px;
     padding:40px 32px;max-width:460px;width:90%;text-align:center;
+    max-height:calc(100vh - 32px);overflow-y:auto;
+    scrollbar-width:thin;scrollbar-color:var(--border) transparent;
   }
   .stripe-box h2{font-size:22px;font-weight:800;margin-bottom:8px;}
   .stripe-box p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;}
@@ -387,6 +389,46 @@
   .stripe-note{
     margin-top:16px;font-size:11px;color:#555;line-height:1.5;
   }
+  .stripe-note a{color:var(--muted);text-decoration:underline;}
+  .stripe-note a:hover{color:var(--gold2);}
+
+  /* ── AUTO-RENEWAL NOTICE ── */
+  .renew-terms{
+    background:rgba(213,160,71,0.06);border:1px solid rgba(213,160,71,0.28);border-radius:10px;
+    padding:14px 16px;margin-bottom:16px;text-align:left;
+    font-size:13px;line-height:1.6;color:var(--text);
+  }
+  .renew-terms strong{color:var(--gold2);font-weight:700;}
+  .renew-agree{
+    display:flex;align-items:flex-start;gap:10px;text-align:left;
+    font-size:13px;line-height:1.5;color:var(--muted);margin-bottom:18px;cursor:pointer;
+  }
+  .renew-agree input{
+    -webkit-appearance:none;appearance:none;flex-shrink:0;width:18px;height:18px;margin-top:1px;
+    border:1.5px solid var(--gold);border-radius:4px;background:#111;cursor:pointer;
+    display:grid;place-content:center;transition:background 0.15s;
+  }
+  .renew-agree input:checked{background:linear-gradient(90deg,var(--gold),var(--gold2));border-color:var(--gold2);}
+  .renew-agree input:checked::after{
+    content:"";width:5px;height:9px;border:solid var(--ink);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg);
+  }
+  .renew-agree input:focus-visible{outline:2px solid var(--gold2);outline-offset:2px;}
+  .renew-agree a{color:var(--gold2);text-decoration:underline;}
+  .btn-stripe:disabled{opacity:0.45;cursor:not-allowed;filter:none;transform:none;}
+  .plan-renew-note{font-size:12px;color:var(--muted);line-height:1.5;margin:-18px 0 24px;text-align:center;}
+
+  /* ── MEMBERSHIP TERMS ── */
+  .terms-section{margin-bottom:60px;scroll-margin-top:90px;}
+  .terms-section h2{font-family:'Playfair Display',Georgia,serif;font-size:28px;font-weight:600;text-align:center;margin-bottom:8px;color:var(--ivory);}
+  .terms-section .terms-sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px;}
+  .terms-card{
+    background:var(--card);border:1px solid rgba(213,160,71,0.22);border-radius:16px;
+    padding:28px 28px 12px;max-width:760px;margin:0 auto;
+  }
+  .terms-card h3{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:600;color:var(--gold2);margin-bottom:6px;}
+  .terms-card p{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:18px;}
+  .terms-card a{color:var(--gold2);text-decoration:underline;}
+  @media(max-width:600px){ .terms-card{padding:22px 18px 6px;} }
 
   @media(max-width:800px){
     .nav-links{display:none;}
@@ -441,7 +483,7 @@
   <p>Unlock unlimited alerts, early deal access, and an ad-free experience — for less than a cup of coffee a month.</p>
   <div style="margin-top:28px;display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid rgba(216,169,79,.35);border-radius:999px;background:rgba(216,154,59,.08);color:var(--gold2);font-size:13px;font-weight:600;">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-    Simple pricing — $8/month, cancel anytime
+    Simple pricing — $8/month, renews monthly, cancel anytime
   </div>
 </div>
 
@@ -498,6 +540,7 @@
       <div class="plan-price" id="pro-price"><sup>$</sup>8</div>
       <div class="plan-period" id="pro-period">per month · unlimited watchers</div>
       <button class="plan-cta pro" id="btn-pro-cta" onclick="handleProCta()">Upgrade to Everyday Plus</button>
+      <div class="plan-renew-note">Renews automatically at $8/month until you cancel. <a href="#membership-terms" style="color:var(--gold2);">See terms</a></div>
       <hr class="plan-divider">
       <ul class="plan-features">
         <li>
@@ -648,7 +691,7 @@
           Can I cancel my Pro plan at any time?
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Yes — cancel anytime from your profile page with no questions asked. Your Pro features remain active until the end of the current billing period.</div>
+        <div class="faq-a">Yes. Email us at <a href="mailto:support@everydayblackfriday.com" style="color:var(--gold2);">support@everydayblackfriday.com</a> from the address on your account and ask us to cancel. Cancel before your next billing date and you won't be charged again. Your Plus features stay active until the end of the month you've already paid for.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
@@ -662,8 +705,28 @@
           How much is Everyday Plus and how am I billed?
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Everyday Plus is $8/month, billed monthly, and includes unlimited deal watchers plus all Plus features. You can cancel anytime. Checkout is handled securely by Stripe (being connected).</div>
+        <div class="faq-a">Everyday Plus is $8/month, billed monthly, and includes unlimited deal watchers plus all Plus features. Your plan renews automatically every month until you cancel, and you can cancel anytime. Checkout is handled securely by Stripe (being connected).</div>
       </div>
+    </div>
+  </div>
+
+  <!-- MEMBERSHIP TERMS -->
+  <div class="terms-section" id="membership-terms">
+    <h2>Membership Terms</h2>
+    <p class="terms-sub">The short version of how Everyday Plus billing works.</p>
+    <div class="terms-card">
+      <h3>Price</h3>
+      <p>Everyday Plus costs $8.00 per month. There is one plan, billed monthly. There is no annual plan and no free trial.</p>
+      <h3>Automatic renewal</h3>
+      <p>Your membership renews automatically every month, and your payment method is charged $8.00 on the same date each month, until you cancel. You agree to this by ticking the automatic renewal box before checkout.</p>
+      <h3>How to cancel</h3>
+      <p>Email <a href="mailto:support@everydayblackfriday.com">support@everydayblackfriday.com</a> from the address on your account and ask us to cancel. There are no cancellation fees.</p>
+      <h3>When cancelling takes effect</h3>
+      <p>Cancel before your next billing date and you won't be charged again. Your Plus features stay active until the end of the month you've already paid for.</p>
+      <h3>Changes to these terms</h3>
+      <p>If we ever change the price or these terms, we'll tell you by email before the change applies to you, and you can cancel before it does.</p>
+      <h3>Payments</h3>
+      <p>Payments are processed by Stripe. We never see or store your full card details.</p>
     </div>
   </div>
 </div>
@@ -682,13 +745,24 @@
         <span class="label">Billing</span>
         <span class="value" id="stripe-billing">Monthly</span>
       </div>
+      <div class="s-row">
+        <span class="label">Renews</span>
+        <span class="value">Automatically, every month</span>
+      </div>
       <hr>
       <div class="s-row total">
         <span class="label">Total today</span>
         <span class="value" id="stripe-total">$8.00 / month</span>
       </div>
     </div>
-    <button class="btn-stripe" onclick="handleStripeCheckout()">
+    <div class="renew-terms" id="renew-terms">
+      <strong>Automatic renewal:</strong> Everyday Plus costs <strong>$8.00 a month</strong>. You're charged $8.00 today, then $8.00 again on the same date every month until you cancel. To cancel, email <a href="mailto:support@everydayblackfriday.com" style="color:var(--gold2);">support@everydayblackfriday.com</a> before your next billing date. You keep Plus until the end of the month you've paid for.
+    </div>
+    <label class="renew-agree" for="renew-consent">
+      <input type="checkbox" id="renew-consent" onchange="toggleRenewConsent(this)">
+      <span>I agree that my plan renews automatically at $8.00 a month until I cancel, and to the <a href="#membership-terms" onclick="closeStripeModal()">Membership Terms</a>.</span>
+    </label>
+    <button class="btn-stripe" id="btn-stripe-checkout" onclick="handleStripeCheckout()" disabled aria-describedby="renew-terms">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Proceed to Secure Checkout
     </button>
@@ -697,7 +771,7 @@
       Secured by Stripe · SSL encrypted
     </div>
     <button class="btn-cancel" onclick="closeStripeModal()">Maybe later</button>
-    <div class="stripe-note">By proceeding you agree to our Terms of Service. Cancel anytime before your next billing date at no charge.</div>
+    <div class="stripe-note">Cancel before your next billing date and you won't be charged again. Read the full <a href="#membership-terms" onclick="closeStripeModal()">Membership Terms</a>.</div>
   </div>
 </div>
 
@@ -724,10 +798,8 @@
       </div>
       <div class="footer-col">
         <h4>Company</h4>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="privacy.html#affiliate">Affiliate Disclosure</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -763,12 +835,22 @@ function handleProCta() {
   }
   document.getElementById('stripe-billing').textContent = 'Monthly';
   document.getElementById('stripe-total').textContent = '$8.00 / month';
+  document.getElementById('renew-consent').checked = false;
+  document.getElementById('btn-stripe-checkout').disabled = true;
   document.getElementById('stripe-modal').classList.add('show');
 }
 function closeStripeModal() {
   document.getElementById('stripe-modal').classList.remove('show');
 }
+function toggleRenewConsent(cb) {
+  document.getElementById('btn-stripe-checkout').disabled = !cb.checked;
+}
 function handleStripeCheckout() {
+  const consent = document.getElementById('renew-consent');
+  if (!consent || !consent.checked) {
+    EBF.showToast('Please agree to the automatic renewal terms first', 'error');
+    return;
+  }
   closeStripeModal();
   window.open(EBF.STRIPE_LINK, '_blank');
 }

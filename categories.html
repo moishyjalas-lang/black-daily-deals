@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Explore every category — Everyday Black Friday</title>
-<meta name="description" content="Browse every category of deals — Electronics, Home, Fashion, Family, Sports, Auto, Travel and Seasonal. Black Friday prices all year round.">
+<meta name="description" content="Browse 14 departments of deals: Electronics, Home, Clothing, Beauty, Family, Health, Sports, Auto & Tools, Garden, Travel, Food, Books & Hobbies, Seasonal & Gifts, and Services. Black Friday prices all year round.">
 <meta name="theme-color" content="#0c0b0a">
 <link rel="icon" href="assets/logo-ebf-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +80,26 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .chip{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:#15110b;color:#d8cdbb;font-size:13px;font-weight:500;transition:all .15s;}
 .chip:hover{border-color:var(--gold2);color:var(--gold2);background:rgba(244,209,139,.08);}
 
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:8px 0 18px;}
+.sec-head h2{font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:600;color:var(--ivory);}
+.sec-head span{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.sec-gap{height:44px;}
+.cat-grid.compact{grid-template-columns:repeat(3,1fr);gap:18px;}
+.cat-grid.compact .cat-name h2{font-size:20px;}
+.cat-grid.compact .cat-name{margin-bottom:12px;}
+.cat-count{font-size:12px;color:var(--gold2);letter-spacing:.06em;margin:-6px 0 12px;}
+.chip .n{color:var(--muted);font-size:11.5px;margin-left:5px;}
+.chip.all{border-color:var(--gold-deep);color:var(--gold2);}
+.cat-soon{font-size:13px;color:var(--muted);}
+.cat-photo.prod{height:170px;background:#fff;}
+.cat-photo.prod::after{display:none;}
+.cat-photo.prod img{object-fit:contain;object-position:center;padding:14px;}
+.chip.th{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 4px;}
+.chip .th-img{width:26px;height:26px;border-radius:50%;background:#fff;object-fit:contain;padding:2px;flex-shrink:0;}
+.chip .th-img.pic{object-fit:cover;padding:0;background:#15110b;}
+@media(max-width:1000px){.cat-grid.compact{grid-template-columns:1fr 1fr;}}
+@media(max-width:760px){.cat-grid.compact{grid-template-columns:1fr;}}
+
 /* FOOTER */
 footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908;border-top:1px solid #3a3023;padding:48px 24px 32px;margin-top:20px;}
 .footer-inner{max-width:1200px;margin:0 auto;}
@@ -93,6 +113,8 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 .footer-col a:hover{color:var(--ivory);}
 .footer-bottom{border-top:1px solid #2a2318;padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .footer-bottom p{font-size:12px;color:#8a8070;}
+.footer-bottom a{color:inherit;text-decoration:none;}
+.footer-bottom a:hover{color:var(--ivory);}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;}
@@ -156,7 +178,11 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 
 <!-- GRID -->
 <div class="cat-wrap">
+  <div class="sec-head"><h2>Shop by department</h2><span id="catTotal"></span></div>
   <div class="cat-grid" id="catGrid"></div>
+  <div class="sec-gap all-cats"></div>
+  <div class="sec-head all-cats"><h2>All categories</h2><span>Every department, A to Z of savings</span></div>
+  <div class="cat-grid compact" id="catGridAll"></div>
 </div>
 
 <!-- FOOTER -->
@@ -192,15 +218,13 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
       </div>
       <div class="footer-col">
         <h4>Support</h4>
-        <a href="#">Contact Us</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Affiliate Disclosure</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="privacy.html#affiliate">Affiliate Disclosure</a>
       </div>
     </div>
     <div class="footer-bottom">
       <p id="foot-copy">Everyday Black Friday. As an Amazon Associate we earn from qualifying purchases.</p>
-      <p>Privacy · Terms</p>
+      <p><a href="privacy.html">Privacy</a></p>
     </div>
   </div>
 </footer>
@@ -219,60 +243,59 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
   </div>
 </div>
 
+<script src="js/catalog.js"></script>
 <script>
-// Full category directory (design book IA)
-const CATEGORIES = [
-  { slug:'electronics', name:'Electronics & Tech', img:'assets/categories/electronics.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-    subs:['Phones & Tablets','Phone Accessories','Computers & Tablets','Audio','TVs & Home Theater','Gaming','Cameras'] },
-  { slug:'home', name:'Home & Living', img:'assets/categories/home.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-    subs:['Furniture','Home Décor','Kitchen & Dining','Appliances','Bedding & Bath','Cleaning'] },
-  { slug:'fashion', name:'Fashion & Care', img:'assets/categories/fashion.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>',
-    subs:['Clothing','Shoes','Bags & Accessories','Jewelry','Beauty & Personal Care'] },
-  { slug:'family', name:'Family & Everyday', img:'assets/categories/family.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    subs:['Toys & Games','Baby & Kids','Pet Supplies','Office & School'] },
-  { slug:'sports', name:'Sports & Outdoors', img:'assets/categories/sports.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20l6-8 4 5 3-4 5 7"/><path d="M3 20h18"/></svg>',
-    subs:['Fitness','Outdoor Gear','Camping','Team Sports'] },
-  { slug:'auto', name:'Auto & Tools', img:'assets/categories/auto.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm18 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/><path d="M5 17l1.5-5h11L19 17M6.5 12l1-3h9l1 3"/></svg>',
-    subs:['Automotive','Tools & DIY','Car Accessories'] },
-  { slug:'travel', name:'Travel', img:'assets/categories/travel.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>',
-    subs:['Luggage','Travel Accessories'] },
-  { slug:'seasonal', name:'Seasonal & Gifts', img:'assets/categories/seasonal.jpg',
-    ico:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
-    subs:['Holiday Deals','Gift Ideas','Seasonal Events'] },
-];
-
-function renderCats(){
-  document.getElementById('catGrid').innerHTML = CATEGORIES.map(c => `
+// Full category directory: one shared list in js/catalog.js
+const CAT = window.EBF_CATALOG;
+const subHref = (c,sub) => `search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : '');
+// pick a real product photo for a category or subcategory: the biggest deal that has a photo
+function coverOf(list){ return (list||[]).filter(d => d.image).sort((a,b) => (b.discount||0)-(a.discount||0))[0]; }
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const imgTag = (src, alt, cls) => `<img${cls ? ` class="${cls}"` : ''} src="${esc(src)}" alt="${esc(alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`;
+function cardHTML(c, groups){
+  const g = groups[c.slug] || {};
+  const total = Object.values(g).reduce((a,b)=>a+b.length,0);
+  const subs = c.subs.filter(s => (g[s]||[]).length);
+  const cover = !c.img && coverOf(Object.values(g).flat());
+  const photo = c.img ? `<a class="cat-photo" href="${subHref(c)}">${imgTag(c.img, c.name)}</a>`
+              : cover ? `<a class="cat-photo prod" href="${subHref(c)}">${imgTag(cover.image, cover.title)}</a>` : '';
+  return `
     <div class="cat-card">
-      <a class="cat-photo" href="search.html?cat=${c.slug}">
-        <img src="${c.img}" alt="${c.name}" loading="lazy">
-      </a>
+      ${photo}
       <div class="cat-body">
-        <a class="cat-name" href="search.html?cat=${c.slug}">
-          <span class="ico">${c.ico}</span>
+        <a class="cat-name" href="${subHref(c)}">
+          ${c.ico ? `<span class="ico">${c.ico}</span>` : ''}
           <h2>${c.name}</h2>
         </a>
+        ${total ? `<div class="cat-count">${total} products</div>` : ''}
         <div class="chips">
-          ${c.subs.map(s => `<a class="chip" href="search.html?cat=${c.slug}">${s}</a>`).join('')}
+          ${subs.length ? `<a class="chip all" href="${subHref(c)}">Shop all</a>` + subs.map(s => { const t = coverOf(g[s]); const pic = (c.subImg||{})[s]; return `<a class="chip${pic||t ? ' th' : ''}" href="${subHref(c,s)}">${pic ? imgTag(pic, '', 'th-img pic') : t ? imgTag(t.image, '', 'th-img') : ''}${esc(s)}<span class="n">${g[s].length}</span></a>`; }).join('')
+                        : `<span class="cat-soon">New deals are being added to this category.</span>`}
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
 }
-
+function renderCats(items){
+  const groups = {};
+  items.forEach(d => { const c = CAT.alias[d.category]||d.category; (groups[c] = groups[c]||{}); (groups[c][d.subcategory] = groups[c][d.subcategory]||[]).push(d); });
+  const popular = CAT.cats.filter(c => c.img), rest = CAT.cats.filter(c => !c.img);
+  document.getElementById('catGrid').innerHTML = popular.map(c => cardHTML(c, groups)).join('');
+  document.getElementById('catGridAll').innerHTML = rest.map(c => cardHTML(c, groups)).join('');
+  document.querySelectorAll('.all-cats').forEach(e => e.hidden = !rest.length);
+  if (items.length) document.getElementById('catTotal').textContent = `${items.length} products in ${CAT.cats.length} departments`;
+}
+function loadCats(){
+  Promise.all(['data/deals.json','data/products.json'].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
+    .then(([deals, products]) => { const seen = new Set(); renderCats([...products, ...deals].filter(d => !seen.has(d.id) && seen.add(d.id))); });
+}
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim();
   if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  renderCats();
+  renderCats([]);
+  loadCats();
   if(typeof EBF !== 'undefined') EBF.init();
 });
 </script>
