@@ -52,3 +52,59 @@ body::before{
 @media (prefers-reduced-motion: reduce){
   .hallway img{ will-change:auto; transform:none !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   LETTING THE ROOM THROUGH
+   The hallway is the point — the page should sit IN it, not on top of
+   it. Three things do that, and all three are tunable from right here.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root{
+  --room-glass: 0.52;   /* how solid a card is — lower lets more room through */
+  --room-blur: 16px;    /* frosting; keeps text crisp over a busy scene */
+  --room-edge: 1180px;  /* how wide the content runs on a big screen */
+}
+
+/* 1 ─ A lighter veil. The old one buried the room at 62–80% black.
+       This keeps text readable while the hallway stays visible. */
+body::before{
+  background:
+    radial-gradient(ellipse 70% 42% at 50% -4%, rgba(150,92,30,0.20), transparent 62%),
+    radial-gradient(ellipse 62% 44% at 50% 104%, rgba(120,72,26,0.18), transparent 62%),
+    linear-gradient(180deg, rgba(12,11,10,0.40) 0%, rgba(12,11,10,0.46) 45%, rgba(12,11,10,0.56) 100%) !important;
+}
+
+/* 2 ─ Frosted glass instead of solid slabs. The room shows through every
+       card, blurred just enough that the words on top stay sharp. */
+.deal-card,
+.cat-card,
+.bf-card{
+  background:linear-gradient(140deg,
+      rgba(38,29,20,var(--room-glass)),
+      rgba(24,21,18,calc(var(--room-glass) - 0.06)) 62%,
+      rgba(20,18,16,var(--room-glass))) !important;
+  backdrop-filter:blur(var(--room-blur)) saturate(1.06);
+  -webkit-backdrop-filter:blur(var(--room-blur)) saturate(1.06);
+  border-color:rgba(201,154,78,0.40);
+}
+
+/* The glow on hover still reads, just softer against the room. */
+.deal-card:hover,
+.cat-card:hover,
+.bf-card:hover{
+  background:linear-gradient(140deg,
+      rgba(46,35,23,calc(var(--room-glass) + 0.14)),
+      rgba(30,25,20,calc(var(--room-glass) + 0.08)) 62%,
+      rgba(24,21,18,calc(var(--room-glass) + 0.12))) !important;
+}
+
+/* 3 ─ Pull the content in on wide screens so the hallway runs down both
+       sides instead of being boxed out edge to edge. */
+@media (min-width:1300px){
+  .section,
+  .cat-wrap,
+  .bf-spotlight,
+  .footer-inner{
+    max-width:var(--room-edge) !important;
+  }
+}
