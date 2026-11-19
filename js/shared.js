@@ -331,3 +331,6 @@ if (document.readyState === 'loading') {
 } else {
   EBF.init();
 }
+
+/* auto-update footer copyright year */
+document.addEventListener('DOMContentLoaded',function(){try{document.querySelectorAll('.js-year').forEach(function(e){e.textContent=new Date().getFullYear();});}catch(_){}} );
