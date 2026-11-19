@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="js/shared.js" defer></script>
+<script src="js/catalog.js" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -705,7 +706,7 @@ footer{
     </a>
   </div>
 
-  <div class="cat-grid">
+  <div class="cat-grid" id="catGrid">
     <a class="cat-tile" href="search.html?cat=electronics">
       <div class="cat-thumb">
         <img src="assets/cat-electronics.png" alt="Electronics" loading="lazy">
@@ -795,6 +796,27 @@ footer{
     </a>
   </div>
 </div>
+
+<script>
+/* Render all 14 category departments from the shared catalog (real images, correct links). */
+(function(){
+  function renderCats(){
+    var grid=document.getElementById('catGrid');
+    if(!grid||!window.EBF_CATALOG||!window.EBF_CATALOG.cats||!window.EBF_CATALOG.cats.length) return;
+    var arrow='<svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    grid.innerHTML=window.EBF_CATALOG.cats.map(function(c){
+      var subs=(c.subs||[]).slice(0,3).join(' · ');
+      if(subs) subs+=' · More';
+      return '<a class="cat-tile" href="search.html?cat='+encodeURIComponent(c.slug)+'">'
+        +'<div class="cat-thumb"><img src="'+c.img+'" alt="'+c.name+'" loading="lazy"></div>'
+        +'<div class="cat-info"><div class="cat-name">'+c.name+'</div><div class="cat-subs">'+subs+'</div></div>'
+        +arrow+'</a>';
+    }).join('');
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',renderCats);
+  else renderCats();
+})();
+</script>
 
 <!-- ══ DEAL OF THE DAY ══ -->
 <div class="section" style="padding-top:8px;">
