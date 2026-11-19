@@ -1,9 +1,22 @@
 /* Everyday Black Friday — the hallway backdrop.
  *
  * The showroom hallway sits BEHIND every page. As the shopper scrolls
- * down through the deals, the room walks forward around them: each scene
- * eases into the next, so the whole site feels like one long stroll
- * through the store.
+ * down through the deals, the room walks forward around them.
+ *
+ * The feel we want: a calm, steady walk. Never a jump, never a snap,
+ * never a race. Two rules make that happen:
+ *
+ *   1. PACE  — the walk is tied to real distance scrolled, not to the
+ *      length of the page. One scene per PACE pixels, always. A short
+ *      page shows a few steps of hallway; a long page shows more. So
+ *      scrolling always feels the same speed, on every page.
+ *
+ *   2. SEAMLESS HANDOFF — each scene drifts forward as you approach it,
+ *      and the next scene drifts in behind it, arriving at exactly the
+ *      size and strength the current one started at. At the moment they
+ *      swap, the two pictures are identical, so there is nothing to see.
+ *      No pop, no snap. The crossfade itself is the in-between frame,
+ *      which is why no extra pictures are needed.
  *
  * No controls, no captions, no counter. It is scenery, not a page.
  * The readability scrim lives in css/stage.css and sits on top of this,
@@ -13,6 +26,12 @@
   'use strict';
 
   var BASE = '/showroom/images/';
+
+  /* ── The dials that decide how it feels ── */
+  var PACE = 620;      /* pixels of scroll per scene — bigger = slower walk */
+  var DRIFT = 0.055;   /* how much a scene grows as you walk into it */
+  var EASE = 300;      /* smoothing, ms — bigger = glidier, less twitchy */
+  var TOP_SPEED = 1.0; /* scenes per second it may ever move — the calm cap */
 
   /* The route, in order — the same walk MJ laid out. */
   var SCENES = [
@@ -42,10 +61,14 @@
 
   function src(i) { return BASE + SCENES[Math.max(0, Math.min(last, i))] + '.jpg'; }
 
-  /* Pull the next few scenes down quietly so the walk never stutters. */
+  /* Pull nearby scenes down quietly so the walk never stutters —
+     ahead for scrolling down, behind for scrolling back up. */
   function warm(i) {
-    for (var n = i; n <= i + 2 && n <= last; n++) {
-      if (!cache[n]) { cache[n] = new Image(); cache[n].src = src(n); }
+    for (var n = i - 1; n <= i + 3; n++) {
+      if (n >= 0 && n <= last && !cache[n]) {
+        cache[n] = new Image();
+        cache[n].src = src(n);
+      }
     }
   }
 
@@ -68,16 +91,15 @@
     warm(0);
   }
 
-  /* How far down the page we are, 0 to 1. */
-  function progress() {
+  /* How far along the hallway this scroll position sits. */
+  function target() {
     var doc = document.documentElement;
-    var runway = (doc.scrollHeight || 0) - window.innerHeight;
-    if (runway <= 40) return 0;
     var y = window.pageYOffset || doc.scrollTop || 0;
-    return Math.max(0, Math.min(1, y / runway));
+    return Math.max(0, Math.min(last, y / PACE));
   }
 
-  function target() { return progress() * last; }
+  /* Soft start, soft finish — no hard edges anywhere in the move. */
+  function smooth(t) { return t * t * (3 - 2 * t); }
 
   function paint() {
     var index = Math.min(last, Math.floor(position));
@@ -86,20 +108,20 @@
     if (index !== current) {
       front.src = src(index);
       back.src = src(index + 1);
-      back.style.opacity = '0';
       current = index;
       warm(index);
     }
 
-    /* Ease the next scene in over the back half of each step. */
-    var blend = Math.max(0, Math.min(1, (frac - 0.3) / 0.7));
-    blend = blend * blend * (3 - 2 * blend);
+    /* The next scene arrives across the WHOLE step, so there is never a
+       moment where nothing is moving and then something suddenly does. */
+    var blend = smooth(Math.max(0, Math.min(1, frac)));
     back.style.opacity = (back.complete && back.naturalWidth) ? blend : 0;
 
-    /* A gentle push forward, so it reads as walking rather than sliding. */
-    var push = 1 + frac * 0.05;
-    front.style.transform = 'scale(' + push + ')';
-    back.style.transform = 'scale(' + (push + 0.02) + ')';
+    /* The scene you are in drifts forward from 1 to 1+DRIFT.
+       The next one drifts from 1-DRIFT up to exactly 1 — which is where
+       the next scene begins. They meet perfectly, so the swap is invisible. */
+    front.style.transform = 'scale(' + (1 + frac * DRIFT) + ')';
+    back.style.transform = 'scale(' + (1 - DRIFT + frac * DRIFT) + ')';
   }
 
   function render(time) {
@@ -110,13 +132,18 @@
     var want = target();
     var gap = want - position;
 
-    /* Follow the scroll closely, but smooth out the jitter. */
-    position += gap * (1 - Math.exp(-elapsed / 90));
-    if (Math.abs(want - position) < 0.0005) position = want;
+    /* Glide toward the scroll position, and never faster than a walk. */
+    var move = gap * (1 - Math.exp(-elapsed / EASE));
+    var cap = TOP_SPEED * (elapsed / 1000);
+    if (move > cap) move = cap;
+    if (move < -cap) move = -cap;
+
+    position += move;
+    if (Math.abs(want - position) < 0.0004) position = want;
 
     paint();
 
-    if (Math.abs(target() - position) > 0.0005) {
+    if (Math.abs(target() - position) > 0.0004) {
       frame = requestAnimationFrame(render);
     } else {
       lastTime = 0;
@@ -131,8 +158,10 @@
 
     if (reduced.matches) { position = 0; paint(); return; }
 
+    /* Begin already standing where the page is, so nothing lurches on load. */
     position = target();
     paint();
+
     window.addEventListener('scroll', queue, { passive: true });
     window.addEventListener('resize', queue, { passive: true });
     back.addEventListener('load', queue);
