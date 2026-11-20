@@ -876,38 +876,59 @@ footer{
 .pk-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
 .pk-name{font-size:14px;font-weight:700;color:var(--ivory);line-height:1.35}
 .pk-cta{margin-top:auto;font-size:12.5px;font-weight:700;color:var(--gold2);display:flex;align-items:center;gap:6px}
+.pk-browse{border-style:dashed;border-color:rgba(201,154,78,.34)}
+.pk-browse:hover{border-style:solid}
+.pk-browse .pk-thumb img{opacity:.62}
+.pk-browse .pk-badge{background:linear-gradient(135deg,#6b5428,#8a6a33);}
 @media(max-width:560px){.pk-card{flex:1 1 150px}.pk-thumb{height:108px}.pk-name{font-size:13px}}
 </style>
 <script>
-/* Real Amazon products, grouped under their department. Each card carries our
-   tag. No price and no Amazon photograph — both of those need the Product
-   Advertising API, which opens after the first sales. The artwork is our own
-   department photography, so no card is ever blank. */
+/* Real Amazon products, grouped under their department, in catalog order.
+   Every department also gets a "browse all" card pointing at its tagged
+   Amazon deals search, so no department is ever empty and all 21 earn.
+   No price and no Amazon photograph on any card - both of those need the
+   Product Advertising API, which opens after the first sales. The artwork
+   is our own department photography. */
 (function(){
-  function build(picks, cats){
-    if(!picks.length) return;
-    var byCat={}, order=[];
-    picks.forEach(function(p){ if(!byCat[p.category]){byCat[p.category]=[];order.push(p.category);} byCat[p.category].push(p); });
-    var meta={}; (cats||[]).forEach(function(c){ meta[c.slug]={name:c.name,img:c.img}; });
-    var html = order.map(function(slug){
-      var m = meta[slug] || {name:slug, img:''};
-      var cards = byCat[slug].map(function(p){
-        var img = m.img ? '<img src="'+m.img+'" alt="" loading="lazy">' : '';
-        return '<a class="pk-card" href="'+p.url+'" target="_blank" rel="noopener sponsored">'
-          +'<div class="pk-thumb">'+img+'<span class="pk-badge">'+p.badge+'</span></div>'
-          +'<div class="pk-body"><div class="pk-name">'+p.name+'</div>'
-          +'<div class="pk-cta">See today\u2019s price on Amazon \u2192</div></div></a>';
-      }).join('');
+  function thumb(m, badge){
+    var img = m.img ? '<img src="'+m.img+'" alt="" loading="lazy">' : '';
+    return '<div class="pk-thumb">'+img+'<span class="pk-badge">'+badge+'</span></div>';
+  }
+  function cardProduct(p, m){
+    return '<a class="pk-card" href="'+p.url+'" target="_blank" rel="noopener sponsored">'
+      +thumb(m, p.badge||'Black Friday Deal')
+      +'<div class="pk-body"><div class="pk-name">'+p.name+'</div>'
+      +'<div class="pk-cta">See today’s price on Amazon →</div></div></a>';
+  }
+  function cardBrowse(url, m){
+    return '<a class="pk-card pk-browse" href="'+url+'" target="_blank" rel="noopener sponsored">'
+      +thumb(m, 'Today’s Deals')
+      +'<div class="pk-body"><div class="pk-name">All '+m.name+' deals</div>'
+      +'<div class="pk-cta">Browse on Amazon →</div></div></a>';
+  }
+  function build(picks, cats, amz){
+    var byCat={};
+    (picks||[]).forEach(function(p){ (byCat[p.category]=byCat[p.category]||[]).push(p); });
+    var html = (cats||[]).map(function(c){
+      var m={name:c.name, img:c.img};
+      var cards=(byCat[c.slug]||[]).map(function(p){ return cardProduct(p,m); }).join('');
+      if(amz[c.slug]) cards += cardBrowse(amz[c.slug], m);
+      if(!cards) return '';
       return '<div class="pk-group"><div class="pk-head"><h3>'+m.name+'</h3><div class="rule"></div></div>'
         +'<div class="pk-grid">'+cards+'</div></div>';
     }).join('');
+    if(!html) return;
     document.getElementById('picks-wrap').innerHTML = html;
     document.getElementById('picks-section').style.display = '';
   }
+  function grab(u){
+    return fetch(u).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; });
+  }
   function boot(){
-    fetch('data/amazon-picks.json').then(function(r){ return r.ok?r.json():[]; })
-      .then(function(picks){
-        build(picks||[], (window.EBF_CATALOG&&window.EBF_CATALOG.cats)||[]);
+    Promise.all([grab('data/amazon-picks.json'), grab('data/amazon-categories.json')])
+      .then(function(res){
+        var amz={}; (res[1]||[]).forEach(function(a){ if(a&&a.category&&a.url) amz[a.category]=a.url; });
+        build(res[0]||[], (window.EBF_CATALOG&&window.EBF_CATALOG.cats)||[], amz);
       }).catch(function(){});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
