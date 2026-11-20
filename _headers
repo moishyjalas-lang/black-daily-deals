@@ -1,0 +1,17 @@
+# Cloudflare Pages header rules.
+#
+# The shared stylesheet and scripts change on most deploys. Without this
+# a returning visitor keeps the copy their browser cached and does not
+# see the change — that is exactly what happened on 20 Nov 2026, when a
+# phone-menu fix was live on the server while the browser still ran the
+# previous script. Ten minutes keeps them fast but never stale for long.
+
+/css/*
+  Cache-Control: public, max-age=600, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=600, must-revalidate
+
+# Deal data changes whenever products are added.
+/data/*
+  Cache-Control: public, max-age=300, must-revalidate
