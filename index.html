@@ -818,6 +818,10 @@ footer{
 <script>
 /* Render all 14 category departments from the shared catalog (real images, correct links). */
 (function(){
+  /* Until our own catalog holds real deals, a category tile sends the shopper
+     to Amazon's live deals for that department, tagged, so the link is never a
+     dead end. Falls back to the internal page if the map can't be loaded. */
+  var AMZ={};
   function renderCats(){
     var grid=document.getElementById('catGrid');
     if(!grid||!window.EBF_CATALOG||!window.EBF_CATALOG.cats||!window.EBF_CATALOG.cats.length) return;
@@ -825,14 +829,22 @@ footer{
     grid.innerHTML=window.EBF_CATALOG.cats.map(function(c){
       var subs=(c.subs||[]).slice(0,3).join(' · ');
       if(subs) subs+=' · More';
-      return '<a class="cat-tile" href="search.html?cat='+encodeURIComponent(c.slug)+'">'
+      var dest=(AMZ[c.slug]||''), ext=!!dest;
+      return '<a class="cat-tile" href="'+(ext?dest:('search.html?cat='+encodeURIComponent(c.slug)))+'"'+(ext?' target="_blank" rel="noopener sponsored"':'')+'>'
         +'<div class="cat-thumb"><img src="'+c.img+'" alt="'+c.name+'" loading="lazy"></div>'
         +'<div class="cat-info"><div class="cat-name-row"><span class="cat-name">'+c.name+'</span>'+arrow+'</div><div class="cat-subs">'+subs+'</div></div>'
         +'</a>';
     }).join('');
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',renderCats);
-  else renderCats();
+  function boot(){
+    fetch('data/amazon-categories.json')
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(list){ (list||[]).forEach(function(x){ if(x && x.category && x.url) AMZ[x.category]=x.url; }); })
+      .catch(function(){})
+      .then(renderCats);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
 })();
 </script>
 

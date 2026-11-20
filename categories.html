@@ -249,7 +249,11 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 <script>
 // Full category directory: one shared list in js/catalog.js
 const CAT = window.EBF_CATALOG;
-const subHref = (c,sub) => `search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : '');
+// Until our own catalog holds real deals, a category link goes to Amazon's
+// live deals for that department, tagged, rather than an empty internal page.
+const AMZ = {};
+const subHref = (c,sub) => AMZ[c.slug] || (`search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : ''));
+const extAttrs = c => AMZ[c.slug] ? ' target="_blank" rel="noopener sponsored"' : '';
 // pick a real product photo for a category or subcategory: the biggest deal that has a photo
 function coverOf(list){ return (list||[]).filter(d => d.image).sort((a,b) => (b.discount||0)-(a.discount||0))[0]; }
 const esc = t => String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -259,19 +263,19 @@ function cardHTML(c, groups){
   const total = Object.values(g).reduce((a,b)=>a+b.length,0);
   const subs = c.subs.filter(s => (g[s]||[]).length);
   const cover = !c.img && coverOf(Object.values(g).flat());
-  const photo = c.img ? `<a class="cat-photo" href="${subHref(c)}">${imgTag(c.img, c.name)}</a>`
-              : cover ? `<a class="cat-photo prod" href="${subHref(c)}">${imgTag(cover.image, cover.title)}</a>` : '';
+  const photo = c.img ? `<a class="cat-photo" href="${subHref(c)}"${extAttrs(c)}>${imgTag(c.img, c.name)}</a>`
+              : cover ? `<a class="cat-photo prod" href="${subHref(c)}"${extAttrs(c)}>${imgTag(cover.image, cover.title)}</a>` : '';
   return `
     <div class="cat-card">
       ${photo}
       <div class="cat-body">
-        <a class="cat-name" href="${subHref(c)}">
+        <a class="cat-name" href="${subHref(c)}"${extAttrs(c)}>
           ${c.ico ? `<span class="ico">${c.ico}</span>` : ''}
           <h2>${c.name}</h2>
         </a>
         <div class="chips">
-          ${subs.length ? `<a class="chip all" href="${subHref(c)}">Shop all</a>` + subs.map(s => { const t = coverOf(g[s]); const pic = (c.subImg||{})[s]; return `<a class="chip${pic||t ? ' th' : ''}" href="${subHref(c,s)}">${pic ? imgTag(pic, '', 'th-img pic') : t ? imgTag(t.image, '', 'th-img') : ''}${esc(s)}</a>`; }).join('')
-                        : `<span class="cat-soon">New deals are being added to this category.</span>`}
+          ${subs.length ? `<a class="chip all" href="${subHref(c)}"${extAttrs(c)}>Shop all</a>` + subs.map(s => { const t = coverOf(g[s]); const pic = (c.subImg||{})[s]; return `<a class="chip${pic||t ? ' th' : ''}" href="${subHref(c,s)}">${pic ? imgTag(pic, '', 'th-img pic') : t ? imgTag(t.image, '', 'th-img') : ''}${esc(s)}</a>`; }).join('')
+                        : (AMZ[c.slug] ? `<a class="chip all" href="${AMZ[c.slug]}" target="_blank" rel="noopener sponsored">See today\u2019s Amazon deals</a>` : `<span class="cat-soon">New deals are being added to this category.</span>`)}
         </div>
       </div>
     </div>`;
@@ -286,8 +290,14 @@ function renderCats(items){
   if (items.length) document.getElementById('catTotal').textContent = 'New deals added all year round';
 }
 function loadCats(){
-  Promise.all(['data/deals.json','data/products.json'].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
-    .then(([deals, products]) => { const seen = new Set(); renderCats([...products, ...deals].filter(d => !seen.has(d.id) && seen.add(d.id))); });
+  Promise.all([
+    'data/deals.json','data/products.json','data/amazon-categories.json'
+  ].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
+    .then(([deals, products, amazon]) => {
+      (amazon||[]).forEach(x => { if (x && x.category && x.url) AMZ[x.category] = x.url; });
+      const seen = new Set();
+      renderCats([...products, ...deals].filter(d => !seen.has(d.id) && seen.add(d.id)));
+    });
 }
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim();
