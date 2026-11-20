@@ -226,12 +226,14 @@ nav{
 
 /* ───── CATEGORY TILES ───── */
 .cat-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(222px,1fr));
+  display:flex;
+  flex-wrap:wrap;
   gap:20px;
 }
 .cat-tile{
-  display:flex;flex-direction:column;
+  flex:1 1 222px;
+  max-width:420px;
+display:flex;flex-direction:column;
   background:linear-gradient(140deg,#2a2016 0%,#1a1613 55%,#141210 100%);
   border:1px solid #6f5330;
   border-radius:18px;
@@ -256,7 +258,7 @@ nav{
 .cat-name{font-size:16px;font-weight:700;color:var(--ivory);line-height:1.25;}
 .cat-subs{font-size:12px;color:#b0a492;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cat-arrow{color:#7a6134;flex-shrink:0;transition:color 0.2s,transform 0.2s;}
-@media(max-width:560px){.cat-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:13px;}.cat-thumb{height:120px;}.cat-info{padding:11px 13px 13px;}.cat-name{font-size:14.5px;}}
+@media(max-width:560px){.cat-grid{gap:13px;}.cat-tile{flex:1 1 150px;}.cat-thumb{height:120px;}.cat-info{padding:11px 13px 13px;}.cat-name{font-size:14.5px;}}
 
 /* ───── DEALS GRID ───── */
 .deals-grid{

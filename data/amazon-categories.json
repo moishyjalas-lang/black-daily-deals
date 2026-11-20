@@ -82,5 +82,47 @@
     "store": "Amazon",
     "label": "See today's Amazon deals",
     "url": "https://www.amazon.com/s?k=amazon+devices+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "videogames",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=video+games+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "computers",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=computers+and+office+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "baby",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=baby+products+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "pets",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=pet+supplies+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "tools",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=tools+and+home+improvement+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "crafts",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=arts+crafts+and+sewing+deals&tag=everydaybl079-20"
+  },
+  {
+    "category": "music",
+    "store": "Amazon",
+    "label": "See today's Amazon deals",
+    "url": "https://www.amazon.com/s?k=musical+instruments+deals&tag=everydaybl079-20"
   }
 ]
