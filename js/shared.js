@@ -606,7 +606,9 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
    renderDeals lives in search.html and we don't want to touch that file.
    ------------------------------------------------------------------ */
 (function amazonBand(){
-  if(!/(^|\/)search\.html/.test(location.pathname)) return;
+  // Cloudflare Pages serves this page as /search, not /search.html,
+  // so both spellings have to match.
+  if(!/(^|\/)search(\.html)?$/.test(location.pathname)) return;
 
   var urls = {};          // slug -> tagged Amazon search url
   var names = {};         // slug -> department name
