@@ -1,0 +1,196 @@
+:root {
+  --room-panel: linear-gradient(140deg,
+    rgba(38, 29, 20, 0.52),
+    rgba(24, 21, 18, 0.46) 62%,
+    rgba(20, 18, 16, 0.52));
+  --room-panel-border: rgba(201, 154, 78, 0.40);
+  --room-content-width: 1180px;
+}
+
+body > main,
+.section,
+.statement-inner,
+.bf-spotlight,
+.cat-wrap,
+.page-wrap,
+.plans-wrap,
+.search-page,
+.results-hero-inner,
+.toolbar {
+  width: min(var(--room-content-width), calc(100% - 48px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-content {
+  width: min(1500px, calc(100% - 48px));
+}
+
+.section {
+  padding: clamp(56px, 8vw, 104px) 0;
+}
+
+.statement {
+  padding: clamp(80px, 12vw, 150px) 24px;
+}
+
+.bf-spotlight {
+  padding: clamp(64px, 9vw, 112px) 0;
+}
+
+.cat-hero {
+  padding-top: clamp(72px, 10vw, 120px);
+  padding-bottom: 24px;
+}
+
+.cat-wrap {
+  padding-top: 24px;
+  padding-bottom: clamp(80px, 11vw, 136px);
+}
+
+.cat-grid {
+  gap: clamp(24px, 3vw, 40px);
+}
+
+.cat-grid.compact {
+  gap: clamp(22px, 2.4vw, 32px);
+}
+
+.sec-gap {
+  height: clamp(64px, 9vw, 112px);
+}
+
+.page-wrap,
+.plans-wrap {
+  max-width: 980px;
+  padding-top: clamp(64px, 9vw, 104px);
+  padding-bottom: clamp(88px, 12vw, 144px);
+}
+
+.page-header {
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.panel,
+.plan,
+.profile-header,
+.stat-card,
+.section-card,
+.wishlist-item,
+.watcher,
+.preview-grid .skel-card,
+.filter-panel,
+.deal-card,
+.cat-card,
+.bf-card,
+.empty-watch,
+.auth-gate {
+  background: var(--room-panel) !important;
+  backdrop-filter: blur(16px) saturate(1.06);
+  -webkit-backdrop-filter: blur(16px) saturate(1.06);
+  border-color: var(--room-panel-border);
+}
+
+.plan.plus {
+  background: linear-gradient(140deg,
+    rgba(68, 48, 24, 0.58),
+    rgba(30, 24, 18, 0.48) 64%,
+    rgba(24, 21, 18, 0.54)) !important;
+}
+
+.search-page {
+  max-width: var(--room-content-width);
+  padding: 24px 0 clamp(88px, 12vw, 144px);
+  gap: clamp(24px, 3vw, 36px);
+}
+
+.results-hero {
+  background: linear-gradient(100deg,
+    rgba(21, 17, 12, 0.30),
+    rgba(26, 21, 15, 0.24) 70%);
+  backdrop-filter: blur(10px) saturate(1.04);
+  -webkit-backdrop-filter: blur(10px) saturate(1.04);
+}
+
+.results-hero-inner,
+.toolbar {
+  max-width: var(--room-content-width);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.toolbar {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.filter-panel {
+  top: 92px;
+}
+
+.results-main {
+  padding-top: 4px;
+}
+
+.deals-grid {
+  gap: clamp(20px, 2.2vw, 28px);
+}
+
+.footer-inner {
+  max-width: var(--room-content-width);
+}
+
+@media (max-width: 860px) {
+  body > main,
+  .section,
+  .bf-spotlight,
+  .cat-wrap,
+  .page-wrap,
+  .plans-wrap,
+  .search-page,
+  .results-hero-inner,
+  .toolbar {
+    width: calc(100% - 40px);
+  }
+
+  .search-page {
+    padding-top: 18px;
+    padding-bottom: 88px;
+  }
+}
+
+@media (max-width: 560px) {
+  body > main,
+  .section,
+  .bf-spotlight,
+  .cat-wrap,
+  .page-wrap,
+  .plans-wrap,
+  .search-page,
+  .results-hero-inner,
+  .toolbar {
+    width: calc(100% - 32px);
+  }
+
+  .cat-hero {
+    padding-top: 64px;
+  }
+
+  .page-wrap,
+  .plans-wrap {
+    padding-top: 56px;
+    padding-bottom: 96px;
+  }
+
+  .section,
+  .bf-spotlight {
+    padding-top: 68px;
+    padding-bottom: 68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

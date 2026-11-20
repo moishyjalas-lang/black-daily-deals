@@ -1,7 +1,7 @@
 /* Everyday Black Friday — shared "stage" backdrop.
    Puts the showroom hallway behind every page so the content sits in a
    lit room instead of floating on flat black. As the shopper scrolls,
-   js/hallway.js walks the room forward through all 60 scenes.
+   js/hallway.js walks the room forward through all 91 scenes.
    Linked on every page; overrides each page's own body background. */
 
 html { background:#0f0c08; }
@@ -26,9 +26,16 @@ body { background:transparent !important; }
   height:106%;
   object-fit:cover;
   object-position:center;
-  filter:brightness(0.84) saturate(0.92);
+  filter:brightness(0.94) saturate(0.98);
   will-change:transform,opacity;
   transform-origin:50% 42%;        /* push toward the light at the end of the hall */
+}
+
+@media (max-width: 700px){
+  .hallway img{
+    object-position:50% 52%;
+    transform-origin:50% 48%;
+  }
 }
 
 /* ── Readability scrim: above the photo, below the content ──
@@ -71,7 +78,7 @@ body::before{
   background:
     radial-gradient(ellipse 70% 42% at 50% -4%, rgba(150,92,30,0.20), transparent 62%),
     radial-gradient(ellipse 62% 44% at 50% 104%, rgba(120,72,26,0.18), transparent 62%),
-    linear-gradient(180deg, rgba(12,11,10,0.40) 0%, rgba(12,11,10,0.46) 45%, rgba(12,11,10,0.56) 100%) !important;
+    linear-gradient(180deg, rgba(12,11,10,0.30) 0%, rgba(12,11,10,0.36) 45%, rgba(12,11,10,0.46) 100%) !important;
 }
 
 /* 2 ─ Frosted glass instead of solid slabs. The room shows through every

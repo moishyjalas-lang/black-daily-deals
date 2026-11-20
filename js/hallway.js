@@ -28,18 +28,19 @@
   var BASE = '/showroom/images/';
 
   /* ── The dials that decide how it feels ── */
-  var PACE = 620;      /* pixels of scroll per scene — bigger = slower walk */
+  var PACE = window.matchMedia('(pointer: coarse)').matches ? 1100 : 700;
   var DRIFT = 0.055;   /* how much a scene grows as you walk into it */
-  var EASE = 300;      /* smoothing, ms — bigger = glidier, less twitchy */
-  var TOP_SPEED = 1.0; /* scenes per second it may ever move — the calm cap */
+  var EASE = 420;      /* smoothing, ms — bigger = glidier, less twitchy */
+  var TOP_SPEED = 0.72; /* scenes per second it may ever move — the calm cap */
 
   /* The route, in order — the same walk MJ laid out. */
   var SCENES = [
     '0', 'added-0', 'added-1', '1',
     'extension-01', 'extension-02', 'extension-03', 'extension-04',
-    'variety-0', 'category-1', 'extension-06', 'category-3',
-    'extension-08', 'variety-1', 'category-2', 'extension-10',
-    'extension-11', 'added-2', 'variety-2', 'category-4',
+    'extension-05', 'variety-0', 'category-1', 'extension-06',
+    'extension-07', 'category-3', 'extension-08', 'extension-09',
+    'variety-1', 'category-2', 'extension-10', 'extension-11',
+    'extension-12', 'added-2', 'variety-2', 'category-4',
     'extension-13', 'extension-14', 'added-3', '2',
     'added-4', 'added-5', '3', 'added-6',
     'added-7', 'added-12', 'added-13', 'extension-15',
@@ -48,8 +49,15 @@
     'extension-23', 'added-15', 'extension-24', 'extension-25',
     'extension-26', 'extension-27', '4', 'extension-28',
     'extension-29', 'extension-30', 'extension-31', 'extension-32',
-    'added-8', 'added-9', '5', 'added-10',
-    'category-5', 'extension-34', 'extension-35', 'added-11'
+    'extension-33', 'added-8', 'added-9', '5', 'added-10',
+    'category-5', 'extension-34', 'extension-35', 'added-11',
+    'extension-36', 'extension-37', 'extension-38', 'extension-39',
+    'extension-40', 'extension-41', 'extension-42', 'extension-43',
+    'extension-44', 'extension-45', 'extension-46', 'extension-47',
+    'extension-48', 'extension-49', 'extension-50', 'extension-51',
+    'extension-52', 'extension-53', 'extension-54', 'extension-55',
+    'extension-56', 'extension-57', 'extension-58', 'extension-59',
+    'extension-60', 'extension-61'
   ];
 
   var last = SCENES.length - 1;
