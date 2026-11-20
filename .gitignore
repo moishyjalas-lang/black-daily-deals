@@ -1,0 +1,5 @@
+.env
+.env.*
+*.pat
+secrets/
+scripts/.cj-token

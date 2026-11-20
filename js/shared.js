@@ -597,3 +597,89 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
     return false;
   };
 })();
+
+/* ------------------------------------------------------------------
+   AMAZON BAND
+   Appends one wide Amazon band under the results on search.html.
+   Done from here, with no HTML edit, so it can't collide with Codex.
+   Watches #deals-grid instead of being called by renderDeals(), because
+   renderDeals lives in search.html and we don't want to touch that file.
+   ------------------------------------------------------------------ */
+(function amazonBand(){
+  if(!/(^|\/)search\.html/.test(location.pathname)) return;
+
+  var urls = {};          // slug -> tagged Amazon search url
+  var names = {};         // slug -> department name
+  var tag = '';
+  var band = null;
+
+  function esc(v){
+    return String(v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function currentCat(){
+    // syncURL() keeps ?cat= current on every filter change
+    var p = new URLSearchParams(location.search);
+    var c = p.get('cat');
+    return (c && urls[c]) ? c : '';
+  }
+
+  function build(){
+    var pag = document.getElementById('pagination');
+    if(!pag || !pag.parentNode) return null;
+    var el = document.createElement('section');
+    el.className = 'ebf-amz-band';
+    el.hidden = true;
+    pag.parentNode.insertBefore(el, pag.nextSibling);
+    return el;
+  }
+
+  function paint(){
+    if(!band) band = build();
+    if(!band) return;
+
+    var slug = currentCat();
+    var href = slug ? urls[slug]
+             : (tag ? 'https://www.amazon.com/deals?tag=' + encodeURIComponent(tag) : '');
+    if(!href){ band.hidden = true; return; }
+
+    var label = slug ? (names[slug] || slug) : '';
+    var head  = label ? 'Looking for something else in ' + esc(label) + '?'
+                      : 'Looking for something else?';
+    var sub   = label
+      ? 'Amazon has thousands more ' + esc(label).toLowerCase() + ' deals running today.'
+      : 'Amazon has thousands more deals running today.';
+    var cta   = label ? 'Browse Amazon ' + esc(label) : 'Browse Amazon deals';
+
+    band.innerHTML =
+      '<div class="ebf-amz-copy"><h3>' + head + '</h3><p>' + sub + '</p></div>' +
+      '<a class="ebf-amz-go" href="' + esc(href) + '" target="_blank" ' +
+        'rel="sponsored nofollow noopener">' + cta + ' →</a>' +
+      '<p class="ebf-amz-note">As an Amazon Associate we may earn from qualifying purchases.</p>';
+    band.hidden = false;
+  }
+
+  function start(){
+    var grid = document.getElementById('deals-grid');
+    if(grid && window.MutationObserver){
+      new MutationObserver(paint).observe(grid, { childList:true });
+    }
+    window.addEventListener('popstate', paint);
+    paint();
+  }
+
+  Promise.all([
+    fetch('data/amazon-categories.json').then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }),
+    fetch('data/config.json').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+  ]).then(function(res){
+    (res[0] || []).forEach(function(x){ if(x && x.category && x.url) urls[x.category] = x.url; });
+    tag = (res[1] && res[1].site && res[1].site.affiliate_tag) || '';
+    var cats = (window.EBF_CATALOG && window.EBF_CATALOG.cats) || [];
+    cats.forEach(function(c){ names[c.slug] = c.name; });
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', start);
+    } else { start(); }
+  });
+})();

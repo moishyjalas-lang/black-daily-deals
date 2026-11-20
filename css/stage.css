@@ -240,3 +240,40 @@ body::before{
 @media(max-width:560px){
   .ebf-install{right:12px;left:12px;bottom:12px;width:auto;padding:18px 16px 14px;}
 }
+
+/* ------------------------------------------------------------------
+   AMAZON BAND
+   Every department page ends with one wide band pointing at Amazon.
+   Deliberately NOT a product card: a card with no photo and no price
+   sitting beside real product cards is what makes a site look broken.
+   A single full-width band reads as a navigation choice, which is what
+   it is — and it means no department is ever a dead end, even the ones
+   with no products of our own yet.
+   ------------------------------------------------------------------ */
+.ebf-amz-band{
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  margin:34px 0 8px; padding:22px 24px;
+  border:1px solid #231a10; border-radius:14px;
+  background:linear-gradient(180deg,#17120b 0%,#0f0c08 100%);
+}
+.ebf-amz-copy{flex:1 1 320px; min-width:0;}
+.ebf-amz-copy h3{
+  margin:0 0 4px; font-size:1.05rem; font-weight:650; color:#f3e6cf;
+  letter-spacing:.1px;
+}
+.ebf-amz-copy p{margin:0; font-size:.9rem; line-height:1.45; color:#9c8d77;}
+.ebf-amz-go{
+  flex:0 0 auto; display:inline-flex; align-items:center; gap:8px;
+  min-height:44px; padding:0 22px; border-radius:10px;
+  background:linear-gradient(180deg,#e8b352 0%,#c78b36 100%);
+  color:#1a1309; font-weight:650; font-size:.94rem; text-decoration:none;
+  transition:filter .15s ease;
+}
+.ebf-amz-go:hover{filter:brightness(1.07);}
+.ebf-amz-note{
+  flex:1 1 100%; margin:2px 0 0; font-size:.74rem; color:#6b5428;
+}
+@media(max-width:620px){
+  .ebf-amz-band{padding:18px 16px; margin-top:26px;}
+  .ebf-amz-go{width:100%; justify-content:center;}
+}
