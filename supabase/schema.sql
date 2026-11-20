@@ -189,3 +189,217 @@ create policy "newsletter admin read" on public.newsletter_subscribers
 drop policy if exists "newsletter admin manage" on public.newsletter_subscribers;
 create policy "newsletter admin manage" on public.newsletter_subscribers
   for update using (public.is_admin()) with check (public.is_admin());
+
+-- ============================================================
+-- OWNER HQ — additional tables for the admin control center
+-- Appended 2026-11-18. Idempotent & re-runnable. Admin-gated.
+-- Run in Supabase SQL Editor AFTER the base schema above.
+-- Until these exist, the matching HQ screens degrade to a
+-- "not set up yet" state instead of breaking.
+-- ============================================================
+
+-- add a role + consent columns used by Team and Audience screens
+alter table public.profiles              add column if not exists role text not null default 'member';
+alter table public.newsletter_subscribers add column if not exists status text not null default 'subscribed'; -- subscribed | unsubscribed
+alter table public.newsletter_subscribers add column if not exists consent_source text;
+alter table public.newsletter_subscribers add column if not exists unsubscribed_at timestamptz;
+
+-- ---- category tree (Screen 5) ----
+create table if not exists public.category_nodes (
+  id          bigint generated always as identity primary key,
+  parent_id   bigint references public.category_nodes(id) on delete cascade,
+  slug        text,
+  name        text not null,
+  image       text,
+  aliases     text[] default '{}',
+  supplier_map jsonb default '{}'::jsonb,
+  sort        integer not null default 0,
+  archived    boolean not null default false,
+  created_at  timestamptz not null default now()
+);
+create index if not exists category_nodes_parent_idx on public.category_nodes (parent_id);
+
+-- ---- imports (Screen 4) ----
+create table if not exists public.import_batches (
+  id          bigint generated always as identity primary key,
+  filename    text,
+  source      text,
+  total_rows  integer not null default 0,
+  approved    integer not null default 0,
+  rejected    integer not null default 0,
+  status      text not null default 'review',  -- review | approved | rejected
+  created_at  timestamptz not null default now()
+);
+create table if not exists public.import_rows (
+  id          bigint generated always as identity primary key,
+  batch_id    bigint references public.import_batches(id) on delete cascade,
+  raw         jsonb,
+  issues      text[] default '{}',
+  state       text not null default 'review',  -- review | approved | rejected | published
+  deal_id     bigint references public.deals(id) on delete set null,
+  created_at  timestamptz not null default now()
+);
+
+-- ---- site settings + revisions (Screen 6) ----
+create table if not exists public.site_settings (
+  key         text primary key,
+  value       text,
+  updated_at  timestamptz not null default now()
+);
+create table if not exists public.site_revisions (
+  id          bigint generated always as identity primary key,
+  snapshot    jsonb not null,
+  note        text,
+  created_at  timestamptz not null default now()
+);
+
+-- ---- promotions: announcements & pop-ups (Screen 7) ----
+create table if not exists public.promotions (
+  id            bigint generated always as identity primary key,
+  kind          text not null default 'announcement',  -- announcement | popup
+  headline      text,
+  body          text,
+  button_label  text,
+  button_url    text,
+  audience      text not null default 'everyone',       -- everyone | members | non-members
+  start_at      timestamptz,
+  end_at        timestamptz,
+  frequency_cap integer,                                 -- max shows per visitor
+  dismiss_hours integer default 24,
+  status        text not null default 'draft',           -- draft | scheduled | active | paused | expired
+  created_at    timestamptz not null default now()
+);
+
+-- ---- email campaigns (Screen 8) ----
+create table if not exists public.email_campaigns (
+  id           bigint generated always as identity primary key,
+  subject      text,
+  preview_text text,
+  deal_ids     bigint[] default '{}',
+  sender_name  text,
+  sender_email text,
+  mailing_addr text,
+  status       text not null default 'draft',   -- draft | scheduled | sending | sent | paused
+  scheduled_at timestamptz,
+  sent_count   integer,  -- null until a real send happens
+  created_at   timestamptz not null default now()
+);
+
+-- ---- support cases + public deal reports (Screen 11) ----
+create table if not exists public.support_cases (
+  id          bigint generated always as identity primary key,
+  kind        text not null default 'message',  -- message | account | deal_report
+  subject     text,
+  body        text,
+  from_email  text,
+  deal_id     bigint references public.deals(id) on delete set null,
+  status      text not null default 'open',     -- open | pending | resolved | escalated
+  priority    text not null default 'normal',
+  assignee    uuid references auth.users(id),
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+-- ---- team invites (Screen 12) ----
+create table if not exists public.team_invites (
+  id          bigint generated always as identity primary key,
+  email       text not null,
+  role        text not null default 'analyst',
+  status      text not null default 'invited',  -- invited | accepted | revoked
+  created_at  timestamptz not null default now()
+);
+
+-- ---- audit events (Screens 12/13/15) ----
+create table if not exists public.audit_events (
+  id          bigint generated always as identity primary key,
+  actor       uuid references auth.users(id),
+  actor_email text,
+  action      text not null,
+  target      text,
+  detail      jsonb,
+  created_at  timestamptz not null default now()
+);
+create index if not exists audit_events_created_idx on public.audit_events (created_at desc);
+
+-- ---- emergency flags (Screen 16) ----
+create table if not exists public.emergency_flags (
+  key         text primary key,   -- pause_publishing | pause_emails | pause_alerts | pause_popups | pause_signups | pause_links | maintenance_mode
+  paused      boolean not null default false,
+  reason      text,
+  updated_by  uuid references auth.users(id),
+  updated_at  timestamptz not null default now()
+);
+
+-- ---- search log for demand (Screen 9) ----
+create table if not exists public.search_log (
+  id          bigint generated always as identity primary key,
+  term        text not null,
+  matched     boolean not null default false,
+  created_at  timestamptz not null default now()
+);
+create index if not exists search_log_created_idx on public.search_log (created_at desc);
+
+-- ---- integration status cards (Screen 14) — status/notes ONLY, never secrets ----
+create table if not exists public.integrations (
+  key         text primary key,  -- supabase | cloudflare | google_auth | stripe | sender | amazon
+  label       text,
+  status      text not null default 'not_connected', -- connected | not_connected | error
+  last_sync   timestamptz,
+  note        text,
+  updated_at  timestamptz not null default now()
+);
+
+-- ============================================================
+-- RLS for the new HQ tables
+-- ============================================================
+alter table public.category_nodes  enable row level security;
+alter table public.import_batches  enable row level security;
+alter table public.import_rows     enable row level security;
+alter table public.site_settings   enable row level security;
+alter table public.site_revisions  enable row level security;
+alter table public.promotions      enable row level security;
+alter table public.email_campaigns enable row level security;
+alter table public.support_cases   enable row level security;
+alter table public.team_invites    enable row level security;
+alter table public.audit_events    enable row level security;
+alter table public.emergency_flags enable row level security;
+alter table public.search_log      enable row level security;
+alter table public.integrations    enable row level security;
+
+-- admin-only tables (read + write by admin). Public-facing surfaces noted.
+do $$
+declare t text;
+begin
+  foreach t in array array['category_nodes','import_batches','import_rows','site_revisions',
+    'email_campaigns','team_invites','audit_events','integrations'] loop
+    execute format('drop policy if exists "%s admin all" on public.%I', t, t);
+    execute format('create policy "%s admin all" on public.%I for all using (public.is_admin()) with check (public.is_admin())', t, t);
+  end loop;
+end $$;
+
+-- category_nodes + site_settings + promotions + emergency_flags are PUBLIC-READ
+-- (the live site reads them) but ADMIN-WRITE.
+do $$
+declare t text;
+begin
+  foreach t in array array['category_nodes','site_settings','promotions','emergency_flags'] loop
+    execute format('drop policy if exists "%s public read" on public.%I', t, t);
+    execute format('create policy "%s public read" on public.%I for select using (true)', t, t);
+    execute format('drop policy if exists "%s admin write" on public.%I', t, t);
+    execute format('create policy "%s admin write" on public.%I for all using (public.is_admin()) with check (public.is_admin())', t, t);
+  end loop;
+end $$;
+
+-- support_cases: anyone may submit (insert); admin reads/updates.
+drop policy if exists "support public submit" on public.support_cases;
+create policy "support public submit" on public.support_cases for insert with check (true);
+drop policy if exists "support admin read" on public.support_cases;
+create policy "support admin read" on public.support_cases for select using (public.is_admin());
+drop policy if exists "support admin manage" on public.support_cases;
+create policy "support admin manage" on public.support_cases for update using (public.is_admin()) with check (public.is_admin());
+
+-- search_log: anyone may insert (the site logs searches); admin reads.
+drop policy if exists "search public insert" on public.search_log;
+create policy "search public insert" on public.search_log for insert with check (true);
+drop policy if exists "search admin read" on public.search_log;
+create policy "search admin read" on public.search_log for select using (public.is_admin());

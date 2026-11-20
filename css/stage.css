@@ -1,13 +1,46 @@
 /* Everyday Black Friday — shared "stage" backdrop.
-   Puts the gold tunnel/stage environment behind every page so the
-   content sits in a lit room instead of floating on flat black.
+   Puts the showroom hallway behind every page so the content sits in a
+   lit room instead of floating on flat black. As the shopper scrolls,
+   js/hallway.js walks the room forward through all 91 scenes.
    Linked on every page; overrides each page's own body background. */
 
 html { background:#0f0c08; }
 
 body { background:transparent !important; }
 
-/* Fixed backdrop behind all content */
+/* ── The hallway itself: photo layers behind everything ──
+   If JavaScript never runs, the single still photo below still shows,
+   so the page is never bare. */
+.hallway{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
+  pointer-events:none;
+  background:url('../assets/bg-stage.jpg') center 20% / cover no-repeat, #0f0c08;
+}
+.hallway img{
+  position:absolute;
+  inset:-3%;
+  width:106%;
+  height:106%;
+  object-fit:cover;
+  object-position:center;
+  filter:brightness(0.94) saturate(0.98);
+  will-change:transform,opacity;
+  transform-origin:50% 42%;        /* push toward the light at the end of the hall */
+}
+
+@media (max-width: 700px){
+  .hallway img{
+    object-position:50% 52%;
+    transform-origin:50% 48%;
+  }
+}
+
+/* ── Readability scrim: above the photo, below the content ──
+   This is what keeps every deal card and every line of text legible
+   no matter which scene is behind it. */
 body::before{
   content:'';
   position:fixed;
@@ -19,25 +52,191 @@ body::before{
     radial-gradient(ellipse 70% 42% at 50% -4%, rgba(150,92,30,0.22), transparent 62%),
     radial-gradient(ellipse 62% 44% at 50% 104%, rgba(120,72,26,0.20), transparent 62%),
     /* readability overlay — darkens the photo so text stays legible */
-    linear-gradient(180deg, rgba(12,11,10,0.62) 0%, rgba(12,11,10,0.70) 45%, rgba(12,11,10,0.80) 100%),
-    /* the real stage photo */
-    url('../assets/bg-stage.jpg') center 20% / cover no-repeat,
-    #0c0b0a;
-  transform-origin:50% 42%;        /* push toward the light at the end of the hall */
-  will-change:transform;
+    linear-gradient(180deg, rgba(12,11,10,0.62) 0%, rgba(12,11,10,0.70) 45%, rgba(12,11,10,0.80) 100%);
 }
 
-/* ── Walk-into-the-shop: the room pushes in as you scroll (native, GPU-smooth) ──
-   Only where the browser supports it AND the person hasn't asked for less motion. */
-@supports (animation-timeline: scroll()){
-  @media (prefers-reduced-motion: no-preference){
-    body::before{
-      animation: stage-push linear both;
-      animation-timeline: scroll(root block);
-    }
-    @keyframes stage-push{
-      from { transform: scale(1.03); }
-      to   { transform: scale(1.16); }
-    }
+/* Someone who asked for less motion gets a still room, not a moving one. */
+@media (prefers-reduced-motion: reduce){
+  .hallway img{ will-change:auto; transform:none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LETTING THE ROOM THROUGH
+   The hallway is the point — the page should sit IN it, not on top of
+   it. Three things do that, and all three are tunable from right here.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root{
+  --room-glass: 0.52;   /* how solid a card is — lower lets more room through */
+  --room-blur: 16px;    /* frosting; keeps text crisp over a busy scene */
+  --room-edge: 1180px;  /* how wide the content runs on a big screen */
+}
+
+/* 1 ─ A lighter veil. The old one buried the room at 62–80% black.
+       This keeps text readable while the hallway stays visible. */
+body::before{
+  background:
+    radial-gradient(ellipse 70% 42% at 50% -4%, rgba(150,92,30,0.20), transparent 62%),
+    radial-gradient(ellipse 62% 44% at 50% 104%, rgba(120,72,26,0.18), transparent 62%),
+    linear-gradient(180deg, rgba(12,11,10,0.30) 0%, rgba(12,11,10,0.36) 45%, rgba(12,11,10,0.46) 100%) !important;
+}
+
+/* 2 ─ Frosted glass instead of solid slabs. The room shows through every
+       card, blurred just enough that the words on top stay sharp. */
+.deal-card,
+.cat-card,
+.bf-card{
+  background:linear-gradient(140deg,
+      rgba(38,29,20,var(--room-glass)),
+      rgba(24,21,18,calc(var(--room-glass) - 0.06)) 62%,
+      rgba(20,18,16,var(--room-glass))) !important;
+  backdrop-filter:blur(var(--room-blur)) saturate(1.06);
+  -webkit-backdrop-filter:blur(var(--room-blur)) saturate(1.06);
+  border-color:rgba(201,154,78,0.40);
+}
+
+/* The glow on hover still reads, just softer against the room. */
+.deal-card:hover,
+.cat-card:hover,
+.bf-card:hover{
+  background:linear-gradient(140deg,
+      rgba(46,35,23,calc(var(--room-glass) + 0.14)),
+      rgba(30,25,20,calc(var(--room-glass) + 0.08)) 62%,
+      rgba(24,21,18,calc(var(--room-glass) + 0.12))) !important;
+}
+
+/* 3 ─ Pull the content in on wide screens so the hallway runs down both
+       sides instead of being boxed out edge to edge. */
+@media (min-width:1300px){
+  .section,
+  .cat-wrap,
+  .bf-spotlight,
+  .footer-inner{
+    max-width:var(--room-edge) !important;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE NAVIGATION
+   The desktop bar needs about 1030px. Each page hid the nav links
+   at its own breakpoint (760-900px) and put nothing in their place,
+   so phone visitors lost Categories, Deals, Alerts and Pro with no
+   way back. profile.html hid nothing and overflowed instead.
+   One consistent phone header for every page, loaded from here so
+   no page markup has to change.
+   ══════════════════════════════════════════════════════════════ */
+
+.nav-burger{display:none;}
+.nav-drawer{display:none;}
+
+@media(max-width:900px){
+  .nav-links{display:none !important;}
+  .btn-alerts{display:none !important;}
+
+  nav{gap:10px;}
+  .nav-logo{margin-right:12px;padding-right:12px;}
+  .nav-right{margin-left:auto;gap:8px;}
+
+  .nav-burger{
+    display:flex;align-items:center;justify-content:center;
+    width:44px;height:44px;flex-shrink:0;margin-left:4px;
+    background:#15110b;border:1px solid rgba(216,169,79,0.45);
+    border-radius:12px;color:var(--gold2);cursor:pointer;padding:0;
+    transition:border-color .2s,box-shadow .2s,background .2s;
+  }
+  .nav-burger:hover{border-color:var(--gold);background:#231a10;}
+  .nav-burger[aria-expanded="true"]{
+    border-color:var(--gold);background:#231a10;
+    box-shadow:0 0 14px rgba(216,169,79,0.38);
+  }
+  .nav-burger .bar{
+    display:block;width:18px;height:2px;border-radius:2px;
+    background:currentColor;margin:3px auto;
+    transition:transform .22s ease,opacity .18s ease;
+  }
+  .nav-burger[aria-expanded="true"] .bar:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  .nav-burger[aria-expanded="true"] .bar:nth-child(2){opacity:0;}
+  .nav-burger[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+
+  .nav-drawer{
+    position:fixed;left:0;right:0;top:72px;z-index:199;
+    display:flex;flex-direction:column;
+    padding:8px 16px 14px;
+    background:linear-gradient(180deg,rgba(23,19,15,0.985),rgba(16,16,15,0.985));
+    backdrop-filter:blur(18px) saturate(1.05);
+    -webkit-backdrop-filter:blur(18px) saturate(1.05);
+    border-bottom:1px solid rgba(139,99,47,0.5);
+    box-shadow:0 18px 44px rgba(0,0,0,0.6);
+    transform:translateY(-14px);opacity:0;visibility:hidden;
+    transition:transform .22s ease,opacity .2s ease,visibility .22s;
+  }
+  .nav-drawer.open{transform:translateY(0);opacity:1;visibility:visible;}
+  .nav-drawer a{
+    display:flex;align-items:center;gap:10px;
+    min-height:48px;padding:0 12px;border-radius:10px;
+    text-decoration:none;color:var(--ivory);
+    font-size:16px;font-weight:600;letter-spacing:0.01em;
+    border-bottom:1px solid rgba(139,99,47,0.2);
+  }
+  .nav-drawer a:last-child{border-bottom:none;}
+  .nav-drawer a.active{color:var(--gold2);}
+  .nav-drawer a:active{background:rgba(216,169,79,0.1);}
+  .nav-drawer a svg{opacity:.55;flex-shrink:0;}
+
+  /* thumb-sized controls */
+  .btn-signin,.user-pill{min-height:44px;}
+  .nav-search input{padding-top:12px;padding-bottom:12px;}
+}
+
+@media(max-width:520px){
+  .nav-logo .wordmark{display:none;}
+  .nav-logo{margin-right:10px;padding-right:10px;}
+  .btn-signin{padding:9px 13px;}
+  .btn-signin span.label{display:none;}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INSTALL PROMPT — "Keep EBF one click away"
+   Shown only when the browser says the site can be installed, and
+   only once: dismissing it is remembered. The footer link stays as
+   a permanent way back in.
+   ══════════════════════════════════════════════════════════════ */
+
+.ebf-install{
+  position:fixed;right:20px;bottom:20px;z-index:400;
+  width:min(360px,calc(100vw - 32px));
+  padding:20px 20px 16px;
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(38,29,20,0.96),rgba(22,19,16,0.96) 62%,rgba(18,16,14,0.97));
+  backdrop-filter:blur(18px) saturate(1.06);
+  -webkit-backdrop-filter:blur(18px) saturate(1.06);
+  border:1px solid rgba(201,154,78,0.45);
+  box-shadow:0 22px 60px rgba(0,0,0,0.6),0 0 26px rgba(213,151,59,0.14);
+  transform:translateY(14px);opacity:0;visibility:hidden;
+  transition:transform .26s ease,opacity .24s ease,visibility .26s;
+}
+.ebf-install.show{transform:translateY(0);opacity:1;visibility:visible;}
+.ebf-install h4{
+  margin:0 0 7px;font-size:17px;font-weight:800;
+  color:var(--gold2);letter-spacing:0.01em;
+}
+.ebf-install p{margin:0 0 15px;font-size:13.5px;line-height:1.55;color:var(--muted);}
+.ebf-install .ebf-install-row{display:flex;gap:10px;align-items:center;}
+.ebf-install button{
+  min-height:44px;padding:0 18px;border-radius:999px;
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+}
+.ebf-install .ebf-install-go{
+  flex:1;background:linear-gradient(135deg,#c78b36,#e8b352);
+  border:none;color:#17120b;
+}
+.ebf-install .ebf-install-go:hover{filter:brightness(1.08);box-shadow:0 0 20px rgba(216,169,79,0.45);}
+.ebf-install .ebf-install-no{
+  background:transparent;border:1px solid rgba(201,154,78,0.35);color:var(--muted);
+}
+.ebf-install .ebf-install-no:hover{border-color:var(--gold);color:var(--ivory);}
+
+@media(max-width:560px){
+  .ebf-install{right:12px;left:12px;bottom:12px;width:auto;padding:18px 16px 14px;}
 }

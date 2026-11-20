@@ -4,14 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Explore every category — Everyday Black Friday</title>
-<meta name="description" content="Browse 22 categories of deals: Electronics, Computers, Gaming, Home, Kitchen, Fashion, Shoes, Beauty, Health, Sports, Patio, Toys, Baby, Grocery, Household, Tools, Automotive, Pets, Books, Office, Travel and Gifts. Black Friday prices all year round.">
+<link rel="canonical" href="https://blackfridaydealseveryday.com/categories">
+<meta name="description" content="Browse 14 departments of deals: Electronics, Home, Clothing, Beauty, Family, Health, Sports, Auto & Tools, Garden, Travel, Food, Books & Hobbies, Seasonal & Gifts, and Services. Black Friday prices all year round.">
 <meta name="theme-color" content="#0c0b0a">
 <link rel="icon" href="assets/logo-ebf-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/shared.js" defer></script>
+<script src="js/supabase-config.js?v=20261120b"></script>
+<script src="js/shared.js?v=20261120b" defer></script>
 <style>
 :root{
   --bg:#0c0b0a;--surface:#141210;--panel:#171614;--card:#1a1613;--card-top:#241c13;
@@ -64,7 +66,7 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 
 /* GRID */
 .cat-wrap{max-width:1200px;margin:0 auto;padding:28px 24px 64px;}
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.cat-grid{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;}.cat-card{flex:1 1 440px;min-width:0;}
 .cat-card{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:linear-gradient(150deg,#241c13,#171412 70%);box-shadow:inset 0 1px rgba(255,255,255,.05),0 14px 34px rgba(0,0,0,.4);transition:border-color .2s,transform .18s,box-shadow .2s;display:flex;flex-direction:column;}
 .cat-card:hover{border-color:var(--border-hover);transform:translateY(-4px);box-shadow:inset 0 1px rgba(255,255,255,.08),0 20px 46px rgba(0,0,0,.55),0 0 28px rgba(213,151,59,.22);}
 .cat-photo{height:190px;overflow:hidden;position:relative;}
@@ -95,6 +97,7 @@ nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(21,
 .cat-photo.prod img{object-fit:contain;object-position:center;padding:14px;}
 .chip.th{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 4px;}
 .chip .th-img{width:26px;height:26px;border-radius:50%;background:#fff;object-fit:contain;padding:2px;flex-shrink:0;}
+.chip .th-img.pic{object-fit:cover;padding:0;background:#15110b;}
 @media(max-width:1000px){.cat-grid.compact{grid-template-columns:1fr 1fr;}}
 @media(max-width:760px){.cat-grid.compact{grid-template-columns:1fr;}}
 
@@ -127,13 +130,15 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 .btn-google:hover{background:#f5f5f5;}
 
 @media(max-width:760px){
-  .cat-grid{grid-template-columns:1fr;}
+  .cat-card{flex:1 1 100%;}
   .nav-links{display:none;}
   .footer-top{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:560px){.nav-search{display:none;}}
 </style>
-<link rel="stylesheet" href="css/stage.css">
+<link rel="stylesheet" href="css/stage.css?v=20261120b">
+<link rel="stylesheet" href="css/showroom-pages.css?v=20261120b">
+<script src="js/hallway.js?v=20261120b" defer></script>
 </head>
 <body>
 
@@ -176,10 +181,10 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
 
 <!-- GRID -->
 <div class="cat-wrap">
-  <div class="sec-head"><h2>Popular categories</h2><span id="catTotal"></span></div>
+  <div class="sec-head"><h2>Shop by department</h2><span id="catTotal"></span></div>
   <div class="cat-grid" id="catGrid"></div>
-  <div class="sec-gap"></div>
-  <div class="sec-head"><h2>All categories</h2><span>Every department, A to Z of savings</span></div>
+  <div class="sec-gap all-cats"></div>
+  <div class="sec-head all-cats"><h2>All categories</h2><span>Every department, A to Z of savings</span></div>
   <div class="cat-grid compact" id="catGridAll"></div>
 </div>
 
@@ -197,16 +202,16 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
       <div class="footer-col">
         <h4>Deals</h4>
         <a href="search.html">All Deals</a>
-        <a href="search.html?cat=electronics">Electronics</a>
-        <a href="search.html?cat=home">Home &amp; Living</a>
-        <a href="search.html?cat=fashion">Fashion</a>
+        <a href="https://www.amazon.com/s?k=electronics+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Electronics</a>
+        <a href="https://www.amazon.com/s?k=home+and+kitchen+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Home &amp; Living</a>
+        <a href="https://www.amazon.com/s?k=clothing+shoes+jewelry+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Fashion</a>
       </div>
       <div class="footer-col">
         <h4>Categories</h4>
         <a href="categories.html">Browse All</a>
-        <a href="search.html?cat=sports">Sports &amp; Outdoors</a>
-        <a href="search.html?cat=auto">Auto &amp; Tools</a>
-        <a href="search.html?cat=travel">Travel</a>
+        <a href="https://www.amazon.com/s?k=sports+and+outdoors+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Sports &amp; Outdoors</a>
+        <a href="https://www.amazon.com/s?k=automotive+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Auto &amp; Tools</a>
+        <a href="https://www.amazon.com/s?k=luggage+and+travel+gear+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Travel</a>
       </div>
       <div class="footer-col">
         <h4>About</h4>
@@ -241,11 +246,15 @@ footer{background:linear-gradient(180deg,transparent,rgba(23,18,12,.55)),#0a0908
   </div>
 </div>
 
-<script src="js/catalog.js"></script>
+<script src="js/catalog.js?v=20261120b"></script>
 <script>
 // Full category directory: one shared list in js/catalog.js
 const CAT = window.EBF_CATALOG;
-const subHref = (c,sub) => `search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : '');
+// Until our own catalog holds real deals, a category link goes to Amazon's
+// live deals for that department, tagged, rather than an empty internal page.
+const AMZ = {};
+const subHref = (c,sub) => AMZ[c.slug] || (`search.html?cat=${c.slug}` + (sub ? `&sub=${encodeURIComponent(sub)}` : ''));
+const extAttrs = c => AMZ[c.slug] ? ' target="_blank" rel="noopener sponsored"' : '';
 // pick a real product photo for a category or subcategory: the biggest deal that has a photo
 function coverOf(list){ return (list||[]).filter(d => d.image).sort((a,b) => (b.discount||0)-(a.discount||0))[0]; }
 const esc = t => String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -255,20 +264,19 @@ function cardHTML(c, groups){
   const total = Object.values(g).reduce((a,b)=>a+b.length,0);
   const subs = c.subs.filter(s => (g[s]||[]).length);
   const cover = !c.img && coverOf(Object.values(g).flat());
-  const photo = c.img ? `<a class="cat-photo" href="${subHref(c)}">${imgTag(c.img, c.name)}</a>`
-              : cover ? `<a class="cat-photo prod" href="${subHref(c)}">${imgTag(cover.image, cover.title)}</a>` : '';
+  const photo = c.img ? `<a class="cat-photo" href="${subHref(c)}"${extAttrs(c)}>${imgTag(c.img, c.name)}</a>`
+              : cover ? `<a class="cat-photo prod" href="${subHref(c)}"${extAttrs(c)}>${imgTag(cover.image, cover.title)}</a>` : '';
   return `
     <div class="cat-card">
       ${photo}
       <div class="cat-body">
-        <a class="cat-name" href="${subHref(c)}">
+        <a class="cat-name" href="${subHref(c)}"${extAttrs(c)}>
           ${c.ico ? `<span class="ico">${c.ico}</span>` : ''}
           <h2>${c.name}</h2>
         </a>
-        ${total ? `<div class="cat-count">${total} products</div>` : ''}
         <div class="chips">
-          ${subs.length ? `<a class="chip all" href="${subHref(c)}">Shop all</a>` + subs.map(s => { const t = coverOf(g[s]); return `<a class="chip${t ? ' th' : ''}" href="${subHref(c,s)}">${t ? imgTag(t.image, '', 'th-img') : ''}${s}<span class="n">${g[s].length}</span></a>`; }).join('')
-                        : `<span class="cat-soon">New deals are being added to this category.</span>`}
+          ${subs.length ? `<a class="chip all" href="${subHref(c)}"${extAttrs(c)}>Shop all</a>` + subs.map(s => { const t = coverOf(g[s]); const pic = (c.subImg||{})[s]; return `<a class="chip${pic||t ? ' th' : ''}" href="${subHref(c,s)}">${pic ? imgTag(pic, '', 'th-img pic') : t ? imgTag(t.image, '', 'th-img') : ''}${esc(s)}</a>`; }).join('')
+                        : (AMZ[c.slug] ? `<a class="chip all" href="${AMZ[c.slug]}" target="_blank" rel="noopener sponsored">See today\u2019s Amazon deals</a>` : `<span class="cat-soon">New deals are being added to this category.</span>`)}
         </div>
       </div>
     </div>`;
@@ -279,11 +287,18 @@ function renderCats(items){
   const popular = CAT.cats.filter(c => c.img), rest = CAT.cats.filter(c => !c.img);
   document.getElementById('catGrid').innerHTML = popular.map(c => cardHTML(c, groups)).join('');
   document.getElementById('catGridAll').innerHTML = rest.map(c => cardHTML(c, groups)).join('');
-  if (items.length) document.getElementById('catTotal').textContent = `${items.length} products in ${CAT.cats.length} categories`;
+  document.querySelectorAll('.all-cats').forEach(e => e.hidden = !rest.length);
+  if (items.length) document.getElementById('catTotal').textContent = 'New deals added all year round';
 }
 function loadCats(){
-  Promise.all(['data/deals.json','data/products.json'].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
-    .then(([deals, products]) => { const seen = new Set(); renderCats([...products, ...deals].filter(d => !seen.has(d.id) && seen.add(d.id))); });
+  Promise.all([
+    'data/deals.json','data/products.json','data/amazon-categories.json'
+  ].map(u => fetch(u).then(r => r.ok ? r.json() : []).catch(() => [])))
+    .then(([deals, products, amazon]) => {
+      (amazon||[]).forEach(x => { if (x && x.category && x.url) AMZ[x.category] = x.url; });
+      const seen = new Set();
+      renderCats([...products, ...deals].filter(d => !seen.has(d.id) && seen.add(d.id)));
+    });
 }
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim();
@@ -296,6 +311,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if(typeof EBF !== 'undefined') EBF.init();
 });
 </script>
-<script src="js/cookie-consent.js"></script>
+<script src="js/cookie-consent.js?v=20261120b"></script>
 </body>
 </html>

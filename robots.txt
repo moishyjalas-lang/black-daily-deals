@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /hq
+Disallow: /hq.html
+Disallow: /profile
+Disallow: /profile.html
+
+Sitemap: https://blackfridaydealseveryday.com/sitemap.xml

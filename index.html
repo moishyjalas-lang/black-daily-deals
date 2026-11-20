@@ -3,15 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Everyday Black Friday — Black Friday Prices. All Year Round.</title>
-<meta name="description" content="Black Friday prices. All year round. Great deals from stores you trust — electronics, home, fashion, and more.">
+<title>EBF Daily Deals — Everyday Black Friday Deals, All Year Round</title>
+<meta name="description" content="Why search a dozen websites? EBF Daily Deals brings the best Amazon deals together in one place, every day — electronics, home, fashion, tools and more.">
 <link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
 <meta name="theme-color" content="#0a0a0a">
+<!-- ══ SEO ══ -->
+<meta name="keywords" content="Black Friday deals, Black Friday deals all year round, daily deals, discounts, Amazon deals, price drops, electronics deals, home deals, fashion deals, best deals online">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://blackfridaydealseveryday.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EBF Daily Deals">
+<meta property="og:title" content="EBF Daily Deals — Everyday Black Friday Deals, All Year Round">
+<meta property="og:description" content="Why search a dozen websites? EBF Daily Deals brings the best Amazon deals together in one place, every day — electronics, home, fashion, tools and more.">
+<meta property="og:url" content="https://blackfridaydealseveryday.com/">
+<meta property="og:image" content="https://blackfridaydealseveryday.com/assets/hero-ebf.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EBF Daily Deals — Everyday Black Friday Deals, All Year Round">
+<meta name="twitter:description" content="Black Friday prices, every day of the year. The biggest deals from the stores you trust.">
+<meta name="twitter:image" content="https://blackfridaydealseveryday.com/assets/hero-ebf.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://blackfridaydealseveryday.com/#org","name":"Everyday Black Friday","alternateName":["EBF Daily Deals","EBF Deals","EBF"],"url":"https://blackfridaydealseveryday.com/","logo":"https://blackfridaydealseveryday.com/assets/logo-ebf.png","email":"hello@blackfridaydealseveryday.com","description":"A deal-hunting service that surfaces the biggest discounts from trusted stores — every day of the year, not just one weekend."},
+{"@type":"WebSite","@id":"https://blackfridaydealseveryday.com/#website","url":"https://blackfridaydealseveryday.com/","name":"Everyday Black Friday","alternateName":["EBF Daily Deals","EBF Deals","EBF"],"publisher":{"@id":"https://blackfridaydealseveryday.com/#org"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://blackfridaydealseveryday.com/search?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/shared.js" defer></script>
+<script src="js/shared.js?v=20261120b" defer></script>
+<script src="js/catalog.js?v=20261120b" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -205,16 +226,18 @@ nav{
 
 /* ───── CATEGORY TILES ───── */
 .cat-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  justify-content:center;
 }
 .cat-tile{
-  display:flex;align-items:center;gap:14px;
+  flex:1 1 222px;
+  max-width:420px;
+display:flex;flex-direction:column;
   background:linear-gradient(140deg,#2a2016 0%,#1a1613 55%,#141210 100%);
   border:1px solid #6f5330;
-  border-radius:16px;
-  padding:16px 18px;
+  border-radius:18px;
   text-decoration:none;
   overflow:hidden;
   position:relative;
@@ -222,26 +245,21 @@ nav{
   transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s;
   cursor:pointer;
 }
-.cat-tile::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(110deg,transparent 25%,rgba(246,210,138,0.06) 50%,transparent 74%);
-  transform:translateX(-100%);transition:transform 0.6s;pointer-events:none;
-}
-.cat-tile:hover{border-color:#e3b963;transform:translateY(-3px);box-shadow:inset 0 1px rgba(255,255,255,0.08),0 16px 34px rgba(0,0,0,0.4),0 0 22px rgba(213,151,59,0.22);}
-.cat-tile:hover::after{transform:translateX(100%);}
-.cat-tile:hover .cat-arrow{color:var(--gold2);}
+.cat-tile:hover{border-color:#e3b963;transform:translateY(-4px);box-shadow:inset 0 1px rgba(255,255,255,0.08),0 18px 40px rgba(0,0,0,0.45),0 0 28px rgba(213,151,59,0.25);}
+.cat-tile:hover .cat-arrow{color:var(--gold2);transform:translateX(3px);}
 .cat-thumb{
-  width:76px;height:60px;flex-shrink:0;
-  border-radius:10px;overflow:hidden;
-  background:#1a1510;border:1px solid rgba(180,132,63,0.3);
+  width:100%;height:152px;flex-shrink:0;
+  overflow:hidden;background:#1a1510;
+  border-bottom:1px solid rgba(180,132,63,0.28);
 }
-.cat-thumb img{width:100%;height:100%;object-fit:cover;}
-.cat-info{flex:1;min-width:0;}
-.cat-name{font-size:15px;font-weight:700;color:var(--ivory);margin-bottom:3px;}
-.cat-subs{font-size:11.5px;color:#b0a492;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cat-arrow{margin-left:auto;color:#7a6134;flex-shrink:0;transition:color 0.2s;}
-@media(max-width:1000px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:600px){.cat-grid{grid-template-columns:1fr;}}
+.cat-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+.cat-tile:hover .cat-thumb img{transform:scale(1.06);}
+.cat-info{padding:14px 17px 16px;display:flex;flex-direction:column;gap:5px;}
+.cat-name-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.cat-name{font-size:16px;font-weight:700;color:var(--ivory);line-height:1.25;}
+.cat-subs{font-size:12px;color:#b0a492;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cat-arrow{color:#7a6134;flex-shrink:0;transition:color 0.2s,transform 0.2s;}
+@media(max-width:560px){.cat-grid{gap:13px;}.cat-tile{flex:1 1 150px;}.cat-thumb{height:120px;}.cat-info{padding:11px 13px 13px;}.cat-name{font-size:14.5px;}}
 
 /* ───── DEALS GRID ───── */
 .deals-grid{
@@ -568,9 +586,11 @@ footer{
   .reveal{opacity:1 !important;transform:none !important;animation:none !important;}
 }
 </style>
-<link rel="stylesheet" href="css/stage.css">
-<script src="js/supabase-config.js"></script>
-<script src="js/supabase-client.js"></script>
+<link rel="stylesheet" href="css/stage.css?v=20261120b">
+<link rel="stylesheet" href="css/showroom-pages.css?v=20261120b">
+<script src="js/hallway.js?v=20261120b" defer></script>
+<script src="js/supabase-config.js?v=20261120b"></script>
+<script src="js/supabase-client.js?v=20261120b"></script>
 </head>
 <body>
 
@@ -621,9 +641,9 @@ footer{
   </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">Everyday Black Friday</div>
+    <div class="hero-eyebrow">EBF Daily Deals</div>
     <h1><span class="hl">Black Friday prices.</span><span class="hl hl-gold">All year round.</span></h1>
-    <p class="hero-sub">Great deals from stores you trust.</p>
+    <p class="hero-sub">Why search a dozen websites? EBF Daily Deals brings the best Amazon deals together in one place, every day.</p>
     <a class="btn-primary" href="search.html">
       Shop All Deals
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -643,7 +663,7 @@ footer{
 </section>
 
 <!-- ══ BLACK FRIDAY SPOTLIGHT — the centerpiece magnet ══ -->
-<section class="bf-spotlight">
+<section class="bf-spotlight" id="bf-section">
   <div class="bf-panel">
     <div class="bf-head">
       <div>
@@ -705,8 +725,8 @@ footer{
     </a>
   </div>
 
-  <div class="cat-grid">
-    <a class="cat-tile" href="search.html?cat=electronics,computers,gaming">
+  <div class="cat-grid" id="catGrid">
+    <a class="cat-tile" href="https://www.amazon.com/s?k=electronics+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">
       <div class="cat-thumb">
         <img src="assets/cat-electronics.png" alt="Electronics" loading="lazy">
       </div>
@@ -717,7 +737,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=home,kitchen,patio">
+    <a class="cat-tile" href="search.html?cat=home,garden">
       <div class="cat-thumb">
         <img src="assets/cat-home.png" alt="Home & Living" loading="lazy">
       </div>
@@ -728,7 +748,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=fashion,shoes,beauty">
+    <a class="cat-tile" href="search.html?cat=fashion,beauty">
       <div class="cat-thumb">
         <img src="assets/cat-fashion.png" alt="Fashion & Care" loading="lazy">
       </div>
@@ -739,7 +759,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=baby,toys,pets,household">
+    <a class="cat-tile" href="https://www.amazon.com/s?k=toys+and+games+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">
       <div class="cat-thumb">
         <img src="assets/cat-family.png" alt="Family & Everyday" loading="lazy">
       </div>
@@ -750,7 +770,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=sports">
+    <a class="cat-tile" href="https://www.amazon.com/s?k=sports+and+outdoors+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">
       <div class="cat-thumb">
         <img src="assets/cat-sports.png" alt="Sports & Outdoors" loading="lazy">
       </div>
@@ -761,7 +781,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=auto,tools">
+    <a class="cat-tile" href="https://www.amazon.com/s?k=automotive+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">
       <div class="cat-thumb">
         <img src="assets/cat-auto.png" alt="Auto & Tools" loading="lazy">
       </div>
@@ -772,7 +792,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=travel">
+    <a class="cat-tile" href="https://www.amazon.com/s?k=luggage+and+travel+gear+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">
       <div class="cat-thumb">
         <img src="assets/cat-travel.png" alt="Travel" loading="lazy">
       </div>
@@ -783,7 +803,7 @@ footer{
       <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
 
-    <a class="cat-tile" href="search.html?cat=seasonal">
+    <a class="cat-tile" href="https://www.amazon.com/s?k=holiday+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">
       <div class="cat-thumb">
         <img src="assets/cat-seasonal.png" alt="Seasonal & Gifts" loading="lazy">
       </div>
@@ -796,8 +816,129 @@ footer{
   </div>
 </div>
 
+<script>
+/* Render all 14 category departments from the shared catalog (real images, correct links). */
+(function(){
+  /* Until our own catalog holds real deals, a category tile sends the shopper
+     to Amazon's live deals for that department, tagged, so the link is never a
+     dead end. Falls back to the internal page if the map can't be loaded. */
+  var AMZ={};
+  function renderCats(){
+    var grid=document.getElementById('catGrid');
+    if(!grid||!window.EBF_CATALOG||!window.EBF_CATALOG.cats||!window.EBF_CATALOG.cats.length) return;
+    var arrow='<svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    grid.innerHTML=window.EBF_CATALOG.cats.map(function(c){
+      var subs=(c.subs||[]).slice(0,3).join(' · ');
+      if(subs) subs+=' · More';
+      var dest=(AMZ[c.slug]||''), ext=!!dest;
+      return '<a class="cat-tile" href="'+(ext?dest:('search.html?cat='+encodeURIComponent(c.slug)))+'"'+(ext?' target="_blank" rel="noopener sponsored"':'')+'>'
+        +'<div class="cat-thumb"><img src="'+c.img+'" alt="'+c.name+'" loading="lazy"></div>'
+        +'<div class="cat-info"><div class="cat-name-row"><span class="cat-name">'+c.name+'</span>'+arrow+'</div><div class="cat-subs">'+subs+'</div></div>'
+        +'</a>';
+    }).join('');
+  }
+  function boot(){
+    fetch('data/amazon-categories.json')
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(list){ (list||[]).forEach(function(x){ if(x && x.category && x.url) AMZ[x.category]=x.url; }); })
+      .catch(function(){})
+      .then(renderCats);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+
+
+<!-- ══ BLACK FRIDAY PICKS — real Amazon products, grouped by department ══ -->
+<div class="section" id="picks-section" style="display:none">
+  <div class="section-header">
+    <h2 class="section-title">Black Friday Picks</h2>
+    <span class="hint" style="color:#b0a492;font-size:13px">Live Amazon deals, hand-picked. Tap through for today's price.</span>
+  </div>
+  <div id="picks-wrap"></div>
+</div>
+<style>
+.pk-group{margin-bottom:34px}
+.pk-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.pk-head h3{font-size:17px;color:var(--gold2);font-weight:700;margin:0;white-space:nowrap}
+.pk-head .rule{flex:1;height:1px;background:linear-gradient(90deg,rgba(180,132,63,.45),transparent)}
+.pk-grid{display:flex;flex-wrap:wrap;gap:16px}
+.pk-card{flex:1 1 220px;max-width:330px;display:flex;flex-direction:column;
+  background:linear-gradient(140deg,rgba(38,29,20,.52),rgba(24,21,18,.46) 62%,rgba(20,18,16,.52));
+  backdrop-filter:blur(16px) saturate(1.06);-webkit-backdrop-filter:blur(16px) saturate(1.06);
+  border:1px solid rgba(201,154,78,.40);border-radius:16px;overflow:hidden;text-decoration:none;
+  transition:border-color .2s,transform .15s,box-shadow .2s}
+.pk-card:hover{border-color:#e3b963;transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 24px rgba(213,151,59,.2)}
+.pk-thumb{position:relative;height:132px;overflow:hidden;background:#16130f;border-bottom:1px solid rgba(180,132,63,.28)}
+.pk-thumb img{width:100%;height:100%;object-fit:cover}
+.pk-badge{position:absolute;top:9px;left:9px;background:linear-gradient(135deg,#c78b36,#e8b352);color:#17120b;
+  font-size:10.5px;font-weight:800;letter-spacing:.3px;padding:4px 9px;border-radius:999px}
+.pk-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.pk-name{font-size:14px;font-weight:700;color:var(--ivory);line-height:1.35}
+.pk-cta{margin-top:auto;font-size:12.5px;font-weight:700;color:var(--gold2);display:flex;align-items:center;gap:6px}
+.pk-browse{border-style:dashed;border-color:rgba(201,154,78,.34)}
+.pk-browse:hover{border-style:solid}
+.pk-browse .pk-thumb img{opacity:.62}
+.pk-browse .pk-badge{background:linear-gradient(135deg,#6b5428,#8a6a33);}
+@media(max-width:560px){.pk-card{flex:1 1 150px}.pk-thumb{height:108px}.pk-name{font-size:13px}}
+</style>
+<script>
+/* Real Amazon products, grouped under their department, in catalog order.
+   Every department also gets a "browse all" card pointing at its tagged
+   Amazon deals search, so no department is ever empty and all 21 earn.
+   No price and no Amazon photograph on any card - both of those need the
+   Product Advertising API, which opens after the first sales. The artwork
+   is our own department photography. */
+(function(){
+  function thumb(m, badge){
+    var img = m.img ? '<img src="'+m.img+'" alt="" loading="lazy">' : '';
+    return '<div class="pk-thumb">'+img+'<span class="pk-badge">'+badge+'</span></div>';
+  }
+  function cardProduct(p, m){
+    return '<a class="pk-card" href="'+p.url+'" target="_blank" rel="noopener sponsored">'
+      +thumb(m, p.badge||'Black Friday Deal')
+      +'<div class="pk-body"><div class="pk-name">'+p.name+'</div>'
+      +'<div class="pk-cta">See today’s price on Amazon →</div></div></a>';
+  }
+  function cardBrowse(url, m){
+    return '<a class="pk-card pk-browse" href="'+url+'" target="_blank" rel="noopener sponsored">'
+      +thumb(m, 'Today’s Deals')
+      +'<div class="pk-body"><div class="pk-name">All '+m.name+' deals</div>'
+      +'<div class="pk-cta">Browse on Amazon →</div></div></a>';
+  }
+  function build(picks, cats, amz){
+    var byCat={};
+    (picks||[]).forEach(function(p){ (byCat[p.category]=byCat[p.category]||[]).push(p); });
+    var html = (cats||[]).map(function(c){
+      var m={name:c.name, img:c.img};
+      var cards=(byCat[c.slug]||[]).map(function(p){ return cardProduct(p,m); }).join('');
+      if(amz[c.slug]) cards += cardBrowse(amz[c.slug], m);
+      if(!cards) return '';
+      return '<div class="pk-group"><div class="pk-head"><h3>'+m.name+'</h3><div class="rule"></div></div>'
+        +'<div class="pk-grid">'+cards+'</div></div>';
+    }).join('');
+    if(!html) return;
+    document.getElementById('picks-wrap').innerHTML = html;
+    document.getElementById('picks-section').style.display = '';
+  }
+  function grab(u){
+    return fetch(u).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; });
+  }
+  function boot(){
+    Promise.all([grab('data/amazon-picks.json'), grab('data/amazon-categories.json')])
+      .then(function(res){
+        var amz={}; (res[1]||[]).forEach(function(a){ if(a&&a.category&&a.url) amz[a.category]=a.url; });
+        build(res[0]||[], (window.EBF_CATALOG&&window.EBF_CATALOG.cats)||[], amz);
+      }).catch(function(){});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+
 <!-- ══ DEAL OF THE DAY ══ -->
-<div class="section" style="padding-top:8px;">
+<div class="section" id="dotd-section" style="padding-top:8px;">
   <div class="dotd-header">
     <h2 class="dotd-title">Deal of the Day</h2>
     <div class="dotd-sep"></div>
@@ -844,6 +985,36 @@ footer{
   </script>
 </div>
 
+<!-- ══ HOW IT WORKS ══ -->
+<div class="section" style="padding-top:8px;">
+  <div class="section-header">
+    <h2 class="section-title">How it works</h2>
+  </div>
+  <p style="color:#b0a492;font-size:14.5px;max-width:740px;margin:-4px 0 22px;line-height:1.6;">
+    Everyday Black Friday is a deal-hunting service. We watch prices across the stores you already trust and surface the biggest discounts &mdash; every day of the year, not just one weekend. It's free to browse, and you check out on the retailer's own site.
+  </p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;">
+    <div style="background:linear-gradient(140deg,#2a2016,#1a1613 55%,#141210);border:1px solid #6f5330;border-radius:16px;padding:22px 20px;">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c78b36,#e8b352);color:#17120b;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;margin-bottom:13px;">1</div>
+      <div style="color:var(--ivory);font-weight:700;font-size:15.5px;margin-bottom:6px;">We hunt the deals</div>
+      <div style="color:#b0a492;font-size:13px;line-height:1.55;">Our team and tools track real price drops across major retailers, all year long &mdash; so you don't have to.</div>
+    </div>
+    <div style="background:linear-gradient(140deg,#2a2016,#1a1613 55%,#141210);border:1px solid #6f5330;border-radius:16px;padding:22px 20px;">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c78b36,#e8b352);color:#17120b;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;margin-bottom:13px;">2</div>
+      <div style="color:var(--ivory);font-weight:700;font-size:15.5px;margin-bottom:6px;">You browse free</div>
+      <div style="color:#b0a492;font-size:13px;line-height:1.55;">No account needed to look around. Sign in only if you want to save picks or set price alerts.</div>
+    </div>
+    <div style="background:linear-gradient(140deg,#2a2016,#1a1613 55%,#141210);border:1px solid #6f5330;border-radius:16px;padding:22px 20px;">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c78b36,#e8b352);color:#17120b;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;margin-bottom:13px;">3</div>
+      <div style="color:var(--ivory);font-weight:700;font-size:15.5px;margin-bottom:6px;">Buy at the store</div>
+      <div style="color:#b0a492;font-size:13px;line-height:1.55;">Click through to Amazon or the retailer and check out safely on their own site, with their protections.</div>
+    </div>
+  </div>
+  <p style="color:#8a7d6b;font-size:12px;margin:18px 0 0;line-height:1.6;">
+    As an Amazon Associate and affiliate partner, we may earn a commission when you buy through our links &mdash; at no extra cost to you. Questions? Reach us at <a href="mailto:hello@blackfridaydealseveryday.com" style="color:var(--gold2);text-decoration:none;">hello@blackfridaydealseveryday.com</a>.
+  </p>
+</div>
+
 <!-- ══ NEWSLETTER ══ -->
 <div class="newsletter">
   <div class="nl-icon">
@@ -877,16 +1048,16 @@ footer{
       <div class="footer-col">
         <h4>Deals</h4>
         <a href="search.html">All Deals</a>
-        <a href="search.html?cat=electronics,computers,gaming">Electronics</a>
-        <a href="search.html?cat=home,kitchen,patio">Home &amp; Living</a>
-        <a href="search.html?cat=fashion,shoes,beauty">Fashion</a>
+        <a href="https://www.amazon.com/s?k=electronics+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Electronics</a>
+        <a href="search.html?cat=home,garden">Home &amp; Living</a>
+        <a href="search.html?cat=fashion,beauty">Fashion</a>
       </div>
       <div class="footer-col">
         <h4>Categories</h4>
         <a href="categories.html">Browse All</a>
-        <a href="search.html?cat=sports">Sports &amp; Outdoors</a>
-        <a href="search.html?cat=auto,tools">Auto &amp; Tools</a>
-        <a href="search.html?cat=travel">Travel</a>
+        <a href="https://www.amazon.com/s?k=sports+and+outdoors+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Sports &amp; Outdoors</a>
+        <a href="https://www.amazon.com/s?k=automotive+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Auto &amp; Tools</a>
+        <a href="https://www.amazon.com/s?k=luggage+and+travel+gear+deals&tag=everydaybl079-20" target="_blank" rel="noopener sponsored">Travel</a>
       </div>
       <div class="footer-col">
         <h4>About</h4>
@@ -896,13 +1067,13 @@ footer{
       </div>
       <div class="footer-col">
         <h4>Support</h4>
-        <a href="mailto:support@everydayblackfriday.com">Contact Us</a>
+        <a href="mailto:hello@blackfridaydealseveryday.com">Contact Us</a>
         <a href="privacy.html">Privacy Policy</a>
         <a href="privacy.html#affiliate">Affiliate Disclosure</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2024 Everyday Black Friday. As an Amazon Associate we earn from qualifying purchases.</span>
+      <span>&copy; <span class="js-year">2026</span> Everyday Black Friday. As an Amazon Associate we earn from qualifying purchases.</span>
       <span><a href="privacy.html">Privacy</a></span>
     </div>
   </div>
@@ -917,7 +1088,7 @@ footer{
     </div>
     <div class="modal-title">Sign in to EBF</div>
     <div class="modal-desc">Save deals, set alerts, and get personalized picks — free, forever.</div>
-    <button class="g-btn" onclick="signInWithGoogle()">
+    <button class="g-btn" onclick="EBF.signIn()">
       <svg width="20" height="20" viewBox="0 0 48 48">
         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -987,6 +1158,23 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-<script src="js/cookie-consent.js"></script>
+<script src="js/cookie-consent.js?v=20261120b"></script>
+
+<script>
+/* Hide any deal section that has nothing real to show. Runs after the deal
+   renderers, and again shortly after, since those fetch asynchronously. */
+(function(){
+  function sweep(){
+    [['bf-grid','bf-section'],['dotd-grid','dotd-section']].forEach(function(pair){
+      var grid=document.getElementById(pair[0]), section=document.getElementById(pair[1]);
+      if(!grid||!section) return;
+      section.style.display = grid.children.length ? '' : 'none';
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',sweep);
+  else sweep();
+  [400, 1200, 2500, 5000].forEach(function(t){ setTimeout(sweep, t); });
+})();
+</script>
 </body>
 </html>

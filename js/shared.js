@@ -10,12 +10,12 @@
    - Site-wide announcement banner (from data/announcements.json)
    ============================================================ */
 
-const EBF = {
-  CLIENT_ID: '875134997725-ktboepqgg8mrbn084v6bc20u29tugbgf.apps.googleusercontent.com',
-  STRIPE_LINK: 'https://buy.stripe.com/PLACEHOLDER_STRIPE_LINK',
+window.EBF = window.EBF || {};
+Object.assign(window.EBF, {
+  STRIPE_LINK: 'https://buy.stripe.com/7sY6oJ9dY4tBdqRckZfbq01',
   FREE_ALERT_LIMIT: 1,
   PRO_ALERT_LIMIT: 999,
-  AFFILIATE_TAG: 'blackdailydeals-20',
+  AFFILIATE_TAG: 'everydaybl079-20',
 
   /* ---- Storage helpers ---- */
   getUser() { try { return JSON.parse(localStorage.getItem('bdd_user') || 'null'); } catch { return null; } },
@@ -120,36 +120,84 @@ const EBF = {
 </div>`;
   },
 
-  /* ---- Google Sign In ---- */
+  /* ---- Supabase auth helpers ---- */
+  _sbUrl() { return (window.EBF_SUPABASE || {}).url || ''; },
+  _sbKey() { return (window.EBF_SUPABASE || {}).publishableKey || ''; },
+  getSession() { try { return JSON.parse(localStorage.getItem('ebf_sb_session') || 'null'); } catch { return null; } },
+  setSession(s) { if (s) localStorage.setItem('ebf_sb_session', JSON.stringify(s)); else localStorage.removeItem('ebf_sb_session'); },
+
+  /* ---- Sign in with Google (via Supabase Auth) ---- */
   signIn() {
-    if (typeof google === 'undefined') { this.showToast('Google Sign-In unavailable', 'error'); return; }
-    const client = google.accounts.oauth2.initTokenClient({
-      client_id: this.CLIENT_ID,
-      scope: 'openid email profile',
-      callback: (resp) => {
-        if (resp.error) { this.showToast('Sign-in failed', 'error'); return; }
-        this.fetchUserInfo(resp.access_token);
-      }
-    });
-    client.requestAccessToken();
+    const url = this._sbUrl();
+    if (!url) { this.showToast('Sign-in isn\'t configured yet', 'error'); return; }
+    const redirectTo = window.location.origin + window.location.pathname;
+    window.location.href = url + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(redirectTo);
   },
 
-  async fetchUserInfo(token) {
+  /* After Supabase redirects back, capture the tokens from the URL hash */
+  async handleAuthRedirect() {
+    const hash = window.location.hash || '';
+    if (hash.indexOf('access_token') === -1) return false;
+    const p = new URLSearchParams(hash.replace(/^#/, ''));
+    const access_token = p.get('access_token');
+    if (!access_token) return false;
+    this.setSession({ access_token, refresh_token: p.get('refresh_token') || '', at: Date.now() });
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    const user = await this.loadSbUser();
+    if (user) this.showToast('Welcome, ' + (user.name || 'there').split(' ')[0] + '!', 'success');
+    const m = document.getElementById('signInModal'); if (m) m.style.display = 'none';
+    return true;
+  },
+
+  /* Load the signed-in user (+ their profile row) and cache it */
+  async loadSbUser() {
+    const url = this._sbUrl(), key = this._sbKey(), sess = this.getSession();
+    if (!url || !key || !sess || !sess.access_token) return null;
     try {
-      const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + token } });
-      const u = await r.json();
-      const existing = this.getUser() || {};
-      const user = { name: u.name || u.email, email: u.email, avatar: u.picture || '', id: u.sub, pro: existing.pro || false };
+      let r = await fetch(url + '/auth/v1/user', { headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } });
+      if (r.status === 401 && sess.refresh_token) {
+        if (await this.refreshSb()) return this.loadSbUser();
+        this.setSession(null); this.clearUser(); this.updateAuthUI(null); return null;
+      }
+      if (!r.ok) return null;
+      const au = await r.json();
+      const meta = au.user_metadata || {};
+      let pro = false, is_admin = false;
+      // profileState tells the caller WHY is_admin is false: 'ok' means we read
+      // the row and it really says false; anything else means we never managed
+      // to check, which is a different problem and deserves a different message.
+      let profileState = 'unchecked';
+      try {
+        const pr = await fetch(url + '/rest/v1/profiles?select=is_pro,is_admin&id=eq.' + au.id, { headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } });
+        if (pr.ok) {
+          const rows = await pr.json();
+          if (rows && rows[0]) { pro = !!rows[0].is_pro; is_admin = !!rows[0].is_admin; profileState = 'ok'; }
+          else { profileState = 'no-row'; }
+        } else { profileState = 'http-' + pr.status; }
+      } catch (e) { profileState = 'error'; }
+      const user = { id: au.id, email: au.email, name: meta.full_name || meta.name || au.email, avatar: meta.avatar_url || meta.picture || '', pro, is_admin, profileState };
       this.setUser(user);
       this.updateAuthUI(user);
-      this.showToast('Welcome, ' + user.name.split(' ')[0] + '!', 'success');
-      // close modal if open
-      const m = document.getElementById('signInModal');
-      if (m) m.style.display = 'none';
-    } catch (e) { this.showToast('Sign-in error', 'error'); }
+      return user;
+    } catch (e) { return null; }
   },
 
-  signOut() {
+  async refreshSb() {
+    const url = this._sbUrl(), key = this._sbKey(), sess = this.getSession();
+    if (!url || !key || !sess || !sess.refresh_token) return false;
+    try {
+      const r = await fetch(url + '/auth/v1/token?grant_type=refresh_token', { method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: sess.refresh_token }) });
+      if (!r.ok) { this.setSession(null); return false; }
+      const d = await r.json();
+      this.setSession({ access_token: d.access_token, refresh_token: d.refresh_token || sess.refresh_token, at: Date.now() });
+      return true;
+    } catch (e) { this.setSession(null); return false; }
+  },
+
+  async signOut() {
+    const url = this._sbUrl(), key = this._sbKey(), sess = this.getSession();
+    try { if (url && key && sess && sess.access_token) await fetch(url + '/auth/v1/logout', { method: 'POST', headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } }); } catch (e) { /* ignore */ }
+    this.setSession(null);
     this.clearUser();
     this.updateAuthUI(null);
     this.showToast('Signed out');
@@ -177,10 +225,103 @@ const EBF = {
     });
   },
 
+  /* ---- Email + password auth (Supabase) ---- */
+  _authMode: 'signin',
+  async signInEmail(email, password) {
+    const url = this._sbUrl(), key = this._sbKey();
+    const r = await fetch(url + '/auth/v1/token?grant_type=password', {
+      method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password })
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.access_token) {
+      return { ok: false, error: d.error_description || d.msg || d.message || 'Could not sign in' };
+    }
+    this.setSession({ access_token: d.access_token, refresh_token: d.refresh_token || '', at: Date.now() });
+    const user = await this.loadSbUser();
+    return { ok: true, user: user };
+  },
+  async signUpEmail(email, password) {
+    const url = this._sbUrl(), key = this._sbKey();
+    const r = await fetch(url + '/auth/v1/signup', {
+      method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password, options: { email_redirect_to: window.location.origin + '/' } })
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      return { ok: false, error: d.error_description || d.msg || d.message || 'Could not create account' };
+    }
+    if (d.access_token) {
+      this.setSession({ access_token: d.access_token, refresh_token: d.refresh_token || '', at: Date.now() });
+      const user = await this.loadSbUser();
+      return { ok: true, confirmed: true, user: user };
+    }
+    return { ok: true, confirmed: false };
+  },
+  setAuthMode(mode) {
+    this._authMode = mode;
+    const b = document.getElementById('ebfEmailBtn');
+    const tog = document.getElementById('ebfToggle');
+    const err = document.getElementById('ebfAuthErr');
+    if (err) { err.style.color = '#ff6b6b'; err.textContent = ''; }
+    if (mode === 'signup') {
+      if (b) b.textContent = 'Create account';
+      if (tog) tog.innerHTML = 'Already have an account? <b style="color:#FFD700;">Sign in</b>';
+    } else {
+      if (b) b.textContent = 'Sign in';
+      if (tog) tog.innerHTML = 'New here? <b style="color:#FFD700;">Create an account</b>';
+    }
+  },
+  async submitEmailAuth() {
+    const email = ((document.getElementById('ebfEmail') || {}).value || '').trim();
+    const pass = (document.getElementById('ebfPass') || {}).value || '';
+    const err = document.getElementById('ebfAuthErr');
+    const btn = document.getElementById('ebfEmailBtn');
+    if (err) { err.style.color = '#ff6b6b'; err.textContent = ''; }
+    if (!email || email.indexOf('@') === -1) { if (err) err.textContent = 'Enter a valid email'; return; }
+    if (!pass || pass.length < 6) { if (err) err.textContent = 'Password must be at least 6 characters'; return; }
+    if (btn) { btn.disabled = true; btn.dataset.txt = btn.textContent; btn.textContent = 'Please wait…'; btn.style.opacity = '.6'; }
+    try {
+      const res = this._authMode === 'signup' ? await this.signUpEmail(email, pass) : await this.signInEmail(email, pass);
+      if (!res.ok) { if (err) err.textContent = res.error; return; }
+      if (this._authMode === 'signup' && res.confirmed === false) {
+        if (err) { err.style.color = '#7CFC9A'; err.textContent = 'Check your email to confirm your account, then sign in.'; }
+        this.setAuthMode('signin');
+        return;
+      }
+      const m = document.getElementById('signInModal'); if (m) m.style.display = 'none';
+      this.showToast('Welcome' + (res.user && res.user.name ? ', ' + res.user.name.split(' ')[0] : '') + '!', 'success');
+    } catch (e) {
+      if (err) err.textContent = 'Something went wrong. Please try again.';
+    } finally {
+      if (btn) { btn.disabled = false; if (btn.dataset.txt) btn.textContent = btn.dataset.txt; btn.style.opacity = '1'; }
+    }
+  },
+
+  /* Inject the email form into a page's own inline sign-in modal (so every page gets it) */
+  _injectEmailForm(modal) {
+    if (!modal || modal.querySelector('#ebfEmail')) return;
+    const box = modal.querySelector('.modal-box') || modal.firstElementChild;
+    if (!box) return;
+    const skip = box.querySelector('.modal-skip');
+    const inStyle = 'width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:10px;outline:none;';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:4px;';
+    wrap.innerHTML =
+      '<input id="ebfEmail" type="email" placeholder="Email" autocomplete="email" style="' + inStyle + '">' +
+      '<input id="ebfPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key===\'Enter\')EBF.submitEmailAuth()" style="' + inStyle + '">' +
+      '<div id="ebfAuthErr" style="color:#ff6b6b;font-size:13px;min-height:16px;margin-bottom:8px;text-align:left;"></div>' +
+      '<button id="ebfEmailBtn" onclick="EBF.submitEmailAuth()" style="background:#FFD700;color:#000;border:none;padding:13px 20px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;width:100%;">Sign in</button>' +
+      '<p id="ebfToggle" onclick="EBF.setAuthMode(EBF._authMode===\'signup\'?\'signin\':\'signup\')" style="color:#aaa;font-size:13px;margin:16px 0 4px;cursor:pointer;">New here? <b style="color:#FFD700;">Create an account</b></p>';
+    if (skip) box.insertBefore(wrap, skip); else box.appendChild(wrap);
+  },
+
   openSignInModal() {
     const m = document.getElementById('signInModal');
     if (m) {
+      this._injectEmailForm(m);
       m.style.display = 'flex';
+      this.setAuthMode('signin');
       if (!m.dataset.closeWired) {
         m.dataset.closeWired = '1';
         // a click on the dark backdrop (outside the box) closes it
@@ -196,17 +337,22 @@ const EBF = {
     const html = `<div id="signInModal" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;">
       <div style="background:#181818;border:1px solid #333;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;position:relative;">
         <button onclick="document.getElementById('signInModal').style.display='none'" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#888;font-size:20px;cursor:pointer;">✕</button>
-        <div style="font-size:36px;margin-bottom:16px;">🛍️</div>
-        <h2 style="color:#fff;margin:0 0 8px;">Sign in to EBF</h2>
+        <h2 style="color:#fff;margin:0 0 8px;">Sign in to Everyday Black Friday</h2>
         <p style="color:#888;font-size:14px;margin:0 0 24px;">Save deals, set alerts, and more</p>
         <button onclick="EBF.signIn()" style="background:#FFD700;color:#000;border:none;padding:14px 32px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;">
           <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
-        <p style="color:#555;font-size:12px;margin:16px 0 0;">No account needed — sign in with Google</p>
+        <div style="display:flex;align-items:center;gap:12px;margin:18px 0;color:#555;font-size:12px;"><span style="flex:1;height:1px;background:#333;"></span>or<span style="flex:1;height:1px;background:#333;"></span></div>
+        <input id="ebfEmail" type="email" placeholder="Email" autocomplete="email" style="width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:10px;outline:none;">
+        <input id="ebfPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')EBF.submitEmailAuth()" style="width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:10px;outline:none;">
+        <div id="ebfAuthErr" style="color:#ff6b6b;font-size:13px;min-height:16px;margin-bottom:8px;text-align:left;"></div>
+        <button id="ebfEmailBtn" onclick="EBF.submitEmailAuth()" style="background:#FFD700;color:#000;border:none;padding:13px 20px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;width:100%;">Sign in</button>
+        <p id="ebfToggle" onclick="EBF.setAuthMode(EBF._authMode==='signup'?'signin':'signup')" style="color:#aaa;font-size:13px;margin:16px 0 0;cursor:pointer;">New here? <b style="color:#FFD700;">Create an account</b></p>
       </div>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', html);
+    this.setAuthMode('signin');
   },
 
   // Closes the sign-in window however it was opened. Pages open it with
@@ -230,7 +376,7 @@ const EBF = {
     if (!this.canCreateAlert()) {
       // show upgrade prompt
       const confirmed = confirm(
-        '🔔 You\'ve used your 1 free alert.\n\nUpgrade to Pro for $8/month to get unlimited alerts.\n\nClick OK to upgrade now.'
+        'You\'ve used your 1 free alert.\n\nUpgrade to Pro for $8/month to get unlimited alerts.\n\nClick OK to upgrade now.'
       );
       if (confirmed) window.location.href = 'membership.html';
       return false;
@@ -254,7 +400,7 @@ const EBF = {
   /* ---- Announcement banner ---- */
   async loadAnnouncement() {
     try {
-      const r = await fetch('/black-daily-deals/data/announcements.json?t=' + Date.now());
+      const r = await fetch('data/announcements.json?t=' + Date.now());
       const ann = await r.json();
       if (!ann.active) return;
       // check dismissed
@@ -290,9 +436,10 @@ const EBF = {
 
   /* ---- Init (called on every page) ---- */
   init() {
-    // restore auth state
-    const user = this.getUser();
-    this.updateAuthUI(user);
+    // show any cached user immediately for snappy UI
+    this.updateAuthUI(this.getUser());
+    // handle a fresh Google redirect, otherwise refresh the stored session
+    this.handleAuthRedirect().then(handled => { if (!handled && this.getSession()) this.loadSbUser(); });
     // load announcement
     this.loadAnnouncement();
     // inject toast animation CSS
@@ -303,7 +450,8 @@ const EBF = {
       document.head.appendChild(s);
     }
   }
-};
+});
+const EBF = window.EBF;
 
 // Auto-init when DOM is ready
 if (document.readyState === 'loading') {
@@ -311,3 +459,165 @@ if (document.readyState === 'loading') {
 } else {
   EBF.init();
 }
+
+/* auto-update footer copyright year */
+document.addEventListener('DOMContentLoaded',function(){try{document.querySelectorAll('.js-year').forEach(function(e){e.textContent=new Date().getFullYear();});}catch(_){}} );
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE NAVIGATION — builds the phone menu on every page.
+   Runs from the shared script so no page markup changes: it reads
+   each page's own nav links (keeping that page's "active" state)
+   and puts them in a drawer behind a menu button. Styles live in
+   css/stage.css under MOBILE NAVIGATION; above 900px nothing here
+   is visible and the desktop bar is untouched.
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  function buildMobileNav() {
+    var nav = document.querySelector('nav');
+    if (!nav || nav.querySelector('.nav-burger')) return;
+
+    var sources = nav.querySelectorAll('.nav-links a, .btn-alerts');
+    if (!sources.length) return;
+
+    var drawer = document.createElement('div');
+    drawer.className = 'nav-drawer';
+    drawer.id = 'navDrawer';
+    Array.prototype.forEach.call(sources, function (a) {
+      var copy = a.cloneNode(true);
+      copy.removeAttribute('id');
+      copy.className = a.classList.contains('active') ? 'active' : '';
+      drawer.appendChild(copy);
+    });
+
+    var burger = document.createElement('button');
+    burger.type = 'button';
+    burger.className = 'nav-burger';
+    burger.setAttribute('aria-label', 'Menu');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-controls', 'navDrawer');
+    burger.innerHTML = '<span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>';
+
+    function setOpen(open) {
+      drawer.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    burger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(burger.getAttribute('aria-expanded') !== 'true');
+    });
+    drawer.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setOpen(false);
+    });
+    document.addEventListener('click', function (e) {
+      if (!drawer.contains(e.target) && !burger.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900) setOpen(false);
+    });
+
+    nav.appendChild(burger);
+    document.body.appendChild(drawer);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildMobileNav);
+  } else {
+    buildMobileNav();
+  }
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   INSTALL TO DESKTOP — "Keep EBF one click away"
+   Adds the manifest link, registers the service worker, and shows
+   the install card when the browser offers it. Nothing is shown to
+   people who already installed, who dismissed it, or whose browser
+   does not support installing. Runs from the shared script so no
+   page markup changes.
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  var DISMISSED = 'ebf_install_dismissed';
+  var deferred = null;
+
+  function head(tag, attrs) {
+    var el = document.createElement(tag);
+    Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    document.head.appendChild(el);
+    return el;
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')) {
+    head('link', { rel: 'manifest', href: '/manifest.webmanifest' });
+  }
+  if (!document.querySelector('meta[name="theme-color"]')) {
+    head('meta', { name: 'theme-color', content: '#0f0c08' });
+  }
+  head('link', { rel: 'apple-touch-icon', href: '/assets/icon-192.png' });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () { /* install prompt simply won't appear */ });
+    });
+  }
+
+  function alreadyInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true;
+  }
+
+  function card() {
+    var el = document.createElement('div');
+    el.className = 'ebf-install';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-label', 'Add EBF Daily Deals to your desktop');
+    el.innerHTML =
+      '<h4>Keep EBF one click away</h4>' +
+      '<p>The best prices go in hours. Don’t go looking for them — we’ll be right there on your desktop.</p>' +
+      '<div class="ebf-install-row">' +
+        '<button type="button" class="ebf-install-go">Add to desktop</button>' +
+        '<button type="button" class="ebf-install-no">Not now</button>' +
+      '</div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add('show'); });
+
+    el.querySelector('.ebf-install-no').addEventListener('click', function () {
+      try { localStorage.setItem(DISMISSED, '1'); } catch (e) {}
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    });
+    el.querySelector('.ebf-install-go').addEventListener('click', function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.finally(function () {
+        try { localStorage.setItem(DISMISSED, '1'); } catch (e) {}
+        deferred = null;
+      });
+    });
+  }
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    var dismissed = false;
+    try { dismissed = localStorage.getItem(DISMISSED) === '1'; } catch (err) {}
+    if (dismissed || alreadyInstalled()) return;
+    /* let the page settle first — an offer in the first second reads as a pop-up */
+    setTimeout(function () { if (deferred) card(); }, 2500);
+  });
+
+  window.addEventListener('appinstalled', function () {
+    try { localStorage.setItem(DISMISSED, '1'); } catch (e) {}
+    deferred = null;
+  });
+
+  /* Permanent way back in, for anyone who said "not now". */
+  window.EBF = window.EBF || {};
+  window.EBF.promptInstall = function () {
+    if (deferred) { deferred.prompt(); return true; }
+    return false;
+  };
+})();
