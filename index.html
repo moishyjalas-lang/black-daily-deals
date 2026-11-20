@@ -848,6 +848,73 @@ footer{
 })();
 </script>
 
+
+<!-- ══ BLACK FRIDAY PICKS — real Amazon products, grouped by department ══ -->
+<div class="section" id="picks-section" style="display:none">
+  <div class="section-header">
+    <h2 class="section-title">Black Friday Picks</h2>
+    <span class="hint" style="color:#b0a492;font-size:13px">Live Amazon deals, hand-picked. Tap through for today's price.</span>
+  </div>
+  <div id="picks-wrap"></div>
+</div>
+<style>
+.pk-group{margin-bottom:34px}
+.pk-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.pk-head h3{font-size:17px;color:var(--gold2);font-weight:700;margin:0;white-space:nowrap}
+.pk-head .rule{flex:1;height:1px;background:linear-gradient(90deg,rgba(180,132,63,.45),transparent)}
+.pk-grid{display:flex;flex-wrap:wrap;gap:16px}
+.pk-card{flex:1 1 220px;max-width:330px;display:flex;flex-direction:column;
+  background:linear-gradient(140deg,rgba(38,29,20,.52),rgba(24,21,18,.46) 62%,rgba(20,18,16,.52));
+  backdrop-filter:blur(16px) saturate(1.06);-webkit-backdrop-filter:blur(16px) saturate(1.06);
+  border:1px solid rgba(201,154,78,.40);border-radius:16px;overflow:hidden;text-decoration:none;
+  transition:border-color .2s,transform .15s,box-shadow .2s}
+.pk-card:hover{border-color:#e3b963;transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 24px rgba(213,151,59,.2)}
+.pk-thumb{position:relative;height:132px;overflow:hidden;background:#16130f;border-bottom:1px solid rgba(180,132,63,.28)}
+.pk-thumb img{width:100%;height:100%;object-fit:cover}
+.pk-badge{position:absolute;top:9px;left:9px;background:linear-gradient(135deg,#c78b36,#e8b352);color:#17120b;
+  font-size:10.5px;font-weight:800;letter-spacing:.3px;padding:4px 9px;border-radius:999px}
+.pk-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.pk-name{font-size:14px;font-weight:700;color:var(--ivory);line-height:1.35}
+.pk-cta{margin-top:auto;font-size:12.5px;font-weight:700;color:var(--gold2);display:flex;align-items:center;gap:6px}
+@media(max-width:560px){.pk-card{flex:1 1 150px}.pk-thumb{height:108px}.pk-name{font-size:13px}}
+</style>
+<script>
+/* Real Amazon products, grouped under their department. Each card carries our
+   tag. No price and no Amazon photograph — both of those need the Product
+   Advertising API, which opens after the first sales. The artwork is our own
+   department photography, so no card is ever blank. */
+(function(){
+  function build(picks, cats){
+    if(!picks.length) return;
+    var byCat={}, order=[];
+    picks.forEach(function(p){ if(!byCat[p.category]){byCat[p.category]=[];order.push(p.category);} byCat[p.category].push(p); });
+    var meta={}; (cats||[]).forEach(function(c){ meta[c.slug]={name:c.name,img:c.img}; });
+    var html = order.map(function(slug){
+      var m = meta[slug] || {name:slug, img:''};
+      var cards = byCat[slug].map(function(p){
+        var img = m.img ? '<img src="'+m.img+'" alt="" loading="lazy">' : '';
+        return '<a class="pk-card" href="'+p.url+'" target="_blank" rel="noopener sponsored">'
+          +'<div class="pk-thumb">'+img+'<span class="pk-badge">'+p.badge+'</span></div>'
+          +'<div class="pk-body"><div class="pk-name">'+p.name+'</div>'
+          +'<div class="pk-cta">See today\u2019s price on Amazon \u2192</div></div></a>';
+      }).join('');
+      return '<div class="pk-group"><div class="pk-head"><h3>'+m.name+'</h3><div class="rule"></div></div>'
+        +'<div class="pk-grid">'+cards+'</div></div>';
+    }).join('');
+    document.getElementById('picks-wrap').innerHTML = html;
+    document.getElementById('picks-section').style.display = '';
+  }
+  function boot(){
+    fetch('data/amazon-picks.json').then(function(r){ return r.ok?r.json():[]; })
+      .then(function(picks){
+        build(picks||[], (window.EBF_CATALOG&&window.EBF_CATALOG.cats)||[]);
+      }).catch(function(){});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+
 <!-- ══ DEAL OF THE DAY ══ -->
 <div class="section" id="dotd-section" style="padding-top:8px;">
   <div class="dotd-header">
