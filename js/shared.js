@@ -303,7 +303,7 @@ Object.assign(window.EBF, {
     if (!modal || modal.querySelector('#ebfEmail')) return;
     const box = modal.querySelector('.modal-box') || modal.firstElementChild;
     if (!box) return;
-    const skip = box.querySelector('.modal-skip');
+    const skip = box.querySelector('.modal-skip, .signin-skip');
     const inStyle = 'width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:10px;outline:none;';
     const wrap = document.createElement('div');
     wrap.style.cssText = 'margin-top:4px;';
