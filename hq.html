@@ -407,7 +407,8 @@ function renderDealTable(tab, q){
         <td>${d.discount?esc(d.discount)+'%':'—'}</td>
         <td>${esc(d.store||'—')}</td>
         <td class="t-sub">${esc((d.price_checked||'').slice(0,10)||'—')}</td>
-        <td><button class="row-edit" onclick="location.hash='#/deals/new?id='+encodeURIComponent('${esc(d.ext_id||d.id||'')}')">Edit</button></td>
+        <td style="white-space:nowrap"><button class="row-edit" onclick="location.hash='#/deals/new?id='+encodeURIComponent('${esc(d.ext_id||d.id||'')}')">Edit</button>
+          <button class="row-edit" style="margin-left:6px;border-color:#8a4a3a;color:#e0937f" onclick="deleteDeal('${esc(d.ext_id||d.id||'')}','${esc((d.title||'').replace(/'/g,''))}')">Delete</button></td>
       </tr>`;
     }).join('')}</tbody></table>
     <div class="sub" style="margin-top:14px">${rows.length} deal${rows.length!==1?'s':''} shown${HQ_SOURCE_NOTE}</div>`;
@@ -480,6 +481,17 @@ async function saveDeal(editId){
   if(!title){ toast('Please enter a deal name'); return; }
   if(isNaN(price)){ toast('Please enter a current price'); return; }
   if(!url){ toast('Please enter the retailer link'); return; }
+  // These are the same three tests the public site applies before it will
+  // render a deal. Catching them here means a deal can never save looking
+  // fine and then silently refuse to appear on the homepage.
+  if(/amazon\.[a-z.]+\/s\?/i.test(url)){
+    toast("That's an Amazon search link, not a product link. Open the product and use SiteStripe → Get Link → Text.");
+    return;
+  }
+  if(/m\.media-amazon\.com/i.test(g('f_image'))){
+    toast("Amazon product photos can only be used through their API, which needs 3 sales first. Leave the image blank for now.");
+    return;
+  }
   const op=parseFloat(g('f_oprice'));
   const rec = {
     title, description:g('f_desc')||null, store:g('f_store')||null, category:g('f_category')||null,
@@ -501,6 +513,28 @@ async function saveDeal(editId){
     if(!r.ok){ const t=await r.text(); toast('Save failed: '+r.status); console.warn('deal save',r.status,t); return; }
     toast(editId?'Deal updated':'Deal saved'); location.hash='#/deals';
   } catch(e){ toast('Save error — check your connection'); console.warn(e); }
+}
+
+async function deleteDeal(id, title){
+  if(!id){ toast('This deal has no id to delete by'); return; }
+  if(!confirm('Delete "'+(title||'this deal')+'"?\n\nIt comes off the site straight away. This cannot be undone.')) return;
+  const sess=EBF.getSession(), base=(window.EBF_SUPABASE||{}).url, key=(window.EBF_SUPABASE||{}).publishableKey;
+  if(!sess||!sess.access_token){ toast('Please sign in again'); return; }
+  try{
+    // ext_id is the usual key; fall back to the row id when a deal has none.
+    let r = await fetch(base+'/rest/v1/deals?ext_id=eq.'+encodeURIComponent(id),
+      { method:'DELETE', headers:{ apikey:key, Authorization:'Bearer '+sess.access_token, Prefer:'return=representation' } });
+    let gone = r.ok ? (await r.json() || []).length : 0;
+    if(!gone){
+      r = await fetch(base+'/rest/v1/deals?id=eq.'+encodeURIComponent(id),
+        { method:'DELETE', headers:{ apikey:key, Authorization:'Bearer '+sess.access_token, Prefer:'return=representation' } });
+      gone = r.ok ? (await r.json() || []).length : 0;
+    }
+    if(!r.ok){ toast('Delete failed ('+r.status+')'); return; }
+    if(!gone){ toast('Nothing matched that deal — it may already be gone'); }
+    else { toast('Deal deleted'); logAudit('deal.delete', title||id); }
+    screenDeals(document.getElementById('view'));
+  }catch(e){ toast('Delete error — check your connection'); console.warn(e); }
 }
 
 /* ========== SCREEN: Category Tree ========== */
