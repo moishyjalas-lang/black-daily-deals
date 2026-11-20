@@ -333,7 +333,10 @@ body::before{
    after the first qualifying sales. Until then Amazon stays in the
    Picks section by name only.
    ------------------------------------------------------------------ */
-.ebf-today{margin:0 0 44px;}
+/* match the page's own .section container so these rows line up with
+   'Shop by category' above them instead of running to the edge */
+.ebf-today{max-width:1360px; margin:0 auto; padding:0 24px 44px;}
+#todays-deals{padding-top:40px;}
 .ebf-today-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:0 0 16px;}
 .ebf-today-head h2{margin:0; font-size:24px; font-weight:800; letter-spacing:-.5px; color:#f3e6cf;}
 .ebf-today-head p{margin:0; font-size:13px; color:#9c8d77;}
