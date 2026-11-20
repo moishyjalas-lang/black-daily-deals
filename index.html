@@ -635,8 +635,9 @@ footer{
 
 <!-- ══ HERO — welcome video (logo → categories) + flashing text ══ -->
 <section class="hero">
-  <video class="hero-vid" id="heroVideo" autoplay muted loop playsinline preload="auto"
+  <video class="hero-vid" id="heroVideo" autoplay muted loop playsinline preload="metadata"
          poster="assets/hero-bg-poster.jpg" aria-label="Everyday Black Friday welcome">
+    <source src="assets/hero-bg-mobile.mp4" type="video/mp4" media="(max-width: 700px)">
     <source src="assets/hero-bg.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
