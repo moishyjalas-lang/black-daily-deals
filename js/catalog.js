@@ -1526,18 +1526,15 @@ window.EBF_CATALOG = {
   }
  ],
  "alias": {
-  "computers": "electronics",
   "gaming": "electronics",
   "kitchen": "home",
   "household": "home",
   "shoes": "fashion",
-  "baby": "family",
   "toys": "family",
-  "pets": "family",
   "office": "family",
   "patio": "garden",
-  "tools": "auto",
   "grocery": "food"
+ 
  },
  "levels": [
   "bf",
@@ -1546,3 +1543,42 @@ window.EBF_CATALOG = {
   "regular"
  ]
 };
+
+/* ------------------------------------------------------------------
+   Helpers the pages call on this catalog.
+   search.html used CAT.bySlug() and CAT.level() but neither was ever
+   defined, so renderSubNav threw on every render and the deals grid
+   never drew a single card. Found by opening the live page.
+   ------------------------------------------------------------------ */
+
+/* Find a department by its slug. Falls back through the alias table,
+   so an old or shorthand slug still lands on the right department. */
+window.EBF_CATALOG.bySlug = function (slug) {
+  if (!slug) return null;
+  var key = String(slug).toLowerCase();
+  var cats = window.EBF_CATALOG.cats || [];
+  for (var i = 0; i < cats.length; i++) {
+    if (cats[i].slug === key) return cats[i];
+  }
+  var alias = (window.EBF_CATALOG.alias || {})[key];
+  if (alias && alias !== key) return window.EBF_CATALOG.bySlug(alias);
+  return null;
+};
+
+/* How big a deal is this, from the store's own was/now prices.
+   We never invent a discount: no 'was' price means it is just a price. */
+window.EBF_CATALOG.level = function (d) {
+  var off = 0;
+  if (d) {
+    if (typeof d.discount === 'number' && d.discount > 0) {
+      off = d.discount;
+    } else if (d.original_price && d.price && d.original_price > d.price) {
+      off = Math.round((1 - d.price / d.original_price) * 100);
+    }
+  }
+  if (off >= 50) return { key: 'bf',      label: 'Doorbuster',     range: '50% off or more' };
+  if (off >= 30) return { key: 'big',     label: 'Hot Deal',       range: '30% to 49% off'  };
+  if (off >= 10) return { key: 'light',   label: 'Price Drop',     range: '10% to 29% off'  };
+  return             { key: 'regular', label: 'Everyday Price', range: 'Our standing price' };
+};
+
