@@ -504,3 +504,96 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
     buildMobileNav();
   }
 })();
+
+/* ══════════════════════════════════════════════════════════════
+   INSTALL TO DESKTOP — "Keep EBF one click away"
+   Adds the manifest link, registers the service worker, and shows
+   the install card when the browser offers it. Nothing is shown to
+   people who already installed, who dismissed it, or whose browser
+   does not support installing. Runs from the shared script so no
+   page markup changes.
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  var DISMISSED = 'ebf_install_dismissed';
+  var deferred = null;
+
+  function head(tag, attrs) {
+    var el = document.createElement(tag);
+    Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    document.head.appendChild(el);
+    return el;
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')) {
+    head('link', { rel: 'manifest', href: '/manifest.webmanifest' });
+  }
+  if (!document.querySelector('meta[name="theme-color"]')) {
+    head('meta', { name: 'theme-color', content: '#0f0c08' });
+  }
+  head('link', { rel: 'apple-touch-icon', href: '/assets/icon-192.png' });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () { /* install prompt simply won't appear */ });
+    });
+  }
+
+  function alreadyInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true;
+  }
+
+  function card() {
+    var el = document.createElement('div');
+    el.className = 'ebf-install';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-label', 'Add EBF Daily Deals to your desktop');
+    el.innerHTML =
+      '<h4>Keep EBF one click away</h4>' +
+      '<p>The best prices go in hours. Don’t go looking for them — we’ll be right there on your desktop.</p>' +
+      '<div class="ebf-install-row">' +
+        '<button type="button" class="ebf-install-go">Add to desktop</button>' +
+        '<button type="button" class="ebf-install-no">Not now</button>' +
+      '</div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add('show'); });
+
+    el.querySelector('.ebf-install-no').addEventListener('click', function () {
+      try { localStorage.setItem(DISMISSED, '1'); } catch (e) {}
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    });
+    el.querySelector('.ebf-install-go').addEventListener('click', function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.finally(function () {
+        try { localStorage.setItem(DISMISSED, '1'); } catch (e) {}
+        deferred = null;
+      });
+    });
+  }
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    var dismissed = false;
+    try { dismissed = localStorage.getItem(DISMISSED) === '1'; } catch (err) {}
+    if (dismissed || alreadyInstalled()) return;
+    /* let the page settle first — an offer in the first second reads as a pop-up */
+    setTimeout(function () { if (deferred) card(); }, 2500);
+  });
+
+  window.addEventListener('appinstalled', function () {
+    try { localStorage.setItem(DISMISSED, '1'); } catch (e) {}
+    deferred = null;
+  });
+
+  /* Permanent way back in, for anyone who said "not now". */
+  window.EBF = window.EBF || {};
+  window.EBF.promptInstall = function () {
+    if (deferred) { deferred.prompt(); return true; }
+    return false;
+  };
+})();

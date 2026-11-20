@@ -194,3 +194,49 @@ body::before{
   .btn-signin{padding:9px 13px;}
   .btn-signin span.label{display:none;}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   INSTALL PROMPT — "Keep EBF one click away"
+   Shown only when the browser says the site can be installed, and
+   only once: dismissing it is remembered. The footer link stays as
+   a permanent way back in.
+   ══════════════════════════════════════════════════════════════ */
+
+.ebf-install{
+  position:fixed;right:20px;bottom:20px;z-index:400;
+  width:min(360px,calc(100vw - 32px));
+  padding:20px 20px 16px;
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(38,29,20,0.96),rgba(22,19,16,0.96) 62%,rgba(18,16,14,0.97));
+  backdrop-filter:blur(18px) saturate(1.06);
+  -webkit-backdrop-filter:blur(18px) saturate(1.06);
+  border:1px solid rgba(201,154,78,0.45);
+  box-shadow:0 22px 60px rgba(0,0,0,0.6),0 0 26px rgba(213,151,59,0.14);
+  transform:translateY(14px);opacity:0;visibility:hidden;
+  transition:transform .26s ease,opacity .24s ease,visibility .26s;
+}
+.ebf-install.show{transform:translateY(0);opacity:1;visibility:visible;}
+.ebf-install h4{
+  margin:0 0 7px;font-size:17px;font-weight:800;
+  color:var(--gold2);letter-spacing:0.01em;
+}
+.ebf-install p{margin:0 0 15px;font-size:13.5px;line-height:1.55;color:var(--muted);}
+.ebf-install .ebf-install-row{display:flex;gap:10px;align-items:center;}
+.ebf-install button{
+  min-height:44px;padding:0 18px;border-radius:999px;
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+}
+.ebf-install .ebf-install-go{
+  flex:1;background:linear-gradient(135deg,#c78b36,#e8b352);
+  border:none;color:#17120b;
+}
+.ebf-install .ebf-install-go:hover{filter:brightness(1.08);box-shadow:0 0 20px rgba(216,169,79,0.45);}
+.ebf-install .ebf-install-no{
+  background:transparent;border:1px solid rgba(201,154,78,0.35);color:var(--muted);
+}
+.ebf-install .ebf-install-no:hover{border-color:var(--gold);color:var(--ivory);}
+
+@media(max-width:560px){
+  .ebf-install{right:12px;left:12px;bottom:12px;width:auto;padding:18px 16px 14px;}
+}
