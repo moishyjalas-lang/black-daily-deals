@@ -115,3 +115,82 @@ body::before{
     max-width:var(--room-edge) !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE NAVIGATION
+   The desktop bar needs about 1030px. Each page hid the nav links
+   at its own breakpoint (760-900px) and put nothing in their place,
+   so phone visitors lost Categories, Deals, Alerts and Pro with no
+   way back. profile.html hid nothing and overflowed instead.
+   One consistent phone header for every page, loaded from here so
+   no page markup has to change.
+   ══════════════════════════════════════════════════════════════ */
+
+.nav-burger{display:none;}
+.nav-drawer{display:none;}
+
+@media(max-width:900px){
+  .nav-links{display:none !important;}
+  .btn-alerts{display:none !important;}
+
+  nav{gap:10px;}
+  .nav-logo{margin-right:12px;padding-right:12px;}
+  .nav-right{margin-left:auto;gap:8px;}
+
+  .nav-burger{
+    display:flex;align-items:center;justify-content:center;
+    width:44px;height:44px;flex-shrink:0;margin-left:4px;
+    background:#15110b;border:1px solid rgba(216,169,79,0.45);
+    border-radius:12px;color:var(--gold2);cursor:pointer;padding:0;
+    transition:border-color .2s,box-shadow .2s,background .2s;
+  }
+  .nav-burger:hover{border-color:var(--gold);background:#231a10;}
+  .nav-burger[aria-expanded="true"]{
+    border-color:var(--gold);background:#231a10;
+    box-shadow:0 0 14px rgba(216,169,79,0.38);
+  }
+  .nav-burger .bar{
+    display:block;width:18px;height:2px;border-radius:2px;
+    background:currentColor;margin:3px auto;
+    transition:transform .22s ease,opacity .18s ease;
+  }
+  .nav-burger[aria-expanded="true"] .bar:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  .nav-burger[aria-expanded="true"] .bar:nth-child(2){opacity:0;}
+  .nav-burger[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+
+  .nav-drawer{
+    position:fixed;left:0;right:0;top:72px;z-index:199;
+    display:flex;flex-direction:column;
+    padding:8px 16px 14px;
+    background:linear-gradient(180deg,rgba(23,19,15,0.985),rgba(16,16,15,0.985));
+    backdrop-filter:blur(18px) saturate(1.05);
+    -webkit-backdrop-filter:blur(18px) saturate(1.05);
+    border-bottom:1px solid rgba(139,99,47,0.5);
+    box-shadow:0 18px 44px rgba(0,0,0,0.6);
+    transform:translateY(-14px);opacity:0;visibility:hidden;
+    transition:transform .22s ease,opacity .2s ease,visibility .22s;
+  }
+  .nav-drawer.open{transform:translateY(0);opacity:1;visibility:visible;}
+  .nav-drawer a{
+    display:flex;align-items:center;gap:10px;
+    min-height:48px;padding:0 12px;border-radius:10px;
+    text-decoration:none;color:var(--ivory);
+    font-size:16px;font-weight:600;letter-spacing:0.01em;
+    border-bottom:1px solid rgba(139,99,47,0.2);
+  }
+  .nav-drawer a:last-child{border-bottom:none;}
+  .nav-drawer a.active{color:var(--gold2);}
+  .nav-drawer a:active{background:rgba(216,169,79,0.1);}
+  .nav-drawer a svg{opacity:.55;flex-shrink:0;}
+
+  /* thumb-sized controls */
+  .btn-signin,.user-pill{min-height:44px;}
+  .nav-search input{padding-top:12px;padding-bottom:12px;}
+}
+
+@media(max-width:520px){
+  .nav-logo .wordmark{display:none;}
+  .nav-logo{margin-right:10px;padding-right:10px;}
+  .btn-signin{padding:9px 13px;}
+  .btn-signin span.label{display:none;}
+}

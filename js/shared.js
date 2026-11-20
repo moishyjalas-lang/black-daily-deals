@@ -438,3 +438,69 @@ if (document.readyState === 'loading') {
 
 /* auto-update footer copyright year */
 document.addEventListener('DOMContentLoaded',function(){try{document.querySelectorAll('.js-year').forEach(function(e){e.textContent=new Date().getFullYear();});}catch(_){}} );
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE NAVIGATION — builds the phone menu on every page.
+   Runs from the shared script so no page markup changes: it reads
+   each page's own nav links (keeping that page's "active" state)
+   and puts them in a drawer behind a menu button. Styles live in
+   css/stage.css under MOBILE NAVIGATION; above 900px nothing here
+   is visible and the desktop bar is untouched.
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  function buildMobileNav() {
+    var nav = document.querySelector('nav');
+    if (!nav || nav.querySelector('.nav-burger')) return;
+
+    var sources = nav.querySelectorAll('.nav-links a, .btn-alerts');
+    if (!sources.length) return;
+
+    var drawer = document.createElement('div');
+    drawer.className = 'nav-drawer';
+    drawer.id = 'navDrawer';
+    Array.prototype.forEach.call(sources, function (a) {
+      var copy = a.cloneNode(true);
+      copy.removeAttribute('id');
+      copy.className = a.classList.contains('active') ? 'active' : '';
+      drawer.appendChild(copy);
+    });
+
+    var burger = document.createElement('button');
+    burger.type = 'button';
+    burger.className = 'nav-burger';
+    burger.setAttribute('aria-label', 'Menu');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-controls', 'navDrawer');
+    burger.innerHTML = '<span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>';
+
+    function setOpen(open) {
+      drawer.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    burger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(burger.getAttribute('aria-expanded') !== 'true');
+    });
+    drawer.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setOpen(false);
+    });
+    document.addEventListener('click', function (e) {
+      if (!drawer.contains(e.target) && !burger.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900) setOpen(false);
+    });
+
+    nav.appendChild(burger);
+    document.body.appendChild(drawer);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildMobileNav);
+  } else {
+    buildMobileNav();
+  }
+})();
