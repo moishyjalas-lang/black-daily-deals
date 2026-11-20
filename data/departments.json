@@ -1,9 +1,11 @@
 {
  "auto": 94,
- "beauty": 140,
- "electronics": 140,
+ "beauty": 141,
+ "electronics": 141,
+ "food": 1,
  "garden": 80,
  "home": 55,
  "pets": 180,
+ "services": 3,
  "videogames": 120
 }

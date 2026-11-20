@@ -257,6 +257,14 @@ def main():
     counts = {}
     for p in out:
         counts[p["category"]] = counts.get(p["category"], 0) + 1
+    # A department with partner offers in it is not empty either, so it
+    # counts here too - otherwise the homepage would still send Services
+    # straight out to Amazon while we have three VPN offers sitting on it.
+    try:
+        for o in json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8")):
+            counts[o["category"]] = counts.get(o["category"], 0) + 1
+    except Exception:
+        pass
     (ROOT / "data" / "departments.json").write_text(
         json.dumps(counts, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 

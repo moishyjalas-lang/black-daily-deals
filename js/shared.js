@@ -685,3 +685,84 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
     } else { start(); }
   });
 })();
+
+/* ------------------------------------------------------------------
+   PARTNER OFFER CARDS
+   Renders the offers in data/offers.json above the product grid on a
+   department page. Done from here so search.html is never edited.
+   If a department has offers but no products, the grid's own "no
+   matching deals" block is hidden - the page is not empty, it just
+   has offers rather than products in it.
+   ------------------------------------------------------------------ */
+(function offerCards(){
+  if(!/(^|\/)search(\.html)?$/.test(location.pathname)) return;
+
+  var offers = [], host = null;
+
+  function esc(v){
+    return String(v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function currentCat(){
+    return new URLSearchParams(location.search).get('cat') || '';
+  }
+
+  function card(o){
+    return '<div class="ebf-offer">' +
+      '<div class="ebf-offer-store">' + esc(o.store) + '</div>' +
+      '<h3>' + esc(o.headline) + '</h3>' +
+      '<p>' + esc(o.blurb) + '</p>' +
+      '<a class="ebf-offer-go" href="' + esc(o.url) + '" target="_blank" ' +
+        'rel="sponsored nofollow noopener">' + esc(o.cta) + ' →</a>' +
+    '</div>';
+  }
+
+  function paint(){
+    var grid = document.getElementById('deals-grid');
+    if(!grid) return;
+    var cat = currentCat();
+    // No category chosen means the shopper is browsing or searching
+    // everything, and a wall of partner offers there would be noise.
+    var mine = cat ? offers.filter(function(o){ return o.category === cat; }) : [];
+
+    if(!host){
+      host = document.createElement('section');
+      host.className = 'ebf-offers';
+      grid.parentNode.insertBefore(host, grid);
+    }
+    if(!mine.length){ host.hidden = true; return; }
+
+    host.innerHTML =
+      '<div class="ebf-offers-head"><h2>Offers from our partners</h2>' +
+      '<span>' + mine.length + (mine.length === 1 ? ' offer' : ' offers') + '</span></div>' +
+      '<div class="ebf-offer-grid">' + mine.map(card).join('') + '</div>' +
+      '<p class="ebf-offer-note">These stores sell plans and subscriptions rather than ' +
+      'single products, so prices are shown on their own site.</p>';
+    host.hidden = false;
+
+    // the department has something in it, so don't tell the shopper it's empty
+    var empty = grid.querySelector('.empty');
+    if(empty) empty.style.display = 'none';
+  }
+
+  fetch('data/offers.json')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .catch(function(){ return []; })
+    .then(function(list){
+      offers = list || [];
+      if(!offers.length) return;
+      function start(){
+        var grid = document.getElementById('deals-grid');
+        if(grid && window.MutationObserver){
+          new MutationObserver(paint).observe(grid, { childList:true });
+        }
+        window.addEventListener('popstate', paint);
+        paint();
+      }
+      if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', start);
+      } else { start(); }
+    });
+})();
