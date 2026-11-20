@@ -15,7 +15,7 @@ Object.assign(window.EBF, {
   STRIPE_LINK: 'https://buy.stripe.com/7sY6oJ9dY4tBdqRckZfbq01',
   FREE_ALERT_LIMIT: 1,
   PRO_ALERT_LIMIT: 999,
-  AFFILIATE_TAG: 'blackdailydeals-20',
+  AFFILIATE_TAG: 'everydaybl079-20',
 
   /* ---- Storage helpers ---- */
   getUser() { try { return JSON.parse(localStorage.getItem('bdd_user') || 'null'); } catch { return null; } },
