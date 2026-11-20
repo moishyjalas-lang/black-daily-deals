@@ -89,6 +89,14 @@ Object.assign(window.EBF, {
   fmt(n) { return '$' + n.toFixed(2); },
 
   /* ---- Deal card HTML ---- */
+  /* A product photo that will not load used to be deleted on the spot,
+     which left a white card with a price and no picture - worse than no
+     card at all. Hide the whole card instead. */
+  imageFailed(img) {
+    const card = img.closest('.deal-card');
+    if (card) card.style.display = 'none'; else img.remove();
+  },
+
   dealCard(d) {
     const inWish = this.getWishlist().includes(d.id);
     /* deal level from the store's shown was/now prices (js/catalog.js) */
@@ -100,7 +108,7 @@ Object.assign(window.EBF, {
     const tag = lv.key === 'big' ? '<span class="lvl-tag">Hot Deal</span>' : lv.key === 'light' ? '<span class="lvl-tag soft">Price Drop</span>' : '';
     return `<div class="deal-card lvl-${lv.key}" data-id="${d.id}">
   <a href="${d.affiliate_url}" target="_blank" rel="noopener noreferrer sponsored" class="card-img-wrap">
-    ${d.image ? `<img src="${d.image}" alt="${d.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+    ${d.image ? `<img src="${d.image}" alt="${d.title}" loading="lazy" referrerpolicy="no-referrer" onerror="EBF.imageFailed(this)">` : ''}
     ${badge}
     <button class="wish-btn${inWish ? ' active' : ''}" onclick="EBF.toggleWishlist(this,'${d.id}')" aria-label="${inWish ? 'Remove from' : 'Add to'} wishlist">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="${inWish ? '#ff3b3b' : 'none'}" stroke="${inWish ? '#ff3b3b' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>

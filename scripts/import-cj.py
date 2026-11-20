@@ -172,6 +172,15 @@ def money(v):
     except (TypeError, ValueError):
         return None
 
+def secure(url):
+    """A browser silently BLOCKS a plain http:// image on an https:// page,
+    which left white cards with no picture on them. Every store we use
+    serves the same file over https, so upgrade it."""
+    if url and url.startswith("http://"):
+        return "https://" + url[len("http://"):]
+    return url
+
+
 def clean(t):
     t = html.unescape(t or "").strip()
     return re.sub(r"\s+", " ", t)
@@ -227,7 +236,7 @@ def main():
                 out.append({
                     "id": "cj-%s-%d" % (adv_id, len(out)),
                     "title": title,
-                    "image": img,
+                    "image": secure(img),
                     "affiliate_url": url,
                     "store": name,
                     "brand": clean(x.get("brand")) or None,
