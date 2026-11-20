@@ -21,8 +21,10 @@ ENDPOINT = "https://ads.api.cj.com/query"
 # Stores we are approved for that have a feed worth using.
 # cap   = most products to take from that store
 # dept  = force every product into this department (None = decide per product)
+# only  = if set, keep a product ONLY if it lands in one of these departments
+# scan  = how many rows to look through (CJ stops serving past ~10,000)
 STORES = [
-    # name,                  advertiserId, cap,  dept
+    # name,                  advertiserId, cap,  dept,          only, scan
     # Tech For Less sends no Google category at all, so the department is forced.
     ("Tech For Less",        "3297514",    140,  "electronics"),
     ("FragranceShop.com",    "7287203",    140,  "beauty"),
@@ -31,9 +33,49 @@ STORES = [
     ("Best Vet Care",        "4247934",     90,  "pets"),
     ("Rexing",               "5357356",     94,  "auto"),
     ("Click & Grow",         "4297609",     80,  "garden"),
-    # DHGate is huge and spans everything - held back until MJ decides.
-    # ("DHGate",             "3992613",    400,  None),
+    # DHGate has 6.2 million products and would otherwise become most of the
+    # site. MJ's call: a few departments only. Home and Crafts are where
+    # cheap-and-cheerful belongs and where counterfeits are least likely.
+    # Apparel and jewellery are deliberately excluded - see BLOCK below.
+    # Crafts only yielded four tin signs, which reads as an abandoned
+    # department. Home only until there is enough to fill a page properly.
+    ("DHGate",               "3992613",    200,  None, {"home"}, 6000),
 ]
+
+# DHGate carries a lot of "Designer"/"Luxury" branded goods at pocket-money
+# prices. We are not putting likely counterfeits on the site: it is a legal
+# risk for MJ and the kind of thing that gets an affiliate account closed.
+BLOCK = ("designer", "luxury", "replica", "aaa quality", "mirror quality",
+         "1:1", "gucci", "chanel", "rolex", "nike", "adidas", "prada",
+         "dior", "hermes", "balenciaga", "versace", "louis vuitton",
+         # Any well-known brand name on a cut-price marketplace listing is
+         # far more likely to be a knock-off than the real thing.
+         "starbucks", "yeti", "stanley", "disney", "apple ", "airpod",
+         "samsung", "lego", "north face", "patagonia", "ray-ban", "rayban")
+
+# Nothing in here belongs on a family deals site, whatever it earns.
+UNFIT = ("banger", "dab rig", "dabber", "bong", "vape", "e-cig", "hookah",
+         "shisha", "rolling paper", "smoking pipe", "ashtray", "nectar collector",
+         "sexy", "erotic", "adult toy", "lingerie")
+
+# A price this low on a marketplace is nearly always junk or a sample
+# listing, and it makes the whole page look cheap.
+MIN_MARKETPLACE_PRICE = 12.0
+
+def readable(title):
+    """Marketplace feeds are full of keyword soup and half-translated titles.
+    A card the shopper cannot read is worse than no card."""
+    if len(title) < 15 or len(title) > 110:
+        return False
+    if len(title.split()) < 3:
+        return False
+    letters = [c for c in title if c.isalpha()]
+    if not letters:
+        return False
+    # mostly plain English letters, or it is not a title our shopper can read
+    if sum(c.isascii() for c in letters) / len(letters) < 0.95:
+        return False
+    return True
 
 # Google product category -> our department. Most specific first.
 CATMAP = [
@@ -56,6 +98,10 @@ CATMAP = [
     ("media",                                  "books"),
     ("toys & games > games",                   "family"),
     ("toys & games",                           "family"),
+    # Fragrance is Beauty, not Home. Google files it under Home > Decor,
+    # which was dropping marketplace perfume into the Home department next
+    # to the dutch ovens - and we already have a real fragrance store.
+    ("home & garden > decor > home fragrances", "beauty"),
     ("home & garden > lawn & garden",          "garden"),
     ("home & garden > kitchen & dining",       "home"),
     ("home & garden",                          "home"),
@@ -132,9 +178,12 @@ def clean(t):
 
 def main():
     out, seen, report = [], set(), []
-    for name, adv_id, cap, forced in STORES:
+    for row in STORES:
+        name, adv_id, cap, forced = row[0], row[1], row[2], row[3]
+        only = row[4] if len(row) > 4 else None
+        scan_budget = row[5] if len(row) > 5 else 1000
         kept, offset, scanned = 0, 0, 0
-        while kept < cap and offset < 1000:
+        while kept < cap and offset < scan_budget:
             d = gql(QUERY % (CID, adv_id, 100, offset, PID))
             if "errors" in d and not d.get("data"):
                 report.append((name, 0, 0, json.dumps(d["errors"])[:120]))
@@ -166,6 +215,14 @@ def main():
                 gcat = (x.get("googleProductCategory") or {}).get("name")
                 slug = dept_for(gcat, forced)
                 if not slug:                             continue
+                if only and slug not in only:            continue
+                low = title.lower()
+                if any(w in low for w in BLOCK):         continue
+                if any(w in low for w in UNFIT):         continue
+                # marketplace stores get a quality gate; real retailers do not
+                if only is not None:
+                    if now < MIN_MARKETPLACE_PRICE:      continue
+                    if not readable(title):              continue
                 disc = x.get("discountPercentage")
                 out.append({
                     "id": "cj-%s-%d" % (adv_id, len(out)),
