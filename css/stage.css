@@ -292,7 +292,7 @@ body::before{
 .ebf-offers-head h2{
   margin:0; font-size:1.05rem; font-weight:650; color:#f3e6cf; letter-spacing:.1px;
 }
-.ebf-offers-head span{font-size:.8rem; color:#6b5428;}
+.ebf-offers-head span{font-size:.8rem; color:#9c8d77;}
 .ebf-offer-grid{
   display:grid; gap:14px;
   grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
@@ -319,7 +319,8 @@ body::before{
   transition:filter .15s ease;
 }
 .ebf-offer-go:hover{filter:brightness(1.07);}
-.ebf-offer-note{font-size:.72rem; color:#6b5428;}
+/* sits over the page photo, not over a panel, so it needs more contrast */
+.ebf-offer-note{font-size:.75rem; color:#9c8d77;}
 @media(max-width:620px){
   .ebf-offer-grid{grid-template-columns:1fr;}
 }

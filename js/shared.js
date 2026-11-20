@@ -745,6 +745,15 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
     // the department has something in it, so don't tell the shopper it's empty
     var empty = grid.querySelector('.empty');
     if(empty) empty.style.display = 'none';
+
+    // the breadcrumb counts products only, so a department made entirely of
+    // offers announced itself as "0 products" right above three offers
+    var crumb = document.getElementById('results-crumb');
+    if(crumb && /\b0 products?\b/.test(crumb.innerHTML)){
+      crumb.innerHTML = crumb.innerHTML.replace(
+        /\b0 products?\b/,
+        mine.length + (mine.length === 1 ? ' offer' : ' offers'));
+    }
   }
 
   fetch('data/offers.json')

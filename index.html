@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EBF Daily Deals — Everyday Black Friday Deals, All Year Round</title>
 <meta name="description" content="Why search a dozen websites? EBF Daily Deals brings the best Amazon deals together in one place, every day — electronics, home, fashion, tools and more.">
-<link rel="icon" type="image/png" href="assets/logo-ebf-icon.png">
+<link rel="icon" type="image/png" href="assets/favicon-32.png">
 <meta name="theme-color" content="#0a0a0a">
 <!-- ══ SEO ══ -->
 <meta name="keywords" content="Black Friday deals, Black Friday deals all year round, daily deals, discounts, Amazon deals, price drops, electronics deals, home deals, fashion deals, best deals online">
@@ -31,8 +31,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/shared.js?v=20261120f" defer></script>
-<script src="js/catalog.js?v=20261120f" defer></script>
+<script src="js/shared.js?v=20261120g" defer></script>
+<script src="js/catalog.js?v=20261120g" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -586,18 +586,18 @@ footer{
   .reveal{opacity:1 !important;transform:none !important;animation:none !important;}
 }
 </style>
-<link rel="stylesheet" href="css/stage.css?v=20261120f">
-<link rel="stylesheet" href="css/showroom-pages.css?v=20261120f">
-<script src="js/hallway.js?v=20261120f" defer></script>
-<script src="js/supabase-config.js?v=20261120f"></script>
-<script src="js/supabase-client.js?v=20261120f"></script>
+<link rel="stylesheet" href="css/stage.css?v=20261120g">
+<link rel="stylesheet" href="css/showroom-pages.css?v=20261120g">
+<script src="js/hallway.js?v=20261120g" defer></script>
+<script src="js/supabase-config.js?v=20261120g"></script>
+<script src="js/supabase-client.js?v=20261120g"></script>
 </head>
 <body>
 
 <!-- ══ NAVBAR ══ -->
 <nav>
   <a class="nav-logo" href="index.html" aria-label="Everyday Black Friday — Home">
-    <img src="assets/logo-ebf.png" alt="Everyday Black Friday logo">
+    <img src="assets/logo-ebf-128.png" alt="Everyday Black Friday logo" width="128" height="128">
     <span class="wordmark"><span class="w1">Everyday</span><span class="w2">Black Friday</span></span>
   </a>
   <div class="nav-links">
@@ -840,6 +840,12 @@ footer{
     }).join('');
   }
   function boot(){
+    /* Draw all the tiles straight away from the catalog, which is already
+       loaded. Waiting for the two fetches meant the page first showed a
+       handful of tiles and then swapped in twenty-one, shoving everything
+       below it down the page. The second render only changes where the
+       tiles point, so the layout never moves. */
+    renderCats();
     Promise.all([
       fetch('data/amazon-categories.json').then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }),
       fetch('data/departments.json').then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; })
@@ -1046,7 +1052,7 @@ footer{
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo-wrap">
-          <img src="assets/logo-ebf.png" alt="Everyday Black Friday" style="height:36px;width:auto;">
+          <img src="assets/logo-ebf-128.png" alt="Everyday Black Friday" width="128" height="128" style="height:36px;width:auto;">
         </div>
         <p>Black Friday prices, all year round. Great deals from stores you trust.</p>
       </div>
@@ -1089,7 +1095,7 @@ footer{
   <div class="modal-box">
     <button class="modal-close" onclick="document.getElementById('signInModal').style.display='none'" aria-label="Close">&times;</button>
     <div style="font-size:32px;margin-bottom:12px;">
-      <img src="assets/logo-ebf-icon.png" alt="EBF" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
+      <img src="assets/logo-ebf-icon-96.png" alt="EBF" width="96" height="96" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
     </div>
     <div class="modal-title">Sign in to EBF</div>
     <div class="modal-desc">Save deals, set alerts, and get personalized picks — free, forever.</div>
@@ -1163,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-<script src="js/cookie-consent.js?v=20261120f"></script>
+<script src="js/cookie-consent.js?v=20261120g"></script>
 
 <script>
 /* Hide any deal section that has nothing real to show. Runs after the deal
