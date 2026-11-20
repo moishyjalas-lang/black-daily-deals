@@ -324,3 +324,51 @@ body::before{
 @media(max-width:620px){
   .ebf-offer-grid{grid-template-columns:1fr;}
 }
+
+/* ------------------------------------------------------------------
+   TODAY'S DEALS (homepage)
+   Real photographs and real prices, from the stores whose feeds we are
+   licensed to show. Amazon products are NOT in here: their prices and
+   photos may only come from the Product Advertising API, which opens
+   after the first qualifying sales. Until then Amazon stays in the
+   Picks section by name only.
+   ------------------------------------------------------------------ */
+.ebf-today{margin:0 0 44px;}
+.ebf-today-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:0 0 16px;}
+.ebf-today-head h2{margin:0; font-size:24px; font-weight:800; letter-spacing:-.5px; color:#f3e6cf;}
+.ebf-today-head p{margin:0; font-size:13px; color:#9c8d77;}
+.ebf-today-head a{margin-left:auto; font-size:13px; font-weight:600; color:#e8b352; text-decoration:none;}
+.ebf-today-head a:hover{text-decoration:underline;}
+.ebf-today-grid{
+  display:grid; gap:14px;
+  grid-template-columns:repeat(auto-fill,minmax(188px,1fr));
+}
+.ebf-tc{
+  display:flex; flex-direction:column; border-radius:14px; overflow:hidden;
+  border:1px solid #231a10; background:#15110b; text-decoration:none;
+  transition:transform .18s ease, border-color .18s ease;
+}
+.ebf-tc:hover{transform:translateY(-3px); border-color:#c78b36;}
+.ebf-tc-img{
+  position:relative; aspect-ratio:1/1; background:#fff;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.ebf-tc-img img{width:100%; height:100%; object-fit:contain; padding:10px;}
+.ebf-tc-off{
+  position:absolute; top:8px; left:8px; padding:4px 8px; border-radius:7px;
+  background:linear-gradient(180deg,#e8b352 0%,#c78b36 100%);
+  color:#1a1309; font-size:11px; font-weight:800; letter-spacing:.03em;
+}
+.ebf-tc-body{padding:12px 13px 14px; display:flex; flex-direction:column; gap:5px; flex:1 1 auto;}
+.ebf-tc-name{
+  font-size:13.5px; line-height:1.35; color:#f3e6cf; font-weight:600;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.ebf-tc-store{font-size:11.5px; color:#8a7b66;}
+.ebf-tc-price{display:flex; align-items:baseline; gap:7px; margin-top:auto; padding-top:6px;}
+.ebf-tc-now{font-size:18px; font-weight:800; color:#e8b352;}
+.ebf-tc-was{font-size:12.5px; color:#8a7b66; text-decoration:line-through;}
+@media(max-width:560px){
+  .ebf-today-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:11px;}
+  .ebf-today-head h2{font-size:20px;}
+}

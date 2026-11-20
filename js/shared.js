@@ -791,3 +791,86 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
       } else { start(); }
     });
 })();
+
+/* ------------------------------------------------------------------
+   TODAY'S DEALS (homepage)
+   Two strips built from data/products.json: the biggest real discounts,
+   and the useful things under $25 - MJ's point that a visitor who buys
+   three small useful items is worth more than one who buys nothing.
+
+   Everything here has a photograph and a price we are licensed to show.
+   No Amazon product appears: Amazon prices and photos may only come
+   from the Product Advertising API, and we do not have it yet.
+   ------------------------------------------------------------------ */
+(function todaysDeals(){
+  var host = document.getElementById('todays-deals');
+  if(!host) return;
+
+  function esc(v){
+    return String(v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function money(n){ return '$' + Number(n).toFixed(2).replace(/\.00$/, ''); }
+
+  function card(p){
+    var off = p.discount ? '<span class="ebf-tc-off">' + p.discount + '% OFF</span>' : '';
+    var was = (p.original_price && p.original_price > p.price)
+      ? '<span class="ebf-tc-was">' + money(p.original_price) + '</span>' : '';
+    return '<a class="ebf-tc" href="' + esc(p.affiliate_url) + '" target="_blank" ' +
+             'rel="sponsored nofollow noopener">' +
+      '<div class="ebf-tc-img">' + off +
+        '<img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy" ' +
+        'onerror="this.closest(\'.ebf-tc\').style.display=\'none\'">' +
+      '</div>' +
+      '<div class="ebf-tc-body">' +
+        '<div class="ebf-tc-name">' + esc(p.title) + '</div>' +
+        '<div class="ebf-tc-store">' + esc(p.store) + '</div>' +
+        '<div class="ebf-tc-price"><span class="ebf-tc-now">' + money(p.price) + '</span>' + was + '</div>' +
+      '</div></a>';
+  }
+
+  function strip(title, note, link, items){
+    if(!items.length) return '';
+    return '<section class="ebf-today">' +
+      '<div class="ebf-today-head"><h2>' + esc(title) + '</h2><p>' + esc(note) + '</p>' +
+      '<a href="' + link + '">See all →</a></div>' +
+      '<div class="ebf-today-grid">' + items.map(card).join('') + '</div>' +
+    '</section>';
+  }
+
+  /* one product per store before repeating a store, so one supplier
+     cannot take over the row */
+  function spread(list, n){
+    var seen = {}, out = [], leftovers = [];
+    list.forEach(function(p){
+      if(out.length < n && !seen[p.store]){ seen[p.store] = 1; out.push(p); }
+      else leftovers.push(p);
+    });
+    return out.concat(leftovers).slice(0, n);
+  }
+
+  fetch('data/products.json')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .catch(function(){ return []; })
+    .then(function(all){
+      if(!all || !all.length) return;
+
+      var discounted = all.filter(function(p){ return p.discount && p.discount >= 15; })
+                          .sort(function(a,b){ return b.discount - a.discount; });
+
+      var cheap = all.filter(function(p){ return p.price > 0 && p.price <= 25; })
+                     .sort(function(a,b){
+                       return (b.discount || 0) - (a.discount || 0) || a.price - b.price;
+                     });
+
+      host.innerHTML =
+        strip('Today’s biggest savings',
+              'Real prices from our partner stores, updated through the day.',
+              'search.html?sort=discount', spread(discounted, 10)) +
+        strip('Useful things under $25',
+              'The small stuff worth adding to any order.',
+              'search.html', spread(cheap, 10));
+      host.hidden = false;
+    });
+})();
