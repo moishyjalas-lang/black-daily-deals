@@ -662,7 +662,7 @@ footer{
 </section>
 
 <!-- ══ BLACK FRIDAY SPOTLIGHT — the centerpiece magnet ══ -->
-<section class="bf-spotlight">
+<section class="bf-spotlight" id="bf-section">
   <div class="bf-panel">
     <div class="bf-head">
       <div>
@@ -837,7 +837,7 @@ footer{
 </script>
 
 <!-- ══ DEAL OF THE DAY ══ -->
-<div class="section" style="padding-top:8px;">
+<div class="section" id="dotd-section" style="padding-top:8px;">
   <div class="dotd-header">
     <h2 class="dotd-title">Deal of the Day</h2>
     <div class="dotd-sep"></div>
@@ -1058,5 +1058,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="js/cookie-consent.js"></script>
+
+<script>
+/* Hide any deal section that has nothing real to show. Runs after the deal
+   renderers, and again shortly after, since those fetch asynchronously. */
+(function(){
+  function sweep(){
+    [['bf-grid','bf-section'],['dotd-grid','dotd-section']].forEach(function(pair){
+      var grid=document.getElementById(pair[0]), section=document.getElementById(pair[1]);
+      if(!grid||!section) return;
+      section.style.display = grid.children.length ? '' : 'none';
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',sweep);
+  else sweep();
+  [400, 1200, 2500, 5000].forEach(function(t){ setTimeout(sweep, t); });
+})();
+</script>
 </body>
 </html>
