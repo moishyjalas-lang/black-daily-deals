@@ -195,6 +195,14 @@ def main():
     (ROOT / "data" / "products.json").write_text(
         json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
+    # A tiny index of which departments have products, so the homepage and
+    # the category page can route links without downloading every product.
+    counts = {}
+    for p in out:
+        counts[p["category"]] = counts.get(p["category"], 0) + 1
+    (ROOT / "data" / "departments.json").write_text(
+        json.dumps(counts, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
     print("%-22s %6s %8s" % ("STORE", "KEPT", "SCANNED"))
     for name, kept, scanned, err in report:
         print("%-22s %6d %8d %s" % (name, kept, scanned, err))
@@ -206,8 +214,13 @@ def main():
         print("  %-14s %d" % (k, v))
 
 if __name__ == "__main__":
-    tf = ROOT / "scripts" / ".cj-token"
-    if not tf.exists():
-        sys.exit("scripts/.cj-token is missing")
-    TOKEN = tf.read_text().strip()
+    # The token comes from the environment first, so GitHub Actions can
+    # supply it from the repository's encrypted secrets and nothing has to
+    # live on any one machine. The local file is only a fallback.
+    TOKEN = (os.environ.get("CJ_PAT") or "").strip()
+    if not TOKEN:
+        tf = ROOT / "scripts" / ".cj-token"
+        if not tf.exists():
+            sys.exit("No CJ token: set CJ_PAT, or create scripts/.cj-token")
+        TOKEN = tf.read_text().strip()
     main()

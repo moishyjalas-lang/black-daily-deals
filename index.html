@@ -31,8 +31,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/shared.js?v=20261120d" defer></script>
-<script src="js/catalog.js?v=20261120d" defer></script>
+<script src="js/shared.js?v=20261120e" defer></script>
+<script src="js/catalog.js?v=20261120e" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -586,11 +586,11 @@ footer{
   .reveal{opacity:1 !important;transform:none !important;animation:none !important;}
 }
 </style>
-<link rel="stylesheet" href="css/stage.css?v=20261120d">
-<link rel="stylesheet" href="css/showroom-pages.css?v=20261120d">
-<script src="js/hallway.js?v=20261120d" defer></script>
-<script src="js/supabase-config.js?v=20261120d"></script>
-<script src="js/supabase-client.js?v=20261120d"></script>
+<link rel="stylesheet" href="css/stage.css?v=20261120e">
+<link rel="stylesheet" href="css/showroom-pages.css?v=20261120e">
+<script src="js/hallway.js?v=20261120e" defer></script>
+<script src="js/supabase-config.js?v=20261120e"></script>
+<script src="js/supabase-client.js?v=20261120e"></script>
 </head>
 <body>
 
@@ -819,10 +819,11 @@ footer{
 <script>
 /* Render all 14 category departments from the shared catalog (real images, correct links). */
 (function(){
-  /* Until our own catalog holds real deals, a category tile sends the shopper
-     to Amazon's live deals for that department, tagged, so the link is never a
-     dead end. Falls back to the internal page if the map can't be loaded. */
-  var AMZ={};
+  /* A department we have real products for opens OUR page. A department we
+     have nothing for still goes out to Amazon's live deals for it, tagged, so
+     no tile is ever a dead end. HAVE comes from data/departments.json, a tiny
+     index, so the homepage never downloads the whole product file. */
+  var AMZ={}, HAVE={};
   function renderCats(){
     var grid=document.getElementById('catGrid');
     if(!grid||!window.EBF_CATALOG||!window.EBF_CATALOG.cats||!window.EBF_CATALOG.cats.length) return;
@@ -830,7 +831,8 @@ footer{
     grid.innerHTML=window.EBF_CATALOG.cats.map(function(c){
       var subs=(c.subs||[]).slice(0,3).join(' · ');
       if(subs) subs+=' · More';
-      var dest=(AMZ[c.slug]||''), ext=!!dest;
+      var mine=!!HAVE[c.slug];
+      var dest=mine ? '' : (AMZ[c.slug]||''), ext=!!dest;
       return '<a class="cat-tile" href="'+(ext?dest:('search.html?cat='+encodeURIComponent(c.slug)))+'"'+(ext?' target="_blank" rel="noopener sponsored"':'')+'>'
         +'<div class="cat-thumb"><img src="'+c.img+'" alt="'+c.name+'" loading="lazy"></div>'
         +'<div class="cat-info"><div class="cat-name-row"><span class="cat-name">'+c.name+'</span>'+arrow+'</div><div class="cat-subs">'+subs+'</div></div>'
@@ -838,11 +840,14 @@ footer{
     }).join('');
   }
   function boot(){
-    fetch('data/amazon-categories.json')
-      .then(function(r){ return r.ok ? r.json() : []; })
-      .then(function(list){ (list||[]).forEach(function(x){ if(x && x.category && x.url) AMZ[x.category]=x.url; }); })
-      .catch(function(){})
-      .then(renderCats);
+    Promise.all([
+      fetch('data/amazon-categories.json').then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }),
+      fetch('data/departments.json').then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; })
+    ]).then(function(res){
+      (res[0]||[]).forEach(function(x){ if(x && x.category && x.url) AMZ[x.category]=x.url; });
+      HAVE = res[1] || {};
+      renderCats();
+    });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
   else boot();
@@ -1158,7 +1163,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-<script src="js/cookie-consent.js?v=20261120d"></script>
+<script src="js/cookie-consent.js?v=20261120e"></script>
 
 <script>
 /* Hide any deal section that has nothing real to show. Runs after the deal

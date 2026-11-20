@@ -1,0 +1,69 @@
+# Keeps the products on the site fresh without depending on anybody's computer.
+#
+# The CJ token lives in this repository's encrypted secrets (Settings ->
+# Secrets and variables -> Actions -> CJ_PAT). GitHub hands it to this job
+# at run time and nobody can read it back out, including us. It never goes
+# into the site's files, so it never reaches a visitor's browser.
+name: Refresh CJ products
+
+on:
+  schedule:
+    # Every six hours. Times are UTC.
+    - cron: "17 */6 * * *"
+  workflow_dispatch:        # so it can also be run by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-products
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull the latest products from CJ
+        env:
+          CJ_PAT: ${{ secrets.CJ_PAT }}
+        run: |
+          if [ -z "$CJ_PAT" ]; then
+            echo "::error::CJ_PAT secret is not set. Add it in Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+          python3 scripts/import-cj.py
+
+      - name: Refuse to publish an empty or broken file
+        run: |
+          python3 - <<'CHECK'
+          import json, sys
+          d = json.load(open("data/products.json"))
+          if len(d) < 100:
+              sys.exit("Only %d products came back - refusing to overwrite the site." % len(d))
+          bad = [p for p in d if not (p.get("title") and p.get("image")
+                                      and p.get("affiliate_url") and p.get("price"))]
+          if bad:
+              sys.exit("%d products are missing a title, photo, price or link." % len(bad))
+          untracked = [p for p in d if "101933046" not in p["affiliate_url"]]
+          if untracked:
+              sys.exit("%d links are not tracked - they would earn nothing." % len(untracked))
+          print("OK: %d products, all complete and tracked." % len(d))
+          CHECK
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name  "EBF product refresh"
+          git config user.email "noreply@blackfridaydealseveryday.com"
+          git add data/products.json data/departments.json
+          if git diff --cached --quiet; then
+            echo "Prices unchanged - nothing to publish."
+          else
+            git commit -m "Refresh CJ products $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
