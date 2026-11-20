@@ -163,11 +163,19 @@ Object.assign(window.EBF, {
       const au = await r.json();
       const meta = au.user_metadata || {};
       let pro = false, is_admin = false;
+      // profileState tells the caller WHY is_admin is false: 'ok' means we read
+      // the row and it really says false; anything else means we never managed
+      // to check, which is a different problem and deserves a different message.
+      let profileState = 'unchecked';
       try {
         const pr = await fetch(url + '/rest/v1/profiles?select=is_pro,is_admin&id=eq.' + au.id, { headers: { apikey: key, Authorization: 'Bearer ' + sess.access_token } });
-        if (pr.ok) { const rows = await pr.json(); if (rows && rows[0]) { pro = !!rows[0].is_pro; is_admin = !!rows[0].is_admin; } }
-      } catch (e) { /* profile row optional */ }
-      const user = { id: au.id, email: au.email, name: meta.full_name || meta.name || au.email, avatar: meta.avatar_url || meta.picture || '', pro, is_admin };
+        if (pr.ok) {
+          const rows = await pr.json();
+          if (rows && rows[0]) { pro = !!rows[0].is_pro; is_admin = !!rows[0].is_admin; profileState = 'ok'; }
+          else { profileState = 'no-row'; }
+        } else { profileState = 'http-' + pr.status; }
+      } catch (e) { profileState = 'error'; }
+      const user = { id: au.id, email: au.email, name: meta.full_name || meta.name || au.email, avatar: meta.avatar_url || meta.picture || '', pro, is_admin, profileState };
       this.setUser(user);
       this.updateAuthUI(user);
       return user;

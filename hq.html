@@ -1043,8 +1043,15 @@ async function gate(){
     return;
   }
   if(!user.is_admin){
-    showGate('This area is owner-only',`You're signed in as ${user.email||'a member'}, but this control center is restricted to the site owner.`,
-      `<a class="btn-ghost" href="index.html">← Back to the site</a>`);
+    // Say exactly what went wrong. "Not the owner" and "couldn't check" are
+    // different problems and used to look identical from this screen.
+    const couldNotCheck = user.profileState && user.profileState !== 'ok';
+    const why = couldNotCheck
+      ? `You're signed in as <b>${esc(user.email||'unknown')}</b>, but the site could not read your account record to confirm ownership (${esc(user.profileState)}). That is a database permission problem, not a wrong account.`
+      : `You're signed in as <b>${esc(user.email||'a member')}</b>. That account is not the site owner. The owner account is the Google account the site was set up with — sign out and back in with that one.`;
+    showGate('This area is owner-only', why,
+      `<button class="gate-btn" onclick="EBF.signOut().then(()=>location.reload())">${icon('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>')} Sign out and use a different account</button>
+       <a class="btn-ghost" href="index.html" style="margin-left:10px">← Back to the site</a>`);
     return;
   }
   enterHQ(user);
