@@ -89,6 +89,22 @@ Object.assign(window.EBF, {
   fmt(n) { return '$' + n.toFixed(2); },
 
   /* ---- Deal card HTML ---- */
+  /* Product photos deliberately do NOT carry referrerpolicy="no-referrer".
+     Several of these stores block image requests that arrive with no
+     referrer - standard anti-hotlinking - so every pet product on the site
+     showed a card with no picture. Proved it in a real browser: the same
+     file fails with no-referrer and loads instantly with a normal one.
+     Sending the referrer is right here anyway: these are affiliate
+     partners and they want to see the traffic coming from us.
+
+     A product photo that will not load used to be deleted on the spot,
+     which left a white card with a price and no picture - worse than no
+     card at all. Hide the whole card instead. */
+  imageFailed(img) {
+    const card = img.closest('.deal-card');
+    if (card) card.style.display = 'none'; else img.remove();
+  },
+
   dealCard(d) {
     const inWish = this.getWishlist().includes(d.id);
     /* deal level from the store's shown was/now prices (js/catalog.js) */
@@ -100,7 +116,7 @@ Object.assign(window.EBF, {
     const tag = lv.key === 'big' ? '<span class="lvl-tag">Hot Deal</span>' : lv.key === 'light' ? '<span class="lvl-tag soft">Price Drop</span>' : '';
     return `<div class="deal-card lvl-${lv.key}" data-id="${d.id}">
   <a href="${d.affiliate_url}" target="_blank" rel="noopener noreferrer sponsored" class="card-img-wrap">
-    ${d.image ? `<img src="${d.image}" alt="${d.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+    ${d.image ? `<img src="${d.image}" alt="${d.title}" loading="lazy" onerror="EBF.imageFailed(this)">` : ''}
     ${badge}
     <button class="wish-btn${inWish ? ' active' : ''}" onclick="EBF.toggleWishlist(this,'${d.id}')" aria-label="${inWish ? 'Remove from' : 'Add to'} wishlist">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="${inWish ? '#ff3b3b' : 'none'}" stroke="${inWish ? '#ff3b3b' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -620,4 +636,265 @@ document.addEventListener('DOMContentLoaded',function(){try{document.querySelect
     if (deferred) { deferred.prompt(); return true; }
     return false;
   };
+})();
+
+/* ------------------------------------------------------------------
+   AMAZON BAND
+   Appends one wide Amazon band under the results on search.html.
+   Done from here, with no HTML edit, so it can't collide with Codex.
+   Watches #deals-grid instead of being called by renderDeals(), because
+   renderDeals lives in search.html and we don't want to touch that file.
+   ------------------------------------------------------------------ */
+(function amazonBand(){
+  // Cloudflare Pages serves this page as /search, not /search.html,
+  // so both spellings have to match.
+  if(!/(^|\/)search(\.html)?$/.test(location.pathname)) return;
+
+  var urls = {};          // slug -> tagged Amazon search url
+  var names = {};         // slug -> department name
+  var tag = '';
+  var band = null;
+
+  function esc(v){
+    return String(v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function currentCat(){
+    // syncURL() keeps ?cat= current on every filter change
+    var p = new URLSearchParams(location.search);
+    var c = p.get('cat');
+    return (c && urls[c]) ? c : '';
+  }
+
+  function build(){
+    var pag = document.getElementById('pagination');
+    if(!pag || !pag.parentNode) return null;
+    var el = document.createElement('section');
+    el.className = 'ebf-amz-band';
+    el.hidden = true;
+    pag.parentNode.insertBefore(el, pag.nextSibling);
+    return el;
+  }
+
+  function paint(){
+    if(!band) band = build();
+    if(!band) return;
+
+    var slug = currentCat();
+    var href = slug ? urls[slug]
+             : (tag ? 'https://www.amazon.com/deals?tag=' + encodeURIComponent(tag) : '');
+    if(!href){ band.hidden = true; return; }
+
+    var label = slug ? (names[slug] || slug) : '';
+    var head  = label ? 'Looking for something else in ' + esc(label) + '?'
+                      : 'Looking for something else?';
+    var sub   = label
+      ? 'Amazon has thousands more ' + esc(label).toLowerCase() + ' deals running today.'
+      : 'Amazon has thousands more deals running today.';
+    var cta   = label ? 'Browse Amazon ' + esc(label) : 'Browse Amazon deals';
+
+    band.innerHTML =
+      '<div class="ebf-amz-copy"><h3>' + head + '</h3><p>' + sub + '</p></div>' +
+      '<a class="ebf-amz-go" href="' + esc(href) + '" target="_blank" ' +
+        'rel="sponsored nofollow noopener">' + cta + ' →</a>' +
+      '<p class="ebf-amz-note">As an Amazon Associate we may earn from qualifying purchases.</p>';
+    band.hidden = false;
+  }
+
+  function start(){
+    var grid = document.getElementById('deals-grid');
+    if(grid && window.MutationObserver){
+      new MutationObserver(paint).observe(grid, { childList:true });
+    }
+    window.addEventListener('popstate', paint);
+    paint();
+  }
+
+  Promise.all([
+    fetch('data/amazon-categories.json').then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }),
+    fetch('data/config.json').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+  ]).then(function(res){
+    (res[0] || []).forEach(function(x){ if(x && x.category && x.url) urls[x.category] = x.url; });
+    tag = (res[1] && res[1].site && res[1].site.affiliate_tag) || '';
+    var cats = (window.EBF_CATALOG && window.EBF_CATALOG.cats) || [];
+    cats.forEach(function(c){ names[c.slug] = c.name; });
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', start);
+    } else { start(); }
+  });
+})();
+
+/* ------------------------------------------------------------------
+   PARTNER OFFER CARDS
+   Renders the offers in data/offers.json above the product grid on a
+   department page. Done from here so search.html is never edited.
+   If a department has offers but no products, the grid's own "no
+   matching deals" block is hidden - the page is not empty, it just
+   has offers rather than products in it.
+   ------------------------------------------------------------------ */
+(function offerCards(){
+  if(!/(^|\/)search(\.html)?$/.test(location.pathname)) return;
+
+  var offers = [], host = null;
+
+  function esc(v){
+    return String(v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function currentCat(){
+    return new URLSearchParams(location.search).get('cat') || '';
+  }
+
+  function card(o){
+    return '<div class="ebf-offer">' +
+      '<div class="ebf-offer-store">' + esc(o.store) + '</div>' +
+      '<h3>' + esc(o.headline) + '</h3>' +
+      '<p>' + esc(o.blurb) + '</p>' +
+      '<a class="ebf-offer-go" href="' + esc(o.url) + '" target="_blank" ' +
+        'rel="sponsored nofollow noopener">' + esc(o.cta) + ' →</a>' +
+    '</div>';
+  }
+
+  function paint(){
+    var grid = document.getElementById('deals-grid');
+    if(!grid) return;
+    var cat = currentCat();
+    // No category chosen means the shopper is browsing or searching
+    // everything, and a wall of partner offers there would be noise.
+    var mine = cat ? offers.filter(function(o){ return o.category === cat; }) : [];
+
+    if(!host){
+      host = document.createElement('section');
+      host.className = 'ebf-offers';
+      grid.parentNode.insertBefore(host, grid);
+    }
+    if(!mine.length){ host.hidden = true; return; }
+
+    host.innerHTML =
+      '<div class="ebf-offers-head"><h2>Offers from our partners</h2>' +
+      '<span>' + mine.length + (mine.length === 1 ? ' offer' : ' offers') + '</span></div>' +
+      '<div class="ebf-offer-grid">' + mine.map(card).join('') + '</div>' +
+      '<p class="ebf-offer-note">These stores sell plans and subscriptions rather than ' +
+      'single products, so prices are shown on their own site.</p>';
+    host.hidden = false;
+
+    // the department has something in it, so don't tell the shopper it's empty
+    var empty = grid.querySelector('.empty');
+    if(empty) empty.style.display = 'none';
+
+    // the breadcrumb counts products only, so a department made entirely of
+    // offers announced itself as "0 products" right above three offers
+    var crumb = document.getElementById('results-crumb');
+    if(crumb && /\b0 products?\b/.test(crumb.innerHTML)){
+      crumb.innerHTML = crumb.innerHTML.replace(
+        /\b0 products?\b/,
+        mine.length + (mine.length === 1 ? ' offer' : ' offers'));
+    }
+  }
+
+  fetch('data/offers.json')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .catch(function(){ return []; })
+    .then(function(list){
+      offers = list || [];
+      if(!offers.length) return;
+      function start(){
+        var grid = document.getElementById('deals-grid');
+        if(grid && window.MutationObserver){
+          new MutationObserver(paint).observe(grid, { childList:true });
+        }
+        window.addEventListener('popstate', paint);
+        paint();
+      }
+      if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', start);
+      } else { start(); }
+    });
+})();
+
+/* ------------------------------------------------------------------
+   TODAY'S DEALS (homepage)
+   Two strips built from data/products.json: the biggest real discounts,
+   and the useful things under $25 - MJ's point that a visitor who buys
+   three small useful items is worth more than one who buys nothing.
+
+   Everything here has a photograph and a price we are licensed to show.
+   No Amazon product appears: Amazon prices and photos may only come
+   from the Product Advertising API, and we do not have it yet.
+   ------------------------------------------------------------------ */
+(function todaysDeals(){
+  var host = document.getElementById('todays-deals');
+  if(!host) return;
+
+  function esc(v){
+    return String(v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function money(n){ return '$' + Number(n).toFixed(2).replace(/\.00$/, ''); }
+
+  function card(p){
+    var off = p.discount ? '<span class="ebf-tc-off">' + p.discount + '% OFF</span>' : '';
+    var was = (p.original_price && p.original_price > p.price)
+      ? '<span class="ebf-tc-was">' + money(p.original_price) + '</span>' : '';
+    return '<a class="ebf-tc" href="' + esc(p.affiliate_url) + '" target="_blank" ' +
+             'rel="sponsored nofollow noopener">' +
+      '<div class="ebf-tc-img">' + off +
+        '<img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy" ' +
+        'onerror="this.closest(\'.ebf-tc\').style.display=\'none\'">' +
+      '</div>' +
+      '<div class="ebf-tc-body">' +
+        '<div class="ebf-tc-name">' + esc(p.title) + '</div>' +
+        '<div class="ebf-tc-store">' + esc(p.store) + '</div>' +
+        '<div class="ebf-tc-price"><span class="ebf-tc-now">' + money(p.price) + '</span>' + was + '</div>' +
+      '</div></a>';
+  }
+
+  function strip(title, note, link, items){
+    if(!items.length) return '';
+    return '<section class="ebf-today">' +
+      '<div class="ebf-today-head"><h2>' + esc(title) + '</h2><p>' + esc(note) + '</p>' +
+      '<a href="' + link + '">See all →</a></div>' +
+      '<div class="ebf-today-grid">' + items.map(card).join('') + '</div>' +
+    '</section>';
+  }
+
+  /* one product per store before repeating a store, so one supplier
+     cannot take over the row */
+  function spread(list, n){
+    var seen = {}, out = [], leftovers = [];
+    list.forEach(function(p){
+      if(out.length < n && !seen[p.store]){ seen[p.store] = 1; out.push(p); }
+      else leftovers.push(p);
+    });
+    return out.concat(leftovers).slice(0, n);
+  }
+
+  fetch('data/products.json')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .catch(function(){ return []; })
+    .then(function(all){
+      if(!all || !all.length) return;
+
+      var discounted = all.filter(function(p){ return p.discount && p.discount >= 15; })
+                          .sort(function(a,b){ return b.discount - a.discount; });
+
+      var cheap = all.filter(function(p){ return p.price > 0 && p.price <= 25; })
+                     .sort(function(a,b){
+                       return (b.discount || 0) - (a.discount || 0) || a.price - b.price;
+                     });
+
+      host.innerHTML =
+        strip('Today’s biggest savings',
+              'Real prices from our partner stores, updated through the day.',
+              'search.html?sort=discount', spread(discounted, 10)) +
+        strip('Useful things under $25',
+              'The small stuff worth adding to any order.',
+              'search.html', spread(cheap, 10));
+      host.hidden = false;
+    });
 })();

@@ -1436,7 +1436,7 @@ window.EBF_CATALOG = {
   {
    "slug": "videogames",
    "name": "Video Games",
-   "img": "assets/categories/sub/electronics--gaming.jpg",
+   "img": "assets/categories/dept/videogames.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"3\" width=\"20\" height=\"14\" rx=\"2\"/><line x1=\"8\" y1=\"21\" x2=\"16\" y2=\"21\"/><line x1=\"12\" y1=\"17\" x2=\"12\" y2=\"21\"/></svg>",
    "subs": [
     "Consoles",
@@ -1449,7 +1449,7 @@ window.EBF_CATALOG = {
   {
    "slug": "computers",
    "name": "Computers & Office",
-   "img": "assets/categories/sub/electronics--computers-and-accessories.jpg",
+   "img": "assets/categories/dept/computers.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"3\" width=\"20\" height=\"14\" rx=\"2\"/><line x1=\"8\" y1=\"21\" x2=\"16\" y2=\"21\"/><line x1=\"12\" y1=\"17\" x2=\"12\" y2=\"21\"/></svg>",
    "subs": [
     "Laptops",
@@ -1462,7 +1462,7 @@ window.EBF_CATALOG = {
   {
    "slug": "baby",
    "name": "Baby & Kids",
-   "img": "assets/categories/sub/family--baby-and-kids.jpg",
+   "img": "assets/categories/dept/baby.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M23 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>",
    "subs": [
     "Baby Gear",
@@ -1475,7 +1475,7 @@ window.EBF_CATALOG = {
   {
    "slug": "pets",
    "name": "Pet Supplies",
-   "img": "assets/categories/sub/family--pet-supplies.jpg",
+   "img": "assets/categories/dept/pets.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M23 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>",
    "subs": [
     "Dog",
@@ -1488,7 +1488,7 @@ window.EBF_CATALOG = {
   {
    "slug": "tools",
    "name": "Tools & Home Improvement",
-   "img": "assets/categories/sub/auto--power-tools.jpg",
+   "img": "assets/categories/dept/tools.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm18 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0z\"/><path d=\"M5 17l1.5-5h11L19 17M6.5 12l1-3h9l1 3\"/></svg>",
    "subs": [
     "Power Tools",
@@ -1501,7 +1501,7 @@ window.EBF_CATALOG = {
   {
    "slug": "crafts",
    "name": "Arts & Crafts",
-   "img": "assets/categories/sub/books--arts-and-crafts.jpg",
+   "img": "assets/categories/dept/crafts.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z\"/><path d=\"M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z\"/></svg>",
    "subs": [
     "Craft Supplies",
@@ -1514,7 +1514,7 @@ window.EBF_CATALOG = {
   {
    "slug": "music",
    "name": "Musical Instruments",
-   "img": "assets/categories/sub/books--musical-instruments.jpg",
+   "img": "assets/categories/dept/music.jpg",
    "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z\"/><path d=\"M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z\"/></svg>",
    "subs": [
     "Guitars",
@@ -1523,21 +1523,46 @@ window.EBF_CATALOG = {
     "Recording"
    ],
    "subImg": {}
+  },
+  {
+   "slug": "mattresses",
+   "name": "Mattresses & Sleep",
+   "img": "assets/categories/dept/mattresses.jpg",
+   "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 18v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7\"/><path d=\"M3 14h18M5 18v2M19 18v2\"/><path d=\"M7 9V7h4a2 2 0 0 1 2 2\"/></svg>",
+   "subs": [
+    "Mattresses",
+    "Pillows",
+    "Bed Frames",
+    "Bedding",
+    "Sleep Accessories"
+   ],
+   "subImg": {}
+  },
+  {
+   "slug": "power",
+   "name": "Home Power & Solar",
+   "img": "assets/categories/dept/power.jpg",
+   "ico": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\"/><path d=\"M19 10h2v4h-2M8 9l-2 4h4l-2 4\"/></svg>",
+   "subs": [
+    "Portable Power Stations",
+    "Solar Panels",
+    "Generators",
+    "Home Batteries",
+    "Backup Power"
+   ],
+   "subImg": {}
   }
  ],
  "alias": {
-  "computers": "electronics",
   "gaming": "electronics",
   "kitchen": "home",
   "household": "home",
   "shoes": "fashion",
-  "baby": "family",
   "toys": "family",
-  "pets": "family",
   "office": "family",
   "patio": "garden",
-  "tools": "auto",
   "grocery": "food"
+ 
  },
  "levels": [
   "bf",
@@ -1546,3 +1571,42 @@ window.EBF_CATALOG = {
   "regular"
  ]
 };
+
+/* ------------------------------------------------------------------
+   Helpers the pages call on this catalog.
+   search.html used CAT.bySlug() and CAT.level() but neither was ever
+   defined, so renderSubNav threw on every render and the deals grid
+   never drew a single card. Found by opening the live page.
+   ------------------------------------------------------------------ */
+
+/* Find a department by its slug. Falls back through the alias table,
+   so an old or shorthand slug still lands on the right department. */
+window.EBF_CATALOG.bySlug = function (slug) {
+  if (!slug) return null;
+  var key = String(slug).toLowerCase();
+  var cats = window.EBF_CATALOG.cats || [];
+  for (var i = 0; i < cats.length; i++) {
+    if (cats[i].slug === key) return cats[i];
+  }
+  var alias = (window.EBF_CATALOG.alias || {})[key];
+  if (alias && alias !== key) return window.EBF_CATALOG.bySlug(alias);
+  return null;
+};
+
+/* How big a deal is this, from the store's own was/now prices.
+   We never invent a discount: no 'was' price means it is just a price. */
+window.EBF_CATALOG.level = function (d) {
+  var off = 0;
+  if (d) {
+    if (typeof d.discount === 'number' && d.discount > 0) {
+      off = d.discount;
+    } else if (d.original_price && d.price && d.original_price > d.price) {
+      off = Math.round((1 - d.price / d.original_price) * 100);
+    }
+  }
+  if (off >= 50) return { key: 'bf',      label: 'Doorbuster',     range: '50% off or more' };
+  if (off >= 30) return { key: 'big',     label: 'Hot Deal',       range: '30% to 49% off'  };
+  if (off >= 10) return { key: 'light',   label: 'Price Drop',     range: '10% to 29% off'  };
+  return             { key: 'regular', label: 'Everyday Price', range: 'Our standing price' };
+};
+
