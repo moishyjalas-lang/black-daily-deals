@@ -319,7 +319,7 @@ Object.assign(window.EBF, {
     if (!modal || modal.querySelector('#ebfEmail')) return;
     const box = modal.querySelector('.modal-box') || modal.firstElementChild;
     if (!box) return;
-    const skip = box.querySelector('.modal-skip');
+    const skip = box.querySelector('.modal-skip, .signin-skip');
     const inStyle = 'width:100%;box-sizing:border-box;background:#111;border:1px solid #333;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:10px;outline:none;';
     const wrap = document.createElement('div');
     wrap.style.cssText = 'margin-top:4px;';
@@ -334,7 +334,21 @@ Object.assign(window.EBF, {
 
   openSignInModal() {
     const m = document.getElementById('signInModal');
-    if (m) { this._injectEmailForm(m); m.style.display = 'flex'; this.setAuthMode('signin'); return; }
+    if (m) {
+      this._injectEmailForm(m);
+      m.style.display = 'flex';
+      this.setAuthMode('signin');
+      if (!m.dataset.closeWired) {
+        m.dataset.closeWired = '1';
+        // a click on the dark backdrop (outside the box) closes it
+        m.addEventListener('click', e => { if (e.target === m) EBF.closeSignInModal(); });
+        // the Escape key closes it
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && m.style.display !== 'none') EBF.closeSignInModal();
+        });
+      }
+      return;
+    }
     // create modal on the fly if page doesn't have one
     const html = `<div id="signInModal" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;">
       <div style="background:#181818;border:1px solid #333;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;position:relative;">
@@ -355,6 +369,16 @@ Object.assign(window.EBF, {
     </div>`;
     document.body.insertAdjacentHTML('beforeend', html);
     this.setAuthMode('signin');
+  },
+
+  // Closes the sign-in window however it was opened. Pages open it with
+  // an inline style (openSignInModal) or a class (.show / .open), so clear both.
+  closeSignInModal(skipped) {
+    const m = document.getElementById('signInModal');
+    if (!m) return;
+    if (skipped) { try { localStorage.setItem('skipped_signin', '1'); } catch (e) {} }
+    m.style.display = 'none';
+    m.classList.remove('show', 'open');
   },
 
   /* ---- Alert creation with gating ---- */
